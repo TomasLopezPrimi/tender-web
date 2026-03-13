@@ -1,8 +1,15 @@
-// app/arquitectos/page.tsx
-export default function ProductoSku() {
-  return (
-    <div>
-      <h1>Producto</h1>
-    </div>
-  );
+// app/producto/[sku]/page.tsx
+
+export async function generateStaticParams() {
+  
+  const skus = ['producto-1', 'producto-2', 'producto-3'];
+  
+  return skus.map((sku) => ({
+    sku: sku,
+  }));
+}
+
+export default function Page({ params }: { params: { sku: string } }) {
+  const { sku } = params;
+  return <div>Producto: {sku}</div>;
 }
