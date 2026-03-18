@@ -17,7 +17,16 @@ interface Slide {
 const slides: Slide[] = [
   {
     id: 1,
-    image: "/images/espacio-balcon.jpg",
+    image: "/images/tender-ropa.jpg",
+    alt: "Tender con ropa",
+    title: "Original como tu ropa",
+    subtitle: "Más de 60 medidas disponibles. Encontrá la solución perfecta para tu hogar.",
+    cta: "VER PRODUCTOS",
+    ctaHref: "#productos",
+  },
+  {
+    id: 2,
+    image: "/images/tender-fondo-blanco.jpg",
     alt: "Tender colgante instalado en techo",
     title: "Original como tu ropa",
     subtitle: "Tender® te ofrece la línea de tendederos más completa para secar y cuidar todas tus prendas. ¡Elegí el tuyo!",
@@ -25,23 +34,23 @@ const slides: Slide[] = [
     ctaHref: "#productos",
   },
   {
-    id: 2,
-    image: "/images/country-blanco-1500-844-B.jpg",
+    id: 3,
+    image: "/images/espacio-balcon.jpg",
     alt: "Casa premium con Tender instalado",
     title: "Diseño que eleva tu hogar",
     subtitle: "Calidad, elegancia y funcionalidad para los hogares más exigentes. La marca que define la categoría.",
     cta: "CONOCÉ MÁS",
     ctaHref: "#espacios",
   },
-  {
-    id: 3,
-    image: "/images/espacio-lavadero.jpg",
-    alt: "Tender en lavadero moderno",
-    title: "Cada espacio merece un Tender®",
-    subtitle: "Más de 60 medidas disponibles. Encontrá la solución perfecta para tu hogar.",
-    cta: "VER PRODUCTOS",
-    ctaHref: "#productos",
-  },
+  // {
+  //   id: 4,
+  //   image: "/images/espacio-lavadero.jpg",
+  //   alt: "Tender en lavadero moderno",
+  //   title: "Cada espacio merece un Tender®",
+  //   subtitle: "Más de 60 medidas disponibles. Encontrá la solución perfecta para tu hogar.",
+  //   cta: "VER PRODUCTOS",
+  //   ctaHref: "#productos",
+  // },
 ]
 
 export default function HeroSlider() {
@@ -91,7 +100,7 @@ export default function HeroSlider() {
             src={slide.image}
             alt={slide.alt}
             fill
-            className="object-cover"
+            className="object-cover object-center"
             priority={i === 0}
             sizes="100vw"
           />
@@ -100,13 +109,6 @@ export default function HeroSlider() {
 
           {/* Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
-            {/* Ver Video button */}
-            {/* <button className="mb-6 flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors group">
-              <span className="flex items-center justify-center w-10 h-10 rounded-full border border-white/40 group-hover:border-white group-hover:bg-white/10 transition-all duration-300">
-                <Play size={14} fill="currentColor" />
-              </span>
-              <span className="tracking-wider text-xs font-medium">Ver Video</span>
-            </button> */}
 
             {/* Logo from real image */}
             <img

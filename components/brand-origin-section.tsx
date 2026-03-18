@@ -42,7 +42,7 @@ export default function BrandOriginSection() {
             />
 
             <p className="mt-6 text-white/70 text-base md:text-lg leading-relaxed max-w-lg lg:mx-0 mx-auto">
-              Desde hace más de 60 años, <strong className="text-white font-semibold">Tender®</strong> es sinónimo de
+              Desde hace más de 70 años, <strong className="text-white font-semibold">Tender®</strong> es sinónimo de
               tendedero de calidad. Fuimos los primeros, y con el tiempo nuestro nombre se convirtió en la
               forma de llamar al producto en sí.
             </p>
@@ -56,7 +56,7 @@ export default function BrandOriginSection() {
             {/* Stats */}
             <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-8">
               <div>
-                <span className="block text-3xl md:text-4xl font-serif text-white font-bold">60+</span>
+                <span className="block text-3xl md:text-4xl font-serif text-white font-bold">70+</span>
                 <span className="text-xs text-white/50 uppercase tracking-widest mt-1 block">Años de historia</span>
               </div>
               <div
@@ -64,7 +64,7 @@ export default function BrandOriginSection() {
                 style={{ background: "linear-gradient(180deg, transparent, var(--tender-gold)/30, transparent)" }}
               />
               <div>
-                <span className="block text-3xl md:text-4xl font-serif text-white font-bold">60+</span>
+                <span className="block text-3xl md:text-4xl font-serif text-white font-bold">30+</span>
                 <span className="text-xs text-white/50 uppercase tracking-widest mt-1 block">Medidas disponibles</span>
               </div>
               <div

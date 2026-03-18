@@ -1,24 +1,24 @@
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//   typescript: {
-//     ignoreBuildErrors: true,
-//   },
-//   images: {
-//     unoptimized: true,
-//   },
-// }
-
-// export default nextConfig
-
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', 
-  images: {
-    unoptimized: true, // GitHub Pages no soporta optimización de imágenes dinámica
+  typescript: {
+    ignoreBuildErrors: true,
   },
-  basePath: '/web-tender', 
-  assetPrefix: '/web-tender',
-};
+  images: {
+    unoptimized: true,
+  },
+}
 
-export default nextConfig;
+export default nextConfig
+
+
+// /** @type {import('next').NextConfig} */
+// const nextConfig = {
+//   output: 'export', 
+//   images: {
+//     unoptimized: true, // GitHub Pages no soporta optimización de imágenes dinámica
+//   },
+//   basePath: '/web-tender', 
+//   assetPrefix: '/web-tender',
+// };
+
+// export default nextConfig;

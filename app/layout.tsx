@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import CartBubble from '@/components/cart-bubble'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -16,9 +17,9 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'Tender® - Tendederos Colgantes para el Hogar',
+  title: 'Tender®',
   description: 'Tender® ofrece tendederos colgantes de techo de alta calidad. Soluciones elegantes para lavar y secar ropa en cualquier espacio.',
-  generator: 'v0.app',
+  generator: 'tomas-primi',
   icons: {
     icon: [
       {
@@ -47,6 +48,7 @@ export default function RootLayout({
     <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans antialiased">
         {children}
+        {/* <CartBubble /> */}
         <Analytics />
       </body>
     </html>

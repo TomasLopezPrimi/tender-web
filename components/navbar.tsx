@@ -1,8 +1,10 @@
-"use client"
+"use client" // Es Client Component para manejar el estado del menú y usar el store de Zustand en el CartWidget
 
 import Link from "next/link"
 import { useState } from "react"
 import { ChevronDown, Menu, X } from "lucide-react"
+// Importamos el componente del carrito (asegurate de que la ruta sea correcta)
+import CartWidget from "./cart-widget"
 
 interface NavItem {
   label: string
@@ -13,12 +15,8 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: "INICIO", href: "/" },
-  { label: "TIENDA", href: "/#productos", 
-    // highlighted: true 
-  },
-  { label: "PRODUCTOS", href: "/#productos", 
-    // hasDropdown: true 
-  },
+  { label: "TIENDA", href: "/#productos" },
+  // { label: "PRODUCTOS", href: "/#productos" }, 
   { label: "SERVICIO TÉCNICO", href: "/servicio-tecnico" },
   { label: "ARQUITECTOS", href: "/arquitectos" },
   { label: "CONTACTO", href: "/#contacto" },
@@ -31,37 +29,59 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Row 1: Logo */}
-        <div className="flex items-center justify-center pt-3 pb-1">
-          <Link href="/" className="shrink-0" aria-label="Tender inicio">
-            <img
-              src="/images/logo-tender.svg"
-              alt="Tender®"
-              className="h-7 w-auto"
-              draggable={false}
-            />
-          </Link>
+      {/* --- ROW 1: Logo & Controles Móviles (Diseño Equilibrado) --- */}
+        <div className="flex items-center justify-between pt-3 pb-1">
+          
+          {/* IZQUIERDA: Pilar del Menú Hamburguesa */}
+          {/* El div se mantiene siempre para equilibrar, el botón se oculta en desktop */}
+          <div className="flex-1 flex justify-start">
+            <button
+              className="lg:hidden p-2 text-(--tender-navy) hover:text-(--tender-cyan) transition-colors"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
 
-          {/* Mobile toggle - absolute positioned */}
-          <button
-            className="lg:hidden absolute right-4 top-3 p-2 text-(--tender-navy) hover:text-(--tender-cyan) transition-colors"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          {/* CENTRO: Logo perfectamente centrado siempre */}
+          <div className="shrink-0 flex justify-center">
+            <Link href="/" aria-label="Tender inicio">
+              <img
+                src="/images/logo-tender.svg"
+                alt="Tender®"
+                className="h-7 w-auto"
+                draggable={false}
+              />
+            </Link>
+          </div>
+
+          {/* DERECHA: Pilar del Carrito Móvil */}
+          {/* El div se mantiene siempre, el CartWidget se oculta en desktop */}
+          <div className="flex-1 flex justify-end items-center pr-2">
+            <div className="lg:hidden">
+              <CartWidget />
+            </div>
+          </div>
         </div>
 
-        {/* Row 2: Navigation (Desktop) */}
+        {/* --- ROW 2: Navegación (Desktop only) --- */}
+        {/* Tal cual estaba, centrado abajo */}
         <nav className="hidden lg:flex items-center justify-center gap-1 pb-2.5" aria-label="Navegación principal">
           {navItems.map((item) => (
             <NavLink key={item.label} item={item} />
           ))}
+          
+          {/* Carrito ESCRITORIO (Se ve como un ítem más al lado de CONTACTO con separador) */}
+          <div className="flex items-center ml-2 pl-3 border-l border-border/50">
+            <CartWidget />
+          </div>
         </nav>
       </div>
 
-      {/* Mobile menu */}
+      {/* --- Menú Móvil (Drawer) --- */}
+      {/* Tu lógica original de menú móvil */}
       {mobileOpen && (
         <div className="lg:hidden border-t border-border bg-background animate-in slide-in-from-top duration-300" role="navigation" aria-label="Menú móvil">
           <div className="px-4 py-3 flex flex-col gap-1">
@@ -86,6 +106,7 @@ export default function Navbar() {
   )
 }
 
+// Componente Helper NavLink original
 function NavLink({ item }: { item: NavItem }) {
   return (
     <Link
