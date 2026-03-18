@@ -10,8 +10,23 @@ import Footer from "@/components/footer"
 import WhatsAppButton from "@/components/whatsapp-button"
 
 export default function HomePage() {
+
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://tender.com.ar",
+    "name": "Tender®",
+    "alternateName": ["Tender Tendederos", "Tender Argentina", "Tender Original"],
+    "description": "Sitio oficial de Tender®: Tendederos colgantes de techo y pared de alta resistencia."
+  };
+
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <Navbar />
       <main>
         {/* Hero con slider */}

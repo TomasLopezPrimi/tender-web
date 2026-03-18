@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-import CartBubble from '@/components/cart-bubble'
+// import CartBubble from '@/components/cart-bubble'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -21,21 +21,8 @@ export const metadata: Metadata = {
   description: 'Tender® ofrece tendederos colgantes de techo de alta calidad. Soluciones elegantes para lavar y secar ropa en cualquier espacio.',
   generator: 'tomas-primi',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: "/icon.png", 
+    apple: "/apple-icon.png", 
   },
 }
 

@@ -54,9 +54,9 @@ export interface ProductSize {
   export const products: Product[] = [
     {
       sku: "tender-col-8h",
-      title: "Tender Colgante 8H",
+      title: "Tender Colgante 8 hilos",
       categoryPath: ["Inicio", "Tendederos", "Colgantes", "Tender Colgante 8H"],
-      priceRange: "$727.375,00 - $792.610,00",
+      priceRange: "$727.375 - $792.610",
       description: "Tender Colgante de 8 Hilos: Es liviano y fácil de usar gracias a su estructura de aluminio y a su mecanismo de reducción de peso. Elija la medida más adecuada para su espacio disponible.",
       code: "TENDER-COL-8H",
       sizes: [
@@ -69,9 +69,9 @@ export interface ProductSize {
     },
     {
       sku: "tender-col-6h",
-      title: "Tender Colgante 6H",
+      title: "Tender Colgante 6 hilos",
       categoryPath: ["Inicio", "Tendederos", "Colgantes", "Tender Colgante 6H"],
-      priceRange: "$662.138,00 - $792.610,00",
+      priceRange: "$662.138 - $792.610",
       description: "Tender Colgante de 6 Hilos: Estructura liviana de aluminio con mecanismo de poleas. Ideal para aprovechar el espacio aéreo en balcones y lavaderos.",
       code: "TENDER-COL-6H",
       sizes: [
@@ -93,9 +93,9 @@ export interface ProductSize {
     },
     {
       sku: "tender-col-4h",
-      title: "Tender Colgante 4H",
+      title: "Tender Colgante 4 hilos",
       categoryPath: ["Inicio", "Tendederos", "Colgantes", "Tender Colgante 4H"],
-      priceRange: "$505.301,00 - $727.375,00",
+      priceRange: "$505.301 - $727.375",
       description: "Tender Colgante de 4 Hilos: La solución más compacta para techos, excelente para pasillos o espacios muy reducidos.",
       code: "TENDER-COL-4H",
       sizes: [
@@ -110,9 +110,9 @@ export interface ProductSize {
     },
     {
       sku: "tender-reb-6h",
-      title: "Tender Rebatible 6H",
+      title: "Tender Rebatible 6 hilos",
       categoryPath: ["Inicio", "Tendederos", "Rebatibles", "Tender Rebatible 6H"],
-      priceRange: "$662.138,00 - $727.375,00",
+      priceRange: "$662.138 - $727.375",
       description: "Tender de pared rebatible de 6 Hilos: Perfecto para espacios donde no se puede perforar el techo. Se pliega contra la pared cuando no está en uso.",
       code: "TENDER-REB-6H",
       sizes: [
@@ -130,9 +130,9 @@ export interface ProductSize {
     },
     {
       sku: "tender-reb-4h",
-      title: "Tender Rebatible 4H",
+      title: "Tender Rebatible 4 hilos",
       categoryPath: ["Inicio", "Tendederos", "Rebatibles", "Tender Rebatible 4H"],
-      priceRange: "$505.301,00",
+      priceRange: "$505.301",
       description: "Tender de pared rebatible de 4 Hilos: Nuestro modelo de pared más estrecho, optimizado para balcones pequeños y pasillos de servicio.",
       code: "TENDER-REB-4H",
       sizes: [

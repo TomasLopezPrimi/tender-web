@@ -4,11 +4,10 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { products, Product as BaseProduct } from "@/lib/products"
+import { UIProduct } from "@/types/types"
+import ProductCard from "./product-card"
 
-interface UIProduct extends BaseProduct {
-  badge?: string;
-  badgeColor?: string;
-}
+
 
 export default function ProductsSection() {
   const displayProducts: UIProduct[] = products.map(p => {
@@ -21,6 +20,7 @@ export default function ProductsSection() {
     return { ...p, ...uiProps };
   });
 
+  
   return (
     // Reduje el padding vertical (py-12 en vez de py-20) para que ocupe menos alto de pantalla
     <section id="productos" className="py-12 md:py-16 bg-background" aria-labelledby="products-heading">
@@ -69,44 +69,3 @@ export default function ProductsSection() {
   )
 }
 
-function ProductCard({ product }: { product: UIProduct }) {
-  return (
-    <Link
-      href={`/producto/${product.sku}`}
-      className="group flex flex-col h-full rounded-xl overflow-hidden shadow-sm border border-border bg-card hover:shadow-lg hover:-translate-y-1 transition-all duration-300 max-w-sm mx-auto w-full"
-    >
-      <div className="relative aspect-[4/3] overflow-hidden bg-[var(--tender-gray-bg)]">
-        <Image
-          src={product.images[0]}
-          alt={product.title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
-        {product.badge && (
-          <span className={`absolute top-3 left-3 ${product.badgeColor || "bg-[var(--tender-cyan)]"} text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wide z-10 shadow-sm`}>
-            {product.badge}
-          </span>
-        )}
-      </div>
-
-      {/* Padding reducido (p-4) y textos más compactos */}
-      <div className="p-4 text-center flex flex-col flex-grow justify-between">
-        <div>
-          <h3 className="text-sm md:text-base font-bold text-[var(--tender-navy)] leading-snug mb-1">
-            {product.title}
-          </h3>
-          <p className="text-xs md:text-sm text-[var(--tender-cyan)] font-semibold">
-            {product.priceRange}
-          </p>
-        </div>
-        
-        <div className="mt-3 pt-3 border-t border-gray-100">
-          <span className="inline-flex items-center justify-center gap-1.5 text-[var(--tender-navy-mid)] text-xs font-semibold group-hover:text-[var(--tender-cyan)] transition-colors duration-300">
-            Ver detalles <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-          </span>
-        </div>
-      </div>
-    </Link>
-  )
-}
