@@ -1,3 +1,5 @@
+
+
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import WhatsAppButton from "@/components/whatsapp-button"
@@ -6,6 +8,8 @@ import TechManuals from "@/components/tech-service/tech-manuals"
 // import TechVideoSection from "@/components/tech-service/tech-video-section"
 import TechContactSection from "@/components/tech-service/tech-contact-section"
 import TechIntegralService from "@/components/tech-service/tech-integral-service"
+import TensionSystem from "@/components/tech-service/tech-tension-system"
+import InstallationsAndShipping from "@/components/instalacion"
 
 export const metadata = {
   title: "Servicio Técnico | Tender®",
@@ -20,6 +24,8 @@ export default function ServicioTecnicoPage() {
         <TechServiceHero />
         <TechIntegralService />
         <TechManuals />
+        <InstallationsAndShipping />
+        <TensionSystem />
         <TechContactSection />
       </main>
       <Footer />
