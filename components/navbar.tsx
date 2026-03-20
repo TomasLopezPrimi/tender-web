@@ -18,6 +18,7 @@ const navItems: NavItem[] = [
   // { label: "TIENDA", href: "/#productos" },
   { label: "PRODUCTOS", href: "/productos" }, 
   { label: "SERVICIO TÉCNICO", href: "/servicio-tecnico" },
+  { label: "SHOWROOM", href: "/showroom" },
   { label: "ARQUITECTOS", href: "/arquitectos" },
   { label: "CONTACTO", href: "/#contacto" },
 ]
