@@ -36,7 +36,7 @@ export async function iniciarProcesoDePago(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Internal-Token": INTERNAL_API_KEY || "",
+        "X-Api-Key": INTERNAL_API_KEY || "",
       },
       body: JSON.stringify(checkoutData),
     });
