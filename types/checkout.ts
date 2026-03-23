@@ -15,6 +15,7 @@ export interface CheckoutRequest {
   customerNote?: string;
   client_id?: number | null;
   client_data?: ClientData | null;
+  payment_method: "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "EFECTIVO"
 }
 
 export interface CartItemReference {

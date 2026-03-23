@@ -12,9 +12,11 @@ const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY;
 
 export async function iniciarProcesoDePago(
   items: CartItemReference[],
+  paymentMethod: "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "EFECTIVO",
   clientId?: number,
   clientData?: ClientData,
-  customerNote?: string
+  customerNote?: string,
+
 ): Promise<CheckoutActionResponse> {
   
   if (!clientId && !clientData) {
@@ -30,6 +32,7 @@ export async function iniciarProcesoDePago(
       customerNote: customerNote ? customerNote : "Pedido desde la web" ,
       client_id: clientId,
       client_data: clientData,
+      payment_method: paymentMethod
     };
 
     const response = await fetch(`${BACKEND_URL}/orders/create`, {

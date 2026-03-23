@@ -53,17 +53,21 @@ export function useCheckout() {
         quantity: item.cantidad,
         selectedSize: item.medida
       }));
+    const paymentMethod = "TRANSFERENCIA"  // por ahora el único
+    const clientId = undefined // por ahora no contamos con id de cliente, a futuro podría estar si hacemos login
+
 
       const response = await iniciarProcesoDePago(
         itemsParaBackend,
-        undefined, 
+        paymentMethod, 
+        clientId, 
         clientForm
       );
 
       if (response.success && response.instruction) {
         if (response.instruction.type === 'EXTERNAL_REDIRECT') {
           window.open(response.instruction.payload.url, '_blank');
-          clearCart(); // Solo limpiamos si todo salió bien
+          clearCart(); 
           router.push('/gracias');
         }
       } else {
