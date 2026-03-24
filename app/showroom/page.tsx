@@ -57,7 +57,7 @@ export default function ShowroomPage() {
               Showroom <span className="text-[var(--tender-cyan)]">Virtual</span> & AR
             </h1>
             <p className="mt-3 text-gray-300 max-w-2xl text-base md:text-lg">
-              Interactuá con nuestros sistemas de secado. Rotá, hacé zoom y proyectalos en escala 1:1 real en tu lavadero o balcón usando Realidad Aumentada.
+              Interactuá con nuestros sistemas de secado. Rotá, hacé zoom y proyectalos en escala 1:1 real en tu lavadero o balcón usando proyectores de Realidad Aumentada.
             </p>
           </div>
 
@@ -121,14 +121,14 @@ export default function ShowroomPage() {
                     </div>
                   )}
                   <p className="text-xs text-center text-gray-400 mt-3 flex items-center justify-center gap-1">
-                    <SmartphoneNfc className="w-3 h-3" /> No requiere descargar apps
+                    <SmartphoneNfc className="w-3 h-3" /> Requiere un visualizador de Realidad Aumentada
                   </p>
                 </div>
 
                 {/* 2. Vista para Mobile (Instrucciones directas, oculta el QR) */}
                 <div className="block lg:hidden mt-3">
                   <p className="text-sm text-gray-300 mb-4">
-                    Estás en tu celular, ¡listo para la experiencia! Seguí estos pasos:
+                    Seguí estos pasos:
                   </p>
                   <ol className="space-y-3 text-sm text-gray-300">
                     <li className="flex gap-3">
@@ -141,6 +141,10 @@ export default function ShowroomPage() {
                     </li>
                     <li className="flex gap-3">
                       <span className="bg-[var(--tender-cyan)]/20 text-[var(--tender-cyan)] w-6 h-6 rounded-full flex items-center justify-center shrink-0 font-bold text-xs">3</span>
+                      <span>Equipate con tu <strong>Cardboard</strong> </span>
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="bg-[var(--tender-cyan)]/20 text-[var(--tender-cyan)] w-6 h-6 rounded-full flex items-center justify-center shrink-0 font-bold text-xs">4</span>
                       <span>Apuntá al techo o pared para proyectarlo.</span>
                     </li>
                   </ol>
