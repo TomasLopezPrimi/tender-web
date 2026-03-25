@@ -1,15 +1,14 @@
 "use client"
 
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
-import { products, Product as BaseProduct } from "@/lib/products"
-import { UIProduct } from "@/types/types"
+import { products} from "@/lib/products"
+import { UIProduct } from "@/types/products"
 import ProductCard from "./product-card"
 
+interface ProductsSectionProps {
+  needTitle: boolean
+}
 
-
-export default function ProductsSection() {
+export default function ProductsSection({needTitle}: ProductsSectionProps) {
   const displayProducts: UIProduct[] = products.map(p => {
     let uiProps = {};
     if (p.sku === "tender-col-6h") {
@@ -22,21 +21,23 @@ export default function ProductsSection() {
 
   
   return (
-    // Reduje el padding vertical (py-12 en vez de py-20) para que ocupe menos alto de pantalla
     <section id="productos" className="py-12 md:py-16 bg-background" aria-labelledby="products-heading">
-      {/* Contenedor más angosto (max-w-5xl) para achicar todas las tarjetas proporcionalmente */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center mb-10">
-          <h2
-            id="products-heading"
-            className="text-2xl md:text-3xl lg:text-4xl font-serif text-[var(--tender-text-dark)] tracking-wide text-balance"
-          >
-            Productos Destacados{" "}
-            <span className="text-[var(--tender-navy)]">Tender</span>
-            <sup className="text-base align-super">®</sup>
-          </h2>
-          <div className="gold-line mt-3" />
+          {needTitle && (
+            <>
+              <h2
+                id="products-heading"
+                className="text-2xl md:text-3xl lg:text-4xl font-serif text-[var(--tender-text-dark)] tracking-wide text-balance"
+              >
+                Productos Destacados{" "}
+                <span className="text-[var(--tender-navy)]">Tender</span>
+                <sup className="text-base align-super">®</sup>
+              </h2>
+              <div className="gold-line mt-3" />
+            </>
+          )}
           <p className="mt-3 text-[var(--tender-text-muted)] text-sm md:text-base">
             Seleccioná el que más se adapta a tus necesidades.
           </p>

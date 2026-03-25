@@ -1,90 +1,90 @@
-import { UIProduct } from "@/types/types";
+import { UIProduct } from "@/types/products";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link"
 
 export default function ProductCard({ product }: { product: UIProduct }) {
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://tender.com.ar/#organization",
-        "name": "Tender®",
-        "url": "https://tender.com.ar",
-        "logo": "https://tender.com.ar/icon.png",
-        "image": "https://tender.com.ar/icon.png",
-        "description": "Fabricantes líderes de tenders de techo y soluciones de secado de ropa en Argentina.",
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "telephone": "+54-911-3187-6811",
-          "contactType": "sales",
-          "areaServed": "AR",
-          "availableLanguage": "Spanish"
-        }
-      },
-      {
-        "@type": "Product",
-        "@id": `https://tender.com.ar/producto/${product.sku}/#product`,
-        "name": product.title,
-        "image": product.images.map(img => `https://tender.com.ar${img}`),
-        "description": product.description,
-        "sku": product.sku,
-        "mpn": product.sku,
-        "brand": {
-          "@type": "Brand",
-          "name": "Tender®"
-        },
-        "offers": {
-          "@type": "AggregateOffer",
-          "url": `https://tender.com.ar/producto/${product.sku}`,
-          "priceCurrency": "ARS",
-          "lowPrice": Math.min(...product.sizes.map(s => s.price)),
-          "highPrice": Math.max(...product.sizes.map(s => s.price)),
-          "offerCount": product.sizes.length,
-          "availability": "https://schema.org/InStock",
-          "itemCondition": "https://schema.org/NewCondition",
-          "priceValidUntil": "2026-12-31"
-        },
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": `https://tender.com.ar/producto/${product.sku}`
-        }
-      },
+  // const jsonLd = {
+  //   "@context": "https://schema.org",
+  //   "@graph": [
+  //     {
+  //       "@type": "Organization",
+  //       "@id": "https://tender.com.ar/#organization",
+  //       "name": "Tender®",
+  //       "url": "https://tender.com.ar",
+  //       "logo": "https://tender.com.ar/icon.png",
+  //       "image": "https://tender.com.ar/icon.png",
+  //       "description": "Fabricantes líderes de tenders de techo y soluciones de secado de ropa en Argentina.",
+  //       "contactPoint": {
+  //         "@type": "ContactPoint",
+  //         "telephone": "+54-911-3187-6811",
+  //         "contactType": "sales",
+  //         "areaServed": "AR",
+  //         "availableLanguage": "Spanish"
+  //       }
+  //     },
+  //     {
+  //       "@type": "Product",
+  //       "@id": `https://tender.com.ar/producto/${product.sku}/#product`,
+  //       "name": product.title,
+  //       "image": product.images.map(img => `https://tender.com.ar${img}`),
+  //       "description": product.description,
+  //       "sku": product.sku,
+  //       "mpn": product.sku,
+  //       "brand": {
+  //         "@type": "Brand",
+  //         "name": "Tender®"
+  //       },
+  //       "offers": {
+  //         "@type": "AggregateOffer",
+  //         "url": `https://tender.com.ar/producto/${product.sku}`,
+  //         "priceCurrency": "ARS",
+  //         "lowPrice": Math.min(...product.sizes.map(s => s.price)),
+  //         "highPrice": Math.max(...product.sizes.map(s => s.price)),
+  //         "offerCount": product.sizes.length,
+  //         "availability": "https://schema.org/InStock",
+  //         "itemCondition": "https://schema.org/NewCondition",
+  //         "priceValidUntil": "2026-12-31"
+  //       },
+  //       "mainEntityOfPage": {
+  //         "@type": "WebPage",
+  //         "@id": `https://tender.com.ar/producto/${product.sku}`
+  //       }
+  //     },
 
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Inicio",
-            "item": "https://tender.com.ar"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": product.categoryPath[0],
-            "item": `https://tender.com.ar/categoria/${product.categoryPath[0].toLowerCase()}`
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": product.title,
-            "item": `https://tender.com.ar/producto/${product.sku}`
-          }
-        ]
-      }
-    ]
-  };
+  //     {
+  //       "@type": "BreadcrumbList",
+  //       "itemListElement": [
+  //         {
+  //           "@type": "ListItem",
+  //           "position": 1,
+  //           "name": "Inicio",
+  //           "item": "https://tender.com.ar"
+  //         },
+  //         {
+  //           "@type": "ListItem",
+  //           "position": 2,
+  //           "name": product.categoryPath[0],
+  //           "item": `https://tender.com.ar/categoria/${product.categoryPath[0].toLowerCase()}`
+  //         },
+  //         {
+  //           "@type": "ListItem",
+  //           "position": 3,
+  //           "name": product.title,
+  //           "item": `https://tender.com.ar/producto/${product.sku}`
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // };
 
   return (
     <>
-      <script
+      {/* <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      /> */}
 
       <Link
         href={`/producto/${product.sku}`}

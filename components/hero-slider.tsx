@@ -12,6 +12,7 @@ interface Slide {
   subtitle: string
   cta?: string
   ctaHref?: string
+  imagePosition?: string
 }
 
 const slides: Slide[] = [
@@ -23,6 +24,7 @@ const slides: Slide[] = [
     subtitle: "Más de 60 medidas disponibles. Encontrá la solución perfecta para tu hogar.",
     cta: "VER PRODUCTOS",
     ctaHref: "#productos",
+    imagePosition: "object-[25%_center] md:object-center",
   },
   {
     id: 2,
@@ -33,15 +35,15 @@ const slides: Slide[] = [
     cta: "VER PRODUCTOS",
     ctaHref: "#productos",
   },
-  {
-    id: 3,
-    image: "/images/espacio-balcon.jpg",
-    alt: "Casa premium con Tender instalado",
-    title: "Diseño que eleva tu hogar",
-    subtitle: "Calidad, elegancia y funcionalidad para los hogares más exigentes. La marca que define la categoría.",
-    cta: "CONOCÉ MÁS",
-    ctaHref: "#espacios",
-  },
+  // {
+  //   id: 3,
+  //   image: "/images/espacio-balcon.jpg",
+  //   alt: "Casa premium con Tender instalado",
+  //   title: "Diseño que eleva tu hogar",
+  //   subtitle: "Calidad, elegancia y funcionalidad para los hogares más exigentes. La marca que define la categoría.",
+  //   cta: "CONOCÉ MÁS",
+  //   ctaHref: "#espacios",
+  // },
   // {
   //   id: 4,
   //   image: "/images/espacio-lavadero.jpg",
@@ -82,12 +84,10 @@ export default function HeroSlider() {
 
   return (
     <section
-      // CAMBIO 1: Altura dinámica basada en la pantalla (85vh) con un mínimo para móviles
       className="relative w-full overflow-hidden bg-[var(--tender-navy)] h-[85vh] min-h-[600px] 2xl:max-h-[900px]"
       aria-label="Carrusel de productos destacados"
       aria-roledescription="carousel"
     >
-      {/* Slides */}
       {slides.map((slide, i) => (
         <div
           key={slide.id}
@@ -100,21 +100,22 @@ export default function HeroSlider() {
             src={slide.image}
             alt={slide.alt}
             fill
-            className="object-cover object-center"
+            className={`object-cover ${slide.imagePosition || "object-center"}`}
             priority={i === 0}
             sizes="100vw"
           />
           
           {/* CAMBIO 2: Gradiente ajustado. Transparente arriba, oscuro abajo para el texto */}
-          <div className="absolute inset-0 bg-gradient-to-t from-(--tender-navy)/95 via-(--tender-navy)/30 to-transparent" />
-
+          {/* <div className="absolute inset-0 bg-gradient-to-t from-(--tender-navy)/95 via-(--tender-navy)/30 to-transparent" /> */}
+          {/* <div className="absolute inset-0 bg-gradient-to-t from-(--tender-navy)/80 to-transparent" /> */}
+          <div className="absolute inset-0 bg-gradient-to-t from-(--tender-navy)/90 from-10% via-(--tender-navy)/0 via-60% to-transparent" />
           {/* CAMBIO 3: Contenido empujado hacia abajo (justify-end) y con padding inferior (pb-32) */}
           <div className="absolute inset-0 flex flex-col items-center justify-end text-center pb-28 md:pb-36 px-6 z-10">
 
             <img
               src="/images/logo-tender.svg"
               alt="Tender®"
-              className="h-10 md:h-14 w-auto select-none mb-4"
+              className="hidden md:block md:h-14 w-auto select-none mb-4"
               style={{ filter: "brightness(0) invert(1)" }}
               draggable={false}
             />

@@ -1,7 +1,7 @@
 // components/carrito/CartItemCard.tsx
 import { Trash2 } from "lucide-react";
 import { getProductBySku } from "@/lib/products";
-import { CartItem } from "@/types/types";
+import { CartItem } from "@/types/products";
 
 interface CartItemCardProps {
   item: CartItem;
