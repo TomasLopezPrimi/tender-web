@@ -3,12 +3,35 @@ import { Phone, Mail, MapPin, Clock, Instagram, Facebook, Youtube, Linkedin } fr
 export default function Footer() {
   return (
     <footer className="bg-[var(--tender-navy-mid)] text-white" aria-label="Pie de página">
-      {/* Main footer */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Tender",
+            "alternateName": "Tender Original",
+            "url": "https://www.tender.com.ar",
+            "logo": "https://www.tender.com.ar/images/logo-tender.svg",
+            "description": "Sitio oficial de Tender® en Argentina. Venta de sistemas de secado de ropa originales con envío a todo el país.",
+            "sameAs": [
+              "https://www.facebook.com/tenderoriginal/",
+              "https://www.instagram.com/tenderargentina/",
+              "https://www.youtube.com/@tender8687"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+54-11-5151-7715",
+              "contactType": "sales",
+              "areaServed": "AR",
+              "availableLanguage": "Spanish"
+            }
+          }),
+        }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Left column */}
           <div>
-            {/* Real logo image */}
             <img
               src="/images/logo-tender.svg"
               alt="Tender®"
@@ -16,10 +39,17 @@ export default function Footer() {
               style={{ filter: "brightness(0) invert(1)" }}
               draggable={false}
             />
+            <div className="mt-6 max-w-xs">
+              <p className="text-sm text-white/70 leading-relaxed">
+                <strong className="text-white">Tender® Original Argentina.</strong> 
+                {/* Líderes en sistemas de secado de ropa. 
+                Calidad garantizada y durabilidad oficial para cada hogar del país. */}
+              </p>
+            </div>
             <div className="mt-6 space-y-4">
               <div className="flex items-start gap-3 text-sm text-white/80">
                 <Clock size={16} className="mt-0.5 flex-shrink-0 text-[var(--tender-cyan)]" aria-hidden="true" />
-                <span>Showroom de lun a vie de 9 a 17 h</span>
+                <span>Showroom presencial de lun a vie de 9 a 17 h</span>
               </div>
               <div className="flex items-start gap-3 text-sm text-white/80">
                 <MapPin size={16} className="mt-0.5 flex-shrink-0 text-[var(--tender-cyan)]" aria-hidden="true" />
@@ -34,18 +64,19 @@ export default function Footer() {
               </a>
             </div>
 
-            {/* Social */}
             <div className="mt-6 flex gap-3">
               {[
-                { icon: <Instagram size={18} />, label: "Instagram", href: "#instagram" },
-                { icon: <Facebook size={18} />, label: "Facebook", href: "#facebook" },
-                { icon: <Youtube size={18} />, label: "YouTube", href: "#youtube" },
-                { icon: <Linkedin size={18} />, label: "LinkedIn", href: "#linkedin" },
+                { icon: <Instagram size={18} />, label: "Instagram", href: "https://www.instagram.com/tenderargentina/" },
+                { icon: <Facebook size={18} />, label: "Facebook", href: "https://www.facebook.com/tenderoriginal/" },
+                { icon: <Youtube size={18} />, label: "YouTube", href: "https://www.youtube.com/@tender8687" },
+                // { icon: <Linkedin size={18} />, label: "LinkedIn", href: "#linkedin" },
               ].map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="p-2.5 rounded-full bg-white/10 hover:bg-[var(--tender-cyan)] transition-all duration-300"
                 >
                   {social.icon}
@@ -54,7 +85,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Right column - Phone numbers */}
           <div className="md:text-right">
             <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--tender-cyan)] mb-4">
               Teléfonos
@@ -68,6 +98,7 @@ export default function Footer() {
                 <a
                   key={phone.label}
                   href={phone.href}
+                  
                   className="flex items-center gap-2 md:justify-end text-sm text-white/80 hover:text-white transition-colors"
                 >
                   <Phone size={14} className="text-[var(--tender-cyan)]" aria-hidden="true" />
@@ -79,17 +110,26 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="border-t border-white/10 bg-[var(--tender-navy)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-white/50 text-xs">
-            &copy; {new Date().getFullYear()} Tender Argentina. Todos los derechos reservados.
-          </p>
+        <p className="text-white/50 text-xs">
+          &copy; {new Date().getFullYear()} Tender Argentina. Todos los derechos reservados.
+          <span className="mx-2 opacity-30">|</span>
+          <span className="opacity-70">Desarrollado por </span>
+          <a 
+            href="https://www.linkedin.com/in/tomaslopezprimi/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="hover:text-[var(--tender-cyan)] transition-colors"
+          >
+            Tomás López Primi
+          </a>
+        </p>
           <div className="flex gap-4">
-            <a href="#terminos" className="text-white/50 hover:text-white/80 text-xs transition-colors">
+            <a href="https://www.tender.com.ar/terminos-y-condiciones/" className="text-white/50 hover:text-white/80 text-xs transition-colors">
               Términos y condiciones
             </a>
-            <a href="#privacidad" className="text-white/50 hover:text-white/80 text-xs transition-colors">
+            <a href="https://www.tender.com.ar/politica-de-privacidad/" className="text-white/50 hover:text-white/80 text-xs transition-colors">
               Políticas de privacidad
             </a>
           </div>

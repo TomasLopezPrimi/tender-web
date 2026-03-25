@@ -32,10 +32,13 @@ export function useCheckout() {
     if (!clientForm.dni.trim() || clientForm.dni.length < 7) return "Por favor ingresá un DNI válido.";
     if (!clientForm.email.trim() || !/^\S+@\S+\.\S+$/.test(clientForm.email)) return "Por favor ingresá un email válido.";
     if (!clientForm.phone.trim() || clientForm.phone.length < 6) return "Por favor ingresá un número de teléfono válido.";
-    return null;
+    return null; 
   };
 
-  const handleCheckout = async () => {
+  type PaymentMethod = "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "EFECTIVO";
+
+  
+  const handleCheckout = async (paymentMethod: PaymentMethod = "TRANSFERENCIA") => {
     if (items.length === 0) return;
     
     const validationError = validateForm();
@@ -53,9 +56,8 @@ export function useCheckout() {
         quantity: item.cantidad,
         selectedSize: item.medida
       }));
-    const paymentMethod = "TRANSFERENCIA"  // por ahora el único
-    const clientId = undefined // por ahora no contamos con id de cliente, a futuro podría estar si hacemos login
-
+      
+      const clientId = undefined; // por ahora no contamos con id de cliente
 
       const response = await iniciarProcesoDePago(
         itemsParaBackend,
@@ -64,10 +66,15 @@ export function useCheckout() {
         clientForm
       );
 
-      if (response.success && response.instruction) {
-        if (response.instruction.type === 'EXTERNAL_REDIRECT') {
+      if (response.success) {
+        if (response.instruction?.type === 'EXTERNAL_REDIRECT') {
           window.open(response.instruction.payload.url, '_blank');
           clearCart(); 
+          router.push('/gracias');
+        } 
+        // 3. Manejo de Getnet u otros (El pago fue exitoso sin salir de la app)
+        else {
+          clearCart();
           router.push('/gracias');
         }
       } else {
@@ -86,7 +93,9 @@ export function useCheckout() {
   return {
     clientForm,
     formError,
+    setFormError,
     isProcessing,
+    validateForm,
     handleInputChange,
     handleCheckout
   };

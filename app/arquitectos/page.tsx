@@ -35,23 +35,16 @@ export default function ArquitectosPage() {
       
       <Navbar />
       
-      <main className="min-h-screen bg-background"
-      // pt-16 md:pt-20"
-      >
+      <main className="min-h-screen bg-background">
         
         <HeroArquitectos />
         
         <BeneficiosArquitectos />
-        
-        {/* Enlace elegante hacia la nueva experiencia 3D */}
+    
         <CtaShowroomArquitectos />
-        
-        {/* Reemplazamos "Descarga la App" por archivos útiles para el profesional */}
-        {/* <DescargaLibreriasCadBim /> */}
         
         <RazonesElegirnos />
         
-        {/* Formulario de cotización corporativa */}
         <div id="consultas">
           <ContactSection />
         </div>
