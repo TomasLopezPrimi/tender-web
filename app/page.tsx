@@ -44,10 +44,6 @@ export default function HomePage() {
         {/* ¿Sabías que se llaman "tender" por nosotros? */}
         <BrandOriginSection />
 
-        {/* Servicios (Garantía, Técnico, Arquitectos, Distribuidores) */}
-        {/* <ServicesSection /> */}
-
-        {/* Formulario de Contacto */}
         <ContactSection />
       </main>
       <Footer />

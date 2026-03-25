@@ -1,4 +1,4 @@
-import Image from "next/image"
+// import Image from "next/image"
 
 export default function BrandOriginSection() {
   return (
@@ -15,9 +15,7 @@ export default function BrandOriginSection() {
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left - Text content */}
           <div className="text-center lg:text-left">
-            {/* Badge */}
             <span className="inline-block px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] border border-[var(--tender-gold)]/40 text-[var(--tender-gold)] mb-8">
               La Marca Original
             </span>
@@ -64,7 +62,7 @@ export default function BrandOriginSection() {
                 style={{ background: "linear-gradient(180deg, transparent, var(--tender-gold)/30, transparent)" }}
               />
               <div>
-                <span className="block text-3xl md:text-4xl font-serif text-white font-bold">30+</span>
+                <span className="block text-3xl md:text-4xl font-serif text-white font-bold">60+</span>
                 <span className="text-xs text-white/50 uppercase tracking-widest mt-1 block">Medidas disponibles</span>
               </div>
               <div
