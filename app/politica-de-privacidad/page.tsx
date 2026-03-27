@@ -1,12 +1,5 @@
-import Footer from '@/components/footer';
-import Navbar from '@/components/navbar';
-import WhatsAppButton from '@/components/whatsapp-button';
-
-
 export default function PrivacyPolicyPage() {
   return (
-    <>
-      <Navbar />
     <main className="max-w-4xl mx-auto px-6 py-12 text-gray-800">
       <h1 className="text-3xl font-bold mb-8 text-center uppercase">
         Política de Privacidad
@@ -66,8 +59,5 @@ export default function PrivacyPolicyPage() {
         </p>
       </div>
     </main>
-      <Footer />
-      <WhatsAppButton />
-    </>
   );
 }

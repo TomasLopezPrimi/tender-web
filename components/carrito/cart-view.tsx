@@ -27,7 +27,6 @@ const formatPrice = (price: number) => {
 export default function CartView() {
   const [isMounted, setIsMounted] = useState(false);
   
-  // Estados para manejar el flujo multi-pago
   const [paymentMethod, setPaymentMethod] = useState("transferencia");
   const [showGetnetModal, setShowGetnetModal] = useState(false);
 
@@ -35,7 +34,6 @@ export default function CartView() {
   const removeItem = useCartStore((state) => state.removeItem);
   const updateItemSize = useCartStore((state) => state.updateItemSize);
 
-  // Extraemos las nuevas funciones del useCheckout actualizado
   const { 
     clientForm, 
     formError,
@@ -53,9 +51,7 @@ export default function CartView() {
     setIsMounted(true);
   }, []);
 
-  // Función interceptora para el botón "Pagar"
   const handleInitiateCheckout = () => {
-    // 1. Validamos que el form esté completo antes de avanzar
     const error = validateForm();
     if (error) {
       setFormError(error);
@@ -63,7 +59,6 @@ export default function CartView() {
       return;
     }
 
-    // 2. Si todo está bien, derivamos el flujo según el método
     if (paymentMethod === "getnet") {
       setShowGetnetModal(true);
     } else {
@@ -126,7 +121,6 @@ export default function CartView() {
               totalItems={totalItems}
               totalPrice={totalPrice}
               isProcessing={isProcessing}
-              // Le pasamos la función interceptora y el método elegido
               onCheckout={handleInitiateCheckout}
               selectedPaymentMethod={paymentMethod}
               formatPrice={formatPrice}

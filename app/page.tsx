@@ -1,12 +1,9 @@
-import Navbar from "@/components/navbar"
 import HeroSlider from "@/components/hero-slider"
 import ProductsSection from "@/components/products-section"
 import SpacesSection from "@/components/spaces-section"
 import TestimonialsSection from "@/components/testimonials-section"
 import ContactSection from "@/components/contact-section"
 import BrandOriginSection from "@/components/brand-origin-section"
-import Footer from "@/components/footer"
-import WhatsAppButton from "@/components/whatsapp-button"
 
 export default function HomePage() {
 
@@ -26,7 +23,6 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
-      <Navbar />
       <main>
         <HeroSlider />
         <ProductsSection needTitle={true}/>
@@ -35,8 +31,6 @@ export default function HomePage() {
         <BrandOriginSection />
         <ContactSection />
       </main>
-      <Footer />
-      <WhatsAppButton />
     </>
   )
 }

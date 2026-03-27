@@ -1,15 +1,8 @@
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
-import WhatsAppButton from "@/components/whatsapp-button"
-
-// Reutilizamos el de contacto global
 import ContactSection from "@/components/contact-section"
 
-// Componentes específicos de Arquitectos
 import HeroArquitectos from "@/components/arquitectos/hero-arquitectos"
 import BeneficiosArquitectos from "@/components/arquitectos/beneficios-arquitectos"
 import CtaShowroomArquitectos from "@/components/arquitectos/cta-showroom-arquitectos"
-// import DescargaLibreriasCadBim from "@/components/arquitectos/descarga-librerias-cad-bim"
 import RazonesElegirnos from "@/components/arquitectos/razones-elegirnos"
 
 export const metadata = {
@@ -33,8 +26,6 @@ export default function ArquitectosPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }}
       />
       
-      <Navbar />
-      
       <main className="min-h-screen bg-background">
         
         <HeroArquitectos />
@@ -50,9 +41,6 @@ export default function ArquitectosPage() {
         </div>
 
       </main>
-
-      <Footer />
-      <WhatsAppButton />
     </>
   )
 }

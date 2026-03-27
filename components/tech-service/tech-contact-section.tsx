@@ -1,9 +1,10 @@
 // components/tech-service/tech-contact-section.tsx
+import { config } from "@/config"
 import { ShieldCheck, CheckCircle2, Award, Headset } from "lucide-react"
 
 export default function TechContactSection() {
   return (
-    <section className="py-20 md:py-32 bg-(--tender-gray-bg)">
+    <section className="py-20 md:py-32 bg-(--tender-gray-bg)" id="contacto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
@@ -62,7 +63,7 @@ export default function TechContactSection() {
               
               {/* Botón WhatsApp (Con SVG Oficial) */}
               <a 
-                href="https://wa.me/54911..." 
+                href="https://api.whatsapp.com/send/?phone=5491131876811"  
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-5 p-5 bg-white rounded-2xl border border-border/50 hover:border-[#25D366] hover:shadow-xl hover:shadow-[#25D366]/10 transition-all duration-300 group hover:-translate-y-1"
@@ -75,7 +76,7 @@ export default function TechContactSection() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 font-bold tracking-wider mb-1">WHATSAPP TÉCNICO</p>
-                  <p className="text-(--tender-navy) font-semibold text-lg">+54 9 11 0000-0000</p>
+                  <p className="text-(--tender-navy) font-semibold text-lg">{config.whatsappNumber}</p>
                 </div>
               </a>
 
@@ -89,7 +90,7 @@ export default function TechContactSection() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 font-bold tracking-wider mb-1">SOPORTE POR EMAIL</p>
-                  <p className="text-(--tender-navy) font-semibold text-lg">service@tender.com.ar</p>
+                  <p className="text-(--tender-navy) font-semibold text-lg">{config.emailVentas}</p>
                 </div>
               </a>
               

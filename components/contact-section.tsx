@@ -14,10 +14,8 @@ export default function ContactSection() {
     captcha: "",
   })
 
-  // Referencia al formulario para poder usar la validación nativa del navegador
   const formRef = useRef<HTMLFormElement>(null)
 
-  // Teléfono destino para WhatsApp (usé uno de los que figuran en la lista)
   const WHATSAPP_NUMBER = "5491131876811" 
 
   const handleSubmit = (e: React.FormEvent) => {
