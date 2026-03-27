@@ -3,20 +3,33 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation" 
 import { useState } from "react"
-import { ChevronDown, Layers,  Menu, X } from "lucide-react"
-import CartWidget from "./cart-widget"
+import {  Layers, X, ChevronDown } from "lucide-react"
+import CartWidget from "../cart-widget"
+import NavLink from "./nav-link"
 
-interface NavItem {
+export interface NavItem {
   label: string
   href: string
   highlighted?: boolean
   hasDropdown?: boolean
+  subItems?: { label: string; href: string }[]
 }
 
 const navItems: NavItem[] = [
   { label: "INICIO", href: "/" },
   { label: "TIENDA", href: "/tienda" },
-  { label: "PRODUCTOS", href: "/productos" }, 
+  { 
+    label: "PRODUCTOS", 
+    href: "/productos",
+    hasDropdown: true,
+    subItems: [
+      { label: "Colgante 8 hilos", href: "/producto/tender-col-8h" },
+      { label: "Colgante 6 hilos", href: "/producto/tender-col-6h" },
+      { label: "Colgante 4 hilos", href: "/producto/tender-col-4h" },
+      { label: "Rebatible 6 hilos", href: "/producto/tender-reb-6h" },
+      { label: "Rebatible 4 hilos", href: "/producto/tender-reb-4h" },
+    ]
+  }, 
   { label: "SERVICIO TÉCNICO", href: "/servicio-tecnico" },
   { label: "SHOWROOM", href: "/showroom" },
   { label: "ARQUITECTOS", href: "/arquitectos" },
@@ -25,6 +38,7 @@ const navItems: NavItem[] = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
   const pathname = usePathname() 
 
   return (
@@ -47,7 +61,7 @@ export default function Navbar() {
 
             {/* Logo para versión móvil (más pequeño y pegado al menú) */}
             <div className="lg:hidden">
-              <Link href="/" aria-label="Tender inicio">
+              <Link href="/" aria-label="Tender inicio" onClick={() => setMobileOpen(false)}>
                 <img
                   src="/images/logo-tender.svg"
                   alt="Tender®"
@@ -99,20 +113,61 @@ export default function Navbar() {
                 : pathname.startsWith(item.href)
 
               return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`px-3 py-2 rounded text-sm font-semibold tracking-wide transition-colors ${
-                    item.highlighted
-                      ? "bg-(--tender-cyan) text-white text-center"
-                      : isActive
-                      ? "text-(--tender-cyan) bg-muted/50" 
-                      : "text-(--tender-navy) hover:bg-muted"
-                  }`}
-                >
-                  {item.label}
-                </Link>
+                <div key={item.label} className="flex flex-col">
+                  <div className="flex items-center">
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex-1 px-3 py-2 rounded text-sm font-semibold tracking-wide transition-colors ${
+                        item.highlighted
+                          ? "bg-(--tender-cyan) text-white text-center"
+                          : isActive
+                          ? "text-(--tender-cyan) bg-muted/50" 
+                          : "text-(--tender-navy) hover:bg-muted"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                    
+                    {item.hasDropdown && (
+                      <button
+                        className="p-2 ml-1 text-(--tender-navy) hover:text-(--tender-cyan) transition-colors rounded hover:bg-muted"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setOpenSubmenu(openSubmenu === item.label ? null : item.label);
+                        }}
+                        aria-expanded={openSubmenu === item.label}
+                        aria-label={`Desplegar submenú de ${item.label}`}
+                      >
+                        <ChevronDown 
+                          size={18} 
+                          className={`transition-transform duration-200 ${
+                            openSubmenu === item.label ? "rotate-180" : ""
+                          }`} 
+                        />
+                      </button>
+                    )}
+                  </div>
+                  
+                  {item.hasDropdown && item.subItems && (
+                    <div 
+                      className={`flex flex-col gap-1 pl-6 pr-3 overflow-hidden transition-all duration-300 ${
+                        openSubmenu === item.label ? "max-h-60 py-1 bg-muted/20 border-l-2 border-(--tender-cyan) ml-3 mt-1 mb-2 rounded-r opacity-100" : "max-h-0 opacity-0 m-0"
+                      }`}
+                    >
+                      {item.subItems.map((sub) => (
+                        <Link
+                          key={sub.href}
+                          href={sub.href}
+                          onClick={() => setMobileOpen(false)}
+                          className="py-1.5 text-sm font-medium text-(--tender-text-dark) hover:text-(--tender-cyan) transition-colors"
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )
             })}
           </div>
@@ -122,36 +177,3 @@ export default function Navbar() {
   )
 }
 
-function NavLink({ item }: { item: NavItem }) {
-  const pathname = usePathname() 
-  
-  const isActive = item.href === "/" 
-    ? pathname === "/" 
-    : pathname.startsWith(item.href)
-
-  return (
-    <Link
-      href={item.href}
-      className={`group relative flex items-center gap-1 px-3 py-1.5 text-xs font-semibold tracking-wider transition-colors rounded ${
-        item.highlighted
-          ? "bg-(--tender-cyan) text-white hover:bg-(--tender-cyan)/90"
-          : isActive
-          ? "text-(--tender-cyan)" 
-          : "text-(--tender-text-dark) hover:text-(--tender-cyan)"
-      }`}
-    >
-      {item.label}
-      {item.hasDropdown && (
-        <ChevronDown size={13} className="opacity-70" aria-hidden="true" />
-      )}
-      
-      {!item.highlighted && (
-        <span 
-          className={`absolute -bottom-1 left-0 h-[2px] bg-(--tender-cyan) transition-all duration-300 ${
-            isActive ? "w-full" : "w-0 group-hover:w-full"
-          }`}
-        />
-      )}
-    </Link>
-  )
-}

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
-import WhatsAppButton from '@/components/whatsapp-button'
-import Footer from '@/components/footer'
-import Navbar from '@/components/navbar'
+import WhatsAppButton from '@/components/layout/whatsapp-button'
+import Footer from '@/components/layout/footer'
+import Navbar from '@/components/layout/navbar'
 
 const inter = Inter({
   subsets: ['latin'],
