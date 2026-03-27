@@ -1,12 +1,6 @@
-import React from 'react';
-import Footer from '@/components/footer';
-import Navbar from '@/components/navbar';
-import WhatsAppButton from '@/components/whatsapp-button';
-
 export default function TermsAndConditionsPage() {
   return (
     <>
-      <Navbar />
       <main className="max-w-4xl mx-auto px-6 py-12 text-gray-800">
         <h1 className="text-3xl font-bold mb-8 text-center uppercase">
           Términos y Condiciones de Uso de la Web
@@ -156,8 +150,6 @@ export default function TermsAndConditionsPage() {
           <p><strong>24.1. TRIBUNAL JURISDICCIONAL.</strong> El Usuario y Tender Original S.A. acuerdan someterse a la jurisdicción de los Tribunales Nacionales Ordinarios de la Ciudad de Buenos Aires, con exclusión de cualquier otro fuero o jurisdicción que pudiera corresponder, para el caso de cualquier divergencia relacionada con la página web. Los Términos y Condiciones, con las respectivas modificaciones que de tanto en tanto se realicen en la página web a exclusivo criterio de Tender S.A., constituyen el único acuerdo entre el usuario y Tender S.A. y gobiernan el uso de los servicios brindados en la página web, reemplazando cualquier contrato previo entre el usuario y el Tender S.A.</p>
         </div>
       </main>
-      <Footer />
-      <WhatsAppButton />
     </>
   );
 }

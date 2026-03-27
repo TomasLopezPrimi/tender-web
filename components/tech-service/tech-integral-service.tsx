@@ -83,12 +83,12 @@ export default function TechIntegralService() {
           </div>
 
           {/* Botón de Acción */}
-          <div className="text-center">
+          {/* <div className="text-center">
             <button className="inline-flex items-center gap-3 bg-(--tender-cyan) hover:bg-cyan-400 text-white font-semibold tracking-wide uppercase text-sm px-8 py-4 rounded-full transition-all hover:shadow-lg hover:shadow-(--tender-cyan)/30 hover:-translate-y-0.5">
               Ver Service Total
               <ArrowRight className="w-4 h-4" />
             </button>
-          </div>
+          </div> */}
 
         </div>
 

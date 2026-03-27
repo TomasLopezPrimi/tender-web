@@ -1,11 +1,7 @@
 
 
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
-import WhatsAppButton from "@/components/whatsapp-button"
 import TechServiceHero from "@/components/tech-service/tech-hero"
 import TechManuals from "@/components/tech-service/tech-manuals"
-// import TechVideoSection from "@/components/tech-service/tech-video-section"
 import TechContactSection from "@/components/tech-service/tech-contact-section"
 import TechIntegralService from "@/components/tech-service/tech-integral-service"
 import TensionSystem from "@/components/tech-service/tech-tension-system"
@@ -19,7 +15,6 @@ export const metadata = {
 export default function ServicioTecnicoPage() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen">
         <TechServiceHero />
         <TechIntegralService />
@@ -28,8 +23,6 @@ export default function ServicioTecnicoPage() {
         <TensionSystem />
         <TechContactSection />
       </main>
-      <Footer />
-      <WhatsAppButton />
     </>
   )
 }

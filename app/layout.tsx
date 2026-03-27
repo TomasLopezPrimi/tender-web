@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import WhatsAppButton from '@/components/whatsapp-button'
+import Footer from '@/components/footer'
+import Navbar from '@/components/navbar'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -40,7 +42,6 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   
-  // 2. Preparamos los Datos Estructurados (Schema) para el Panel de Conocimiento
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -61,9 +62,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
         />
-        
+        <Navbar />
         {children}
-        <Analytics />
+        <Footer />
+        <WhatsAppButton />
       </body>
     </html>
   )

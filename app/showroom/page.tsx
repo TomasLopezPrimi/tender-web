@@ -1,13 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
-import WhatsAppButton from "@/components/whatsapp-button"
 import QRCode from "react-qr-code"
 import { Box, Layers, ScanFace, SmartphoneNfc, Info } from "lucide-react"
 
-// Tus modelos de Sketchfab
 const modelos3D = [
   {
     id: "d0530aa0ace342d8827887ae501f3d87",
@@ -30,19 +26,15 @@ export default function ShowroomPage() {
   const [activeModel, setActiveModel] = useState(modelos3D[0])
   const [isMounted, setIsMounted] = useState(false)
 
-  // La URL absoluta de esta misma página para el QR
   const showroomUrl = "https://tender.com.ar/showroom"
 
-  // Evitamos problemas de hidratación con el QR renderizándolo solo en el cliente
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
   return (
     <>
-      <Navbar />
       
-      {/* Usamos un fondo oscuro inmersivo para resaltar el 3D */}
       <main className="min-h-screen bg-[var(--tender-navy)] text-white pt-20 pb-12 flex flex-col">
         
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 w-full flex-grow flex flex-col">
@@ -181,9 +173,6 @@ export default function ShowroomPage() {
           </div>
         </div>
       </main>
-
-      <Footer />
-      <WhatsAppButton />
     </>
   )
 }

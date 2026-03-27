@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation" 
 import { useState } from "react"
-import { ChevronDown, Menu, X } from "lucide-react"
+import { ChevronDown, Layers,  Menu, X } from "lucide-react"
 import CartWidget from "./cart-widget"
 
 interface NavItem {
@@ -31,20 +31,35 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-      {/* --- ROW 1: Logo & Controles Móviles --- */}
+      {/* --- ROW 1: Logo & Controles --- */}
         <div className="flex items-center justify-between pt-3 pb-1">
-          <div className="flex-1 flex justify-start">
+          
+          {/* LADO IZQUIERDO: Menú + Logo (Mobile) */}
+          <div className="flex-1 flex items-center gap-2">
             <button
               className="lg:hidden p-2 text-(--tender-navy) hover:text-(--tender-cyan) transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={mobileOpen}
             >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              {mobileOpen ? <X size={22} /> : <Layers size={22} />}
             </button>
+
+            {/* Logo para versión móvil (más pequeño y pegado al menú) */}
+            <div className="lg:hidden">
+              <Link href="/" aria-label="Tender inicio">
+                <img
+                  src="/images/logo-tender.svg"
+                  alt="Tender®"
+                  className="h-5 w-auto" // Tamaño reducido en móvil (h-5 es menor que h-7)
+                  draggable={false}
+                />
+              </Link>
+            </div>
           </div>
 
-          <div className="shrink-0 flex justify-center">
+          {/* CENTRO: Logo (Desktop solamente) */}
+          <div className="hidden lg:flex shrink-0 justify-center">
             <Link href="/" aria-label="Tender inicio">
               <img
                 src="/images/logo-tender.svg"
@@ -55,6 +70,7 @@ export default function Navbar() {
             </Link>
           </div>
 
+          {/* LADO DERECHO: Carrito */}
           <div className="flex-1 flex justify-end items-center pr-2">
             <div className="lg:hidden">
               <CartWidget />
@@ -73,7 +89,6 @@ export default function Navbar() {
           </div>
         </nav>
       </div>
-
       {/* --- Menú Móvil (Drawer) --- */}
       {mobileOpen && (
         <div className="lg:hidden border-t border-border bg-background animate-in slide-in-from-top duration-300" role="navigation" aria-label="Menú móvil">

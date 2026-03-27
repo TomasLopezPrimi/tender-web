@@ -4,11 +4,9 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, ShoppingCartIcon } from 'lucide-react';
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
-import WhatsAppButton from "@/components/whatsapp-button";
-import { formatPrice, ProductSize, Product } from "@/lib/products";
+import { formatPrice } from "@/lib/products";
 import { useCartStore } from '@/hooks/use-cart-store';
+import { ProductSize, Product } from '@/types/products';
 
 interface ProductClientPageProps {
     product: Product; 
@@ -70,7 +68,6 @@ export default function ProductClientPage({ product, sku }: ProductClientPagePro
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
       
       <main className="grow container mx-auto px-4 py-8 max-w-6xl animate-fade-in">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -272,8 +269,6 @@ export default function ProductClientPage({ product, sku }: ProductClientPagePro
         </div>
       </main>
 
-      <Footer />
-      <WhatsAppButton />
     </div>
   );
 }

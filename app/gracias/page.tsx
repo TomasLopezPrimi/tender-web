@@ -1,12 +1,9 @@
 import Link from "next/link";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
-import { CheckCircle2, MessageCircle, ArrowLeft, Receipt, Package } from "lucide-react";
+import {  MessageCircle, ArrowLeft, Receipt, Package } from "lucide-react";
 
 export default function GraciasPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[var(--tender-gray-bg)]">
-      <Navbar />
 
       <main className="flex-grow flex items-center justify-center container mx-auto px-4 py-12 animate-fade-in-up">
         <div className="bg-white rounded-xl p-8 md:p-12 shadow-lg border border-gray-100 max-w-2xl w-full text-center relative overflow-hidden">
@@ -73,7 +70,6 @@ export default function GraciasPage() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }

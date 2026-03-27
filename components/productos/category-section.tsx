@@ -1,4 +1,4 @@
-import { Product, ProductFeature } from "@/lib/products";
+import { Product, ProductFeature } from "@/types/products";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,19 +18,27 @@ interface CategorySectionProps {
 
 export default function CategorySection({ type, title, subtitle, heroImage, videoUrl, features, productsData, bgColor }: CategorySectionProps) {
   return (
-    <section className={bgColor}>
-      <div className="relative flex h-[40vh] min-h-100 w-full items-center justify-center overflow-hidden bg-(--tender-navy)">
-        <Image
-          src={heroImage}
-          alt={`Hero Tender ${type}`}
-          fill
-          className="object-cover object-center opacity-50"
-          priority={type === "Colgante"}
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-[var(--tender-navy)]/90 via-[var(--tender-navy)]/40 to-transparent" />
+    // Aplicamos relative y z-0 a la sección general para que la sombra del hero caiga sobre ella
+    <section className={`${bgColor} relative z-0`}>
+      
+      {/* 1. Contenedor Hero: Le agregamos el borde, la sombra y un z-10 */}
+      <div className="relative flex h-[40vh] min-h-[400px] w-full items-center justify-center bg-[var(--tender-navy)] border-b-4 border-[var(--tender-gold)] shadow-xl shadow-black/20 z-10">
+        
+        {/* Envolvemos la imagen en este div con overflow-hidden para que NO corte la sombra del contenedor padre */}
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src={heroImage}
+            alt={`Hero Tender ${type}`}
+            fill
+            className="object-cover object-center opacity-50"
+            priority={type === "Colgante"}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--tender-navy)]/90 via-[var(--tender-navy)]/40 to-transparent" />
+        </div>
         
         <div className="relative z-10 flex flex-col items-center px-4 text-center animate-fade-in-up">
-          <h2 className="text-sm font-bold tracking-[0.2em] text-(--tender-cyan) uppercase mb-4">
+          {/* Corregí text-(--tender-cyan) a la sintaxis correcta text-[var(--tender-cyan)] */}
+          <h2 className="text-sm font-bold tracking-[0.2em] text-[var(--tender-cyan)] uppercase mb-4">
             Tender {type}
           </h2>
           <p className="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide text-white">
