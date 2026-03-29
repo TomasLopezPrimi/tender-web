@@ -4,9 +4,9 @@ export const config = {
     phone3: "+54 11 4931-6465",
     emailVentas: "ventas@tender.com.ar",
     bankDetails : {
-        alias: "TENDER.ARGENTINA",
-        cbu: "0000000000000000000000",
-        titular: "Nombre Apellido"
+        alias: "TENDERAX",
+        cbu: "0720146888000037236186",
+        titular: "Axenfeld Ruth Haydee"
     },
     descuentoTransferencia : 0.85
     

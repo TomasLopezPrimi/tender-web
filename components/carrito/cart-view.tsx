@@ -11,7 +11,6 @@ import EmptyCart from "./empty-cart";
 import CartItemCard from "./cart-item-card";
 import ClientForm from "./client-form";
 import OrderSummary from "./order-summary";
-// Importamos los dos componentes nuevos que creamos
 import PaymentSelector from "./payment-selector";
 import GetnetModal from "./getnet-modal";
 
