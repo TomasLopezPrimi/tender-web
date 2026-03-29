@@ -63,7 +63,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
         />
-        <ScrollToTop />
+        {/* <ScrollToTop /> */}
         <Navbar />
         {children}
         <Footer />
