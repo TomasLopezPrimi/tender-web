@@ -18,9 +18,9 @@ export default function ServicioTecnicoPage() {
       <main className="min-h-screen">
         <TechServiceHero />
         <TechIntegralService />
-        <TechManuals />
-        <InstallationsAndShipping />
         <TensionSystem />
+        <InstallationsAndShipping />
+        <TechManuals />
         <TechContactSection />
       </main>
     </>

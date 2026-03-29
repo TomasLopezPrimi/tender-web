@@ -74,11 +74,11 @@ export default function TechIntegralService() {
           
           {/* Caja de Advertencia */}
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-10">
-            <div className="bg-amber-100 p-2 rounded-full shrink-0">
-              <AlertTriangle className="w-6 h-6 text-amber-600" />
+            <div className="bg-amber-100 p-4 rounded-full shrink-0">
+              <AlertTriangle className="w-10 h-10 text-amber-600" />
             </div>
-            <p className="text-sm md:text-base text-amber-900 leading-relaxed">
-              <strong className="font-semibold">ADVERTENCIA:</strong> Se recomienda no abrir la caja elevadora ya que para hacerlo debe conocer su funcionamiento. De lo contrario, corre el riesgo de inutilizarla.
+            <p className="text-sm md:text-base text-amber-900 leading-relaxed max-w-4xl mx-auto text-center">
+              <strong className="font-semibold">ADVERTENCIA: NO abrir la caja elevadora. </strong> <br></br>De lo contrario, corre el riesgo de inutilizarla y/o perder la garantía.
             </p>
           </div>
 

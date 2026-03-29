@@ -1,4 +1,5 @@
 import { Product, ProductFeature } from "@/types/products";
+import { calculateDiscountedPrice } from "./utils";
 
 
 export function formatPrice(price: number): string {
@@ -30,7 +31,7 @@ const rebatibleFeatures: ProductFeature[] = [
 const colganteVideo = "https://www.youtube.com/embed/eY4S7nUCGl0";
 const rebatibleVideo = "https://www.youtube.com/embed/crla_4OY4fs";
 
-const baseProducts: Omit<Product, 'priceRange'>[] = [
+const baseProducts: Omit<Product, 'priceRange' | 'minPrice' | 'maxPrice'>[] = [
   {
     sku: "tender-col-8h",
     title: "Tender Colgante 8 hilos",
@@ -41,7 +42,15 @@ const baseProducts: Omit<Product, 'priceRange'>[] = [
       { name: "0,70 x 0,80", price: 727375 }, { name: "0,80 x 0,80", price: 727375 }, { name: "0,90 x 0,80", price: 727375 }, { name: "1,00 x 0,80", price: 727375 },
       { name: "1,10 x 0,80", price: 792610 }, { name: "1,20 x 0,80", price: 792610 }, { name: "1,30 x 0,80", price: 792610 }, { name: "1,40 x 0,80", price: 792610 },
     ],
-    images: ["/images/producto/tender-col-8h.jpg", "/images/producto/thumb-1.jpg", "/images/producto/thumb-2.jpg"],
+    images: [
+      "/images/producto/tender-col-8h.jpg", 
+      "/images/producto/1.jpg", 
+      "/images/producto/2.jpg",
+      "/images/producto/3.jpg",
+      "/images/producto/4.jpg",
+      "/images/producto/5.jpg",
+      "/images/producto/resorte.gif"
+    ],
     features: colganteFeatures,
     videoUrl: colganteVideo
   },
@@ -64,7 +73,15 @@ const baseProducts: Omit<Product, 'priceRange'>[] = [
       { name: "1,60 x 0,45", price: 792610 }, { name: "1,60 x 0,50", price: 792610 }, { name: "1,60 x 0,60", price: 792610 }, { name: "1,60 x 0,70", price: 792610 },
       { name: "1,70 x 0,45", price: 792610 }, { name: "1,70 x 0,50", price: 792610 }, { name: "1,70 x 0,60", price: 792610 }, { name: "1,70 x 0,70", price: 792610 },
     ],
-    images: ["/images/producto/tender-col-6h.jpg"],
+    images: [
+      "/images/producto/tender-col-6h.jpg",
+      "/images/producto/1.jpg", 
+      "/images/producto/2.jpg",
+      "/images/producto/3.jpg",
+      "/images/producto/4.jpg",
+      "/images/producto/5.jpg",
+      "/images/producto/resorte.gif"
+    ],
     features: colganteFeatures,
     videoUrl: colganteVideo
   },
@@ -80,7 +97,15 @@ const baseProducts: Omit<Product, 'priceRange'>[] = [
       { name: "1,30 x 0,30", price: 662138 }, { name: "1,40 x 0,30", price: 662138 }, { name: "1,50 x 0,30", price: 727375 },
       { name: "1,60 x 0,30", price: 727375 }, { name: "1,70 x 0,30", price: 727375 },
     ],
-    images: ["/images/producto/tender-col-4h.jpg"],
+    images: [
+      "/images/producto/tender-col-4h.jpg",
+      "/images/producto/1.jpg", 
+      "/images/producto/2.jpg",
+      "/images/producto/3.jpg",
+      "/images/producto/4.jpg",
+      "/images/producto/5.jpg",
+      "/images/producto/resorte.gif"
+    ],
     features: colganteFeatures,
     videoUrl: colganteVideo
   },
@@ -99,7 +124,15 @@ const baseProducts: Omit<Product, 'priceRange'>[] = [
       { name: "1,20 x 0,45", price: 727375 }, { name: "1,20 x 0,50", price: 727375 }, { name: "1,20 x 0,60", price: 727375 },
       { name: "1,30 x 0,45", price: 727375 }, { name: "1,30 x 0,50", price: 727375 }, { name: "1,30 x 0,60", price: 727375 },
     ],
-    images: ["/images/producto/tender-reb-6h.jpg"],
+    images: [
+      "/images/producto/tender-reb-6h.jpg",
+      "/images/producto/1.jpg", 
+      "/images/producto/2.jpg",
+      "/images/producto/3.jpg",
+      "/images/producto/4.jpg",
+      "/images/producto/5.jpg",
+      "/images/producto/resorte.gif"
+    ],
     features: rebatibleFeatures,
     videoUrl: rebatibleVideo
   },
@@ -114,7 +147,15 @@ const baseProducts: Omit<Product, 'priceRange'>[] = [
       { name: "1,00 x 0,30", price: 505301 }, { name: "1,10 x 0,30", price: 505301 }, { name: "1,20 x 0,30", price: 505301 },
       { name: "1,30 x 0,30", price: 505301 },
     ],
-    images: ["/images/producto/tender-reb-4h.jpg"],
+    images: [
+      "/images/producto/tender-reb-4h.jpg",
+      "/images/producto/1.jpg", 
+      "/images/producto/2.jpg",
+      "/images/producto/3.jpg",
+      "/images/producto/4.jpg",
+      "/images/producto/5.jpg",
+      "/images/producto/resorte.gif"
+    ],
     features: rebatibleFeatures,
     videoUrl: rebatibleVideo
   }
@@ -127,7 +168,7 @@ export const products: Product[] = baseProducts.map(product => {
     return { ...product, priceRange: "Consultar precio" };
   }
 
-  const minPrice = Math.min(...prices);
+  const minPrice = calculateDiscountedPrice(Math.min(...prices));
   const maxPrice = Math.max(...prices);
 
   // Si todos los tamaños cuestan lo mismo, muestra un solo precio. 
@@ -138,7 +179,9 @@ export const products: Product[] = baseProducts.map(product => {
 
   return {
     ...product,
-    priceRange
+    priceRange,
+    minPrice,
+    maxPrice
   };
 });
 

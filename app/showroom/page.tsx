@@ -46,10 +46,10 @@ export default function ShowroomPage() {
               <span>Herramienta Interactiva</span>
             </div>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif tracking-wide text-balance">
-              Showroom <span className="text-[var(--tender-cyan)]">Virtual</span> & AR
+              Showroom <span className="text-[var(--tender-cyan)]">Virtual</span> y AR
             </h1>
             <p className="mt-3 text-gray-300 max-w-2xl text-base md:text-lg">
-              Interactuá con nuestros sistemas de secado. Rotá, hacé zoom y proyectalos en escala 1:1 real en tu lavadero o balcón usando proyectores de Realidad Aumentada.
+              Interactuá con nuestros productos. Rotá, hacé zoom y proyectalos en escala 1:1 real en tu lavadero o balcón usando proyectores de Realidad Aumentada.
             </p>
           </div>
 

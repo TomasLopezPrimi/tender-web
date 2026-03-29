@@ -31,6 +31,8 @@ export interface CartItem {
     images: string[];
     features: ProductFeature[];
     videoUrl: string;
+    minPrice?: number;   
+    maxPrice?: number;
   }
 
   export interface UIProduct extends Product {

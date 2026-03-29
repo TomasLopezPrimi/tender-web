@@ -46,8 +46,8 @@ export default function BrandOriginSection() {
             </p>
 
             <p className="mt-4 text-white/60 text-sm md:text-base leading-relaxed max-w-lg lg:mx-0 mx-auto">
-              Cuando alguien dice <em>&ldquo;necesito un tender&rdquo;</em>, en realidad está hablando de nosotros.
-              Somos la marca que creó la categoría en Argentina y seguimos siendo referentes en
+              {/* Cuando alguien dice <em>&ldquo;necesito un tender&rdquo;</em>, en realidad está hablando de nosotros. */}
+              Somos la marca que creó la categoría y seguimos siendo referentes en
               diseño, calidad y durabilidad.
             </p>
 

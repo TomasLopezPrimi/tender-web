@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation" 
 import { useState } from "react"
-import {  Layers, X, ChevronDown } from "lucide-react"
+import {  Layers, X, ChevronDown, SquareMenu, Grip } from "lucide-react"
 import CartWidget from "../cart-widget"
 import NavLink from "./nav-link"
 
@@ -33,7 +33,7 @@ const navItems: NavItem[] = [
   { label: "SERVICIO TÉCNICO", href: "/servicio-tecnico" },
   { label: "SHOWROOM", href: "/showroom" },
   { label: "ARQUITECTOS", href: "/arquitectos" },
-  { label: "CONTACTO", href: "/#contacto" },
+  // { label: "CONTACTO", href: "/#contacto" },
 ]
 
 export default function Navbar() {
@@ -48,29 +48,32 @@ export default function Navbar() {
       {/* --- ROW 1: Logo & Controles --- */}
         <div className="flex items-center justify-between pt-3 pb-1">
           
-          {/* LADO IZQUIERDO: Menú + Logo (Mobile) */}
-          <div className="flex-1 flex items-center gap-2">
-            <button
-              className="lg:hidden p-2 text-(--tender-navy) hover:text-(--tender-cyan) transition-colors"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-              aria-expanded={mobileOpen}
-            >
-              {mobileOpen ? <X size={22} /> : <Layers size={22} />}
-            </button>
+        {/* LADO IZQUIERDO: Menú + Logo (Mobile) */}
+        <div className="flex-1 flex items-center gap-2">
+          <button
+            className="lg:hidden p-2 text-(--tender-navy) hover:text-(--tender-cyan) transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? <X size={22} /> : <Grip size={22} />}
+          </button>
 
-            {/* Logo para versión móvil (más pequeño y pegado al menú) */}
-            <div className="lg:hidden">
-              <Link href="/" aria-label="Tender inicio" onClick={() => setMobileOpen(false)}>
-                <img
-                  src="/images/logo-tender.svg"
-                  alt="Tender®"
-                  className="h-5 w-auto" // Tamaño reducido en móvil (h-5 es menor que h-7)
-                  draggable={false}
-                />
-              </Link>
-            </div>
+          {/* Línea vertical separadora */}
+          <div className="lg:hidden w-px h-5 bg-gray-300" aria-hidden="true" />
+
+          {/* Logo para versión móvil (más pequeño y pegado al menú) */}
+          <div className="lg:hidden">
+            <Link href="/" aria-label="Tender inicio" onClick={() => setMobileOpen(false)}>
+              <img
+                src="/images/logo-tender.svg"
+                alt="Tender®"
+                className="h-5 w-auto" // Tamaño reducido en móvil
+                draggable={false}
+              />
+            </Link>
           </div>
+        </div>
 
           {/* CENTRO: Logo (Desktop solamente) */}
           <div className="hidden lg:flex shrink-0 justify-center">

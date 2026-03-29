@@ -28,9 +28,6 @@ export default function BeneficiosArquitectos() {
     <section id="beneficios" className="py-20 md:py-32 bg-gray-50/50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 max-w-2xl mx-auto">
-          <span className="text-[var(--tender-cyan)] font-semibold tracking-widest uppercase text-xs mb-3 block">
-            Valor Agregado
-          </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[var(--tender-text-dark)] tracking-wide text-balance mb-6">
             Diseñado para potenciar tus proyectos
           </h2>
