@@ -16,15 +16,15 @@ export default function PaymentSelector({
     {
       id: "transferencia",
       title: "Transferencia Bancaria",
-      description: "Pago manual con 10% de descuento.",
+      description: "Pago manual con 15% de descuento.",
       icon: Landmark,
     },
-    {
-      id: "getnet",
-      title: "Tarjetas de Crédito / Débito",
-      description: "Pago seguro a través de Getnet.",
-      icon: CreditCard,
-    }
+    // {
+    //   id: "getnet",
+    //   title: "Tarjetas de Crédito / Débito",
+    //   description: "Pago seguro a través de Getnet.",
+    //   icon: CreditCard,
+    // }
   ];
 
   return (

@@ -29,7 +29,7 @@ export function useCheckout() {
 
   const validateForm = () => {
     if (!clientForm.nombre.trim() || !clientForm.apellido.trim()) return "Por favor ingresá tu nombre y apellido.";
-    if (!clientForm.dni.trim() || clientForm.dni.length < 7) return "Por favor ingresá un DNI válido.";
+    if (!clientForm.dni.trim() || clientForm.dni.length < 6) return "Por favor ingresá un DNI válido.";
     if (!clientForm.email.trim() || !/^\S+@\S+\.\S+$/.test(clientForm.email)) return "Por favor ingresá un email válido.";
     if (!clientForm.phone.trim() || clientForm.phone.length < 6) return "Por favor ingresá un número de teléfono válido.";
     return null; 

@@ -27,7 +27,7 @@ export default function TechContactSection() {
               </h2>
               
               <p className="text-white/80 leading-relaxed mb-8 text-lg font-light text-balance">
-                Todos nuestros productos cuentan con <strong className="font-semibold text-white">2 años de garantía oficial</strong>. 
+                Todos nuestros productos cuentan con <strong className="font-semibold text-white">1 año de garantía oficial</strong>. 
                 Fabricamos bajo estándares de alta calidad para asegurar que tu Tender sea una inversión de por vida.
               </p>
               

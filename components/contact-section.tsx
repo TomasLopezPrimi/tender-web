@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react"
 import { Phone, Send } from "lucide-react"
+import { config } from "@/config"
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -16,7 +17,8 @@ export default function ContactSection() {
 
   const formRef = useRef<HTMLFormElement>(null)
 
-  const WHATSAPP_NUMBER = "5491131876811" 
+  // const WHATSAPP_NUMBER = "5491131876811" 
+  const WHATSAPP_NUMBER = config.whatsappNumber
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,25 +27,13 @@ export default function ContactSection() {
   }
 
   const handleWhatsApp = () => {
-    // 1. Forzamos la validación nativa del HTML (los "required")
-    if (formRef.current && !formRef.current.reportValidity()) {
-      return // Si falta algún dato, corta acá y el navegador muestra el aviso de "completar este campo"
-    }
 
-    // Opcional: Validar el captcha antes de ir a WhatsApp
-    if (formData.captcha !== "24") {
-      alert("Por favor, resolvé la suma de seguridad correctamente (11 + 13).")
-      return
-    }
-
-    // 2. Armamos el mensaje con los datos del usuario
     const text = `Hola Tender, soy ${formData.nombre} ${formData.apellido}.
-📧 Email: ${formData.email}
+Email: ${formData.email}
 
-💬 Mi consulta es:
+Mi consulta es:
 ${formData.consulta}`
 
-    // 3. Generamos la URL y abrimos una nueva pestaña
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`
     window.open(url, "_blank", "noopener,noreferrer")
   }
@@ -192,13 +182,13 @@ ${formData.consulta}`
               {/* BOTONES DE ENVÍO */}
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 {/* Botón tradicional */}
-                <button
+                {/* <button
                   type="submit"
                   className="flex-1 flex items-center justify-center gap-2 bg-[var(--tender-cyan)] hover:bg-[var(--tender-cyan)]/90 text-white font-semibold py-3.5 px-6 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[var(--tender-cyan)]/25"
                 >
                   <Send size={18} />
                   Enviar
-                </button>
+                </button> */}
 
                 {/* Botón WhatsApp */}
                 <button

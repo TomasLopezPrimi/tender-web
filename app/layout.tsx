@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
-import WhatsAppButton from '@/components/whatsapp-button'
-import Footer from '@/components/footer'
-import Navbar from '@/components/navbar'
+import WhatsAppButton from '@/components/layout/whatsapp-button'
+import Footer from '@/components/layout/footer'
+import Navbar from '@/components/layout/navbar'
+import ScrollToTop from '@/components/layout/scroll-to-top'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -62,6 +63,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
         />
+        <ScrollToTop />
         <Navbar />
         {children}
         <Footer />

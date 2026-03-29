@@ -26,7 +26,6 @@ export default function TechServiceHero() {
         {/* Título con SOMBRA FUERTE para resaltar sobre la imagen clara */}
         <h1 className="animate-fade-in-up text-4xl font-serif tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.9)] md:text-6xl lg:text-7xl">
           Servicio Técnico
-          <sup className="top-[-0.4em] ml-1 text-2xl text-cyan-300 md:text-4xl">®</sup>
         </h1>
         
         <div 
@@ -36,11 +35,12 @@ export default function TechServiceHero() {
         
         {/* Párrafo con peso Font-Bold y sombra para máxima legibilidad */}
         <p 
-          className="animate-fade-in-up mx-auto max-w-2xl text-balance text-lg font-semibold leading-relaxed text-white drop-shadow-[0_2px_10px_rgba(0,0,0,1)] md:text-2xl" 
+          className="mt-6 animate-fade-in-up mx-auto max-w-2xl text-balance text-lg font-semibold leading-relaxed text-white drop-shadow-[0_2px_10px_rgba(0,0,0,1)] md:text-2xl" 
           style={{ animationDelay: '300ms' }}
         >
-          Estamos para ayudarte. Aquí encontrarás toda la información para la 
-          <span className="text-cyan-200"> instalación y mantenimiento </span> 
+          Estamos para ayudarte<br></br><br></br>
+          Aquí encontrarás toda la información para la 
+          <span className="text-cyan-200"> instalación y mantenimiento </span>
           de tus productos <strong className="text-white">Tender®</strong>.
         </p>
 

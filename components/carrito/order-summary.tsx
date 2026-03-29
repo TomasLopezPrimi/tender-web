@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Truck, Landmark, MessageCircle, Loader2, Copy, Check, CreditCard, Lock } from "lucide-react";
+import { config } from "@/config";
 
 interface OrderSummaryProps {
   totalItems: number;
@@ -27,13 +28,11 @@ export default function OrderSummary({
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const bankDetails = {
-    alias: "TENDER.ARGENTINA",
-    cbu: "0000000000000000000000",
-    titular: "Nombre Apellido"
-  };
+  const bankDetails = config.bankDetails
 
   const isTransferencia = selectedPaymentMethod === "transferencia";
+
+  const totalPriceWithDiscount = totalPrice * config.descuentoTransferencia  // descuentoTransferencia es 0.85
 
   return (
     <div className="bg-white rounded-sm p-6 shadow-sm border border-gray-100 sticky top-4 animate-fade-in-up">
@@ -41,10 +40,38 @@ export default function OrderSummary({
         Resumen de compra
       </h2>
       
-      <div className="flex justify-between items-center mb-6">
+      {/* <div className="flex justify-between items-center mb-6">
         <span className="text-gray-600">Total ({totalItems} {totalItems === 1 ? 'producto' : 'productos'})</span>
         <span className="text-2xl font-bold text-[var(--tender-navy-mid)]">{formatPrice(totalPrice)}</span>
-      </div>
+      </div> */}
+      <div className="flex justify-between items-end mb-6">
+  <span className="text-gray-600 pb-1">Total ({totalItems} {totalItems === 1 ? 'producto' : 'productos'})</span>
+  
+  <div className="flex flex-col items-end">
+    {isTransferencia ? (
+      <>
+        {/* Precio original tachado */}
+        <span className="text-sm text-gray-400 line-through leading-none mb-1">
+          {formatPrice(totalPrice)}
+        </span>
+        {/* Precio con descuento resaltado */}
+        <div className="flex flex-col items-end">
+          <span className="text-3xl font-black text-[var(--tender-navy-mid)] leading-none">
+            {formatPrice(totalPriceWithDiscount)}
+          </span>
+          <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full mt-1 animate-pulse">
+            {Math.round((1 - config.descuentoTransferencia) * 100)}% OFF PAGANDO POR TRANSFERENCIA
+          </span>
+        </div>
+      </>
+    ) : (
+      /* Precio estándar sin transferencia */
+      <span className="text-2xl font-bold text-[var(--tender-navy-mid)]">
+        {formatPrice(totalPrice)}
+      </span>
+    )}
+  </div>
+</div>
 
       <div className="bg-blue-50/50 border border-blue-100 rounded-sm p-4 mb-6">
         <div className="flex items-start gap-3">
