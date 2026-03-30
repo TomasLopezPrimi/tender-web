@@ -5,7 +5,6 @@ export default function TechServiceHero() {
   return (
     <section className="relative flex min-h-[65vh] w-full items-center justify-center overflow-hidden bg-black py-24 md:py-32">
       
-      {/* 1. IMAGEN CON MÁS IMPORTANCIA: Opacidad al 90% para que se vea casi total */}
       <Image
         src="/images/servicio-tecnico/tender-instalacion.jpg"
         alt="Instalación y Servicio Técnico Tender"
@@ -14,10 +13,8 @@ export default function TechServiceHero() {
         priority
       />
 
-      {/* 2. OVERLAY MÍNIMO: Solo un tinte para unificar con la marca, muy sutil */}
       <div className="absolute inset-0 bg-gradient-to-t from-[var(--tender-navy)]/90 via-[var(--tender-navy)]/60 to-[var(--tender-navy)]/30" />
 
-      {/* 3. GRADIENTE DE SEGURIDAD: Solo en la base para que el texto respire */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
       {/* Contenido */}

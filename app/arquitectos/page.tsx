@@ -1,4 +1,4 @@
-import ContactSection from "@/components/contact-section"
+import ContactSection from "@/components/home/contact-section"
 
 import HeroArquitectos from "@/components/arquitectos/hero-arquitectos"
 import BeneficiosArquitectos from "@/components/arquitectos/beneficios-arquitectos"

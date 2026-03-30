@@ -1,8 +1,5 @@
 import { Metadata } from "next"; 
-import Navbar from "@/components/layout/navbar";
-import ContactSection from "@/components/contact-section";
-import Footer from "@/components/layout/footer";
-import WhatsAppButton from "@/components/layout/whatsapp-button";
+import ContactSection from "@/components/home/contact-section";
 import { products } from "@/lib/products";
 import CategorySection from "@/components/productos/category-section";
 

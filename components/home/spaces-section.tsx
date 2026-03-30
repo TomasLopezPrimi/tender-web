@@ -9,13 +9,12 @@ interface ProductCategory {
   id: number
   name: string
   title: string
-  description: string
+  description?: string
   image: string
   cta: string
-  ctaHref: string
+  ctaHref?: string
 }
 
-// ... (Array productCategories se mantiene igual) ...
 const productCategories: ProductCategory[] = [
   {
     id: 1,
@@ -28,12 +27,12 @@ const productCategories: ProductCategory[] = [
   },
   {
     id: 2,
-    name: "Tender Plegable",
-    title: "Tender® Plegable",
-    description: "Con pie de caño blanco. Puede plegarse cuando no se utiliza. Práctico para balcones, terrazas y espacios reducidos. Portátil y apropiado para secar la ropa bajo el sol.",
-    image: "/images/tender-plegable.jpg",
+    name: "Espacio Tender",
+    title: "Espacio Tender®",
+    description: "La solución integral para lavaderos modernos. Diseñado para optimizar cada metro cuadrado, logrando una organización impecable que se integra naturalmente con la estética de tu hogar.",
+    image: "/images/tender-fondo-blanco.jpg",
     cta: "Consultar!",
-    ctaHref: "#tender-plegable",
+    // ctaHref: "#tender-plegable",
   },
   {
     id: 3,

@@ -1,7 +1,12 @@
 export const config = {
     whatsappNumber : "5491131876811",
     phone2: "+54 11 5151-7715",
-    phone3: "+54 11 4931-6465",
+    // phone3: "+54 11 4931-6465",
+    allNumbers: [
+        { number: "11 5151-7715", href: "tel:+541151517715" },
+        // { number: "11 4931-6465", href: "tel:+541149316465" },
+        { number: "15 3187-6811", href: "tel:+5491131876811" },
+      ],
     emailVentas: "ventas@tender.com.ar",
     bankDetails : {
         alias: "TENDERAX",

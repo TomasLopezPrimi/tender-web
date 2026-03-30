@@ -3,8 +3,8 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation" 
 import { useState } from "react"
-import {  Layers, X, ChevronDown, SquareMenu, Grip } from "lucide-react"
-import CartWidget from "../cart-widget"
+import {  X, ChevronDown, Grip } from "lucide-react"
+import CartWidget from "./cart-widget"
 import NavLink from "./nav-link"
 
 export interface NavItem {
