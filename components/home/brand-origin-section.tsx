@@ -1,9 +1,6 @@
-// import Image from "next/image"
-
 export default function BrandOriginSection() {
   return (
-    <section className="relative py-24 overflow-hidden" aria-labelledby="brand-origin-heading">
-      {/* Background */}
+    <section className="relative py-12 lg:py-24 overflow-hidden" aria-labelledby="brand-origin-heading">
       <div className="absolute inset-0 bg-[var(--tender-navy)]">
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -15,8 +12,9 @@ export default function BrandOriginSection() {
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div className="text-center lg:text-left">
-            <span className="inline-block px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] border border-[var(--tender-gold)]/40 text-[var(--tender-gold)] mb-8">
+          
+          <div className="order-2 lg:order-1 text-center lg:text-left">
+            <span className="hidden md:inline-block px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] border border-[var(--tender-gold)]/40 text-[var(--tender-gold)] mb-8">
               La Marca Original
             </span>
 
@@ -33,7 +31,7 @@ export default function BrandOriginSection() {
             </h2>
 
             <div
-              className="mt-6 h-0.5 w-16 lg:mx-0 mx-auto"
+              className="mt-6 h-0.5 w-1/4 md:w-16 lg:mx-0 mx-auto"
               style={{
                 background: "linear-gradient(90deg, var(--tender-gold), var(--tender-gold-light))",
               }}
@@ -46,29 +44,31 @@ export default function BrandOriginSection() {
             </p>
 
             <p className="mt-4 text-white/60 text-sm md:text-base leading-relaxed max-w-lg lg:mx-0 mx-auto">
-              {/* Cuando alguien dice <em>&ldquo;necesito un tender&rdquo;</em>, en realidad está hablando de nosotros. */}
               Somos la marca que creó la categoría y seguimos siendo referentes en
               diseño, calidad y durabilidad.
             </p>
 
-            {/* Stats */}
-            <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-8">
+            <div className="mt-10 flex flex-col md:flex-row flex-wrap justify-center lg:justify-start items-center md:items-stretch gap-8">
               <div>
                 <span className="block text-3xl md:text-4xl font-serif text-white font-bold">70+</span>
                 <span className="text-xs text-white/50 uppercase tracking-widest mt-1 block">Años de historia</span>
               </div>
+              
               <div
-                className="w-px h-16 self-center"
+                className="hidden md:block w-px h-16 self-center"
                 style={{ background: "linear-gradient(180deg, transparent, var(--tender-gold)/30, transparent)" }}
               />
+              
               <div>
                 <span className="block text-3xl md:text-4xl font-serif text-white font-bold">60+</span>
                 <span className="text-xs text-white/50 uppercase tracking-widest mt-1 block">Medidas disponibles</span>
               </div>
+              
               <div
-                className="w-px h-16 self-center"
+                className="hidden md:block w-px h-16 self-center"
                 style={{ background: "linear-gradient(180deg, transparent, var(--tender-gold)/30, transparent)" }}
               />
+              
               <div>
                 <span className="block text-3xl md:text-4xl font-serif text-white font-bold">100%</span>
                 <span className="text-xs text-white/50 uppercase tracking-widest mt-1 block">Industria Argentina</span>
@@ -76,9 +76,7 @@ export default function BrandOriginSection() {
             </div>
           </div>
 
-          {/* Right - Logo visual */}
-          <div className="relative flex items-center justify-center">
-            {/* Glow effect behind logo */}
+          <div className="order-1 lg:order-2 relative flex items-center justify-center">
             <div
               className="absolute w-72 h-72 md:w-96 md:h-96 rounded-full opacity-10"
               style={{
@@ -104,6 +102,7 @@ export default function BrandOriginSection() {
               </p>
             </div>
           </div>
+
         </div>
       </div>
     </section>

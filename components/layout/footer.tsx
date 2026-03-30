@@ -1,4 +1,7 @@
+import { config } from "@/config"
 import { Phone, Mail, MapPin, Clock, Instagram, Facebook, Youtube, Linkedin } from "lucide-react"
+import Link from "next/link"
+
 
 export default function Footer() {
   return (
@@ -90,19 +93,15 @@ export default function Footer() {
               Teléfonos
             </h3>
             <div className="space-y-3">
-              {[
-                { label: "+54 11 5151-7715", href: "tel:+541151517715" },
-                { label: "+54 11 4931-6465", href: "tel:+541149316465" },
-                { label: "+549 11 3187-6811", href: "tel:+5491131876811" },
-              ].map((phone) => (
+              {config.allNumbers.map((phone) => (
                 <a
-                  key={phone.label}
+                  key={phone.number}
                   href={phone.href}
                   
                   className="flex items-center gap-2 md:justify-end text-sm text-white/80 hover:text-white transition-colors"
                 >
                   <Phone size={14} className="text-[var(--tender-cyan)]" aria-hidden="true" />
-                  <span>{phone.label}</span>
+                  <span>{phone.number}</span>
                 </a>
               ))}
             </div>
@@ -111,28 +110,39 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10 bg-[var(--tender-navy)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p className="text-white/50 text-xs">
-          &copy; {new Date().getFullYear()} Tender Argentina. Todos los derechos reservados.
-          <span className="mx-2 opacity-30">|</span>
-          <span className="opacity-70">Desarrollado por </span>
-          <a 
-            href="https://www.linkedin.com/in/tomaslopezprimi/" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="hover:text-[var(--tender-cyan)] transition-colors"
-          >
-            Tomás López Primi
-          </a>
-        </p>
-          <div className="flex gap-4">
-            <a href="https://www.tender.com.ar/terminos-y-condiciones/" className="text-white/50 hover:text-white/80 text-xs transition-colors">
-              Términos y condiciones
-            </a>
-            <a href="https://www.tender.com.ar/politica-de-privacidad/" className="text-white/50 hover:text-white/80 text-xs transition-colors">
-              Políticas de privacidad
-            </a>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-2">
+          
+          {/* Copyright y Desarrollador */}
+          <div className="text-white/50 text-xs flex flex-col sm:flex-row items-center text-center sm:text-left gap-1 sm:gap-0">
+            <span>&copy; {new Date().getFullYear()} Tender Argentina. Todos los derechos reservados.</span>
+            
+            {/* El separador solo se ve en pantallas medianas/grandes */}
+            <span className="hidden sm:inline mx-2 opacity-30">|</span>
+            
+            <span>
+              <span className="opacity-70">Desarrollado por </span>
+              <a 
+                href="https://www.linkedin.com/in/tomaslopezprimi/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-[var(--tender-cyan)] transition-colors whitespace-nowrap"
+              >
+                Tomás López Primi
+              </a>
+            </span>
           </div>
+
+          {/* Enlaces legales */}
+          <div className="flex justify-center items-center gap-6 mt-4 sm:mt-0 z-10 relative">
+            <Link href="/terminos-y-condiciones/" className="text-white/50 hover:text-white/80 text-xs transition-colors text-center">
+              Términos y condiciones
+            </Link>
+            <span className="text-white/30 text-[10px]">•</span>
+            <Link href="/politica-de-privacidad/" className="text-white/50 hover:text-white/80 text-xs transition-colors text-center">
+              Políticas de privacidad
+            </Link>
+          </div>
+
         </div>
       </div>
     </footer>

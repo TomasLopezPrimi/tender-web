@@ -4,7 +4,7 @@ import './globals.css'
 import WhatsAppButton from '@/components/layout/whatsapp-button'
 import Footer from '@/components/layout/footer'
 import Navbar from '@/components/layout/navbar'
-import ScrollToTop from '@/components/layout/scroll-to-top'
+// import ScrollToTop from '@/components/layout/scroll-to-top'
 
 const inter = Inter({
   subsets: ['latin'],

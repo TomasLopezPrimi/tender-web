@@ -1,11 +1,11 @@
 
 
-import TechServiceHero from "@/components/tech-service/tech-hero"
-import TechManuals from "@/components/tech-service/tech-manuals"
-import TechContactSection from "@/components/tech-service/tech-contact-section"
-import TechIntegralService from "@/components/tech-service/tech-integral-service"
-import TensionSystem from "@/components/tech-service/tech-tension-system"
-import InstallationsAndShipping from "@/components/instalacion"
+import TechServiceHero from "@/components/servicio-tecnico/tech-hero"
+import TechManuals from "@/components/servicio-tecnico/tech-manuals"
+import TechContactSection from "@/components/servicio-tecnico/tech-contact-section"
+import TechIntegralService from "@/components/servicio-tecnico/tech-integral-service"
+import TensionSystem from "@/components/servicio-tecnico/tech-tension-system"
+import InstallationsAndShipping from "@/components/servicio-tecnico/instalacion"
 
 export const metadata = {
   title: "Servicio Técnico | Tender®",
