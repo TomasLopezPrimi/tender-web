@@ -333,10 +333,16 @@ export async function getProducts(): Promise<Product[]> {
 
   try {
     const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
+    const API_KEY = process.env.INTERNAL_API_KEY || "";
+  
     const response = await fetch(BACKEND_URL + '/products/variants/?limit=1000', {
+      headers: {
+        'x-api-key': API_KEY, 
+        'Content-Type': 'application/json'
+      },
       // Opcional: Si usas Next.js App Router, puedes configurar el revalidate aquí
       // next: { revalidate: 3600 } // Refresca la caché cada hora automáticamente
-    }); 
+    });
     
     if (!response.ok) throw new Error('Error al obtener las variantes de la API');
     
