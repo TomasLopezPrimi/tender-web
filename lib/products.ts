@@ -333,7 +333,7 @@ export async function getProducts(): Promise<Product[]> {
 
   try {
     const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
-    const response = await fetch(BACKEND_URL + '/variants/?limit=1000', {
+    const response = await fetch(BACKEND_URL + '/products/variants/?limit=1000', {
       // Opcional: Si usas Next.js App Router, puedes configurar el revalidate aquí
       // next: { revalidate: 3600 } // Refresca la caché cada hora automáticamente
     }); 
