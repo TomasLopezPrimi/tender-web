@@ -1,8 +1,9 @@
-// components/carrito/CartItemCard.tsx
+"use client";
+
+import { useState, useEffect } from "react";
 import { Trash2 } from "lucide-react";
 import { getProductBySku } from "@/lib/products";
-import { CartItem } from "@/types/products";
-
+import { CartItem, Product } from "@/types/products"; 
 interface CartItemCardProps {
   item: CartItem;
   onRemove: (id: string) => void;
@@ -11,7 +12,21 @@ interface CartItemCardProps {
 }
 
 export default function CartItemCard({ item, onRemove, onUpdateSize, formatPrice }: CartItemCardProps) {
-  const fullProduct = getProductBySku(item.sku);
+  // Estados para manejar el producto asincrónico
+  const [fullProduct, setFullProduct] = useState<Product | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Cargamos el producto cuando el componente se monta
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setIsLoading(true);
+      const product = await getProductBySku(item.sku);
+      setFullProduct(product);
+      setIsLoading(false);
+    };
+
+    fetchProduct();
+  }, [item.sku]);
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-50 pb-6 last:border-0 last:pb-0">
@@ -20,7 +35,11 @@ export default function CartItemCard({ item, onRemove, onUpdateSize, formatPrice
         
         <div className="mt-2 flex items-center gap-2">
           <label htmlFor={`size-${item.id}`} className="text-sm text-gray-500">Medida:</label>
-          {fullProduct ? (
+          
+          {/* Lógica condicional: Cargando -> Select listo -> Fallback si no encuentra */}
+          {isLoading ? (
+            <span className="text-sm font-medium text-gray-400 animate-pulse">Cargando...</span>
+          ) : fullProduct ? (
             <select
               id={`size-${item.id}`}
               value={item.medida}

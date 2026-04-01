@@ -1,6 +1,6 @@
 import { Metadata } from "next"; 
 import ContactSection from "@/components/home/contact-section";
-import { products } from "@/lib/products";
+import { getProducts } from "@/lib/products";
 import CategorySection from "@/components/productos/category-section";
 
 export const metadata: Metadata = {
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   }
 };
 
-export default function ProductosPage() {
+export default async function ProductosPage() {
+  const products = await getProducts()
   const colgantes = products.filter((p) => p.code.includes("COL"));
   const rebatibles = products.filter((p) => p.code.includes("REB"));
 

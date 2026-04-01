@@ -1,6 +1,6 @@
-"use client"
+// "use client"
 
-import { products} from "@/lib/products"
+import { getProducts} from "@/lib/products"
 import { UIProduct } from "@/types/products"
 import ProductCard from "./product-card"
 
@@ -8,7 +8,8 @@ interface ProductsSectionProps {
   needTitle: boolean
 }
 
-export default function ProductsSection({needTitle}: ProductsSectionProps) {
+export default async function ProductsSection({needTitle}: ProductsSectionProps) {
+  const products = await getProducts()
   const displayProducts: UIProduct[] = products.map(p => {
     let uiProps = {};
     if (p.sku === "tender-col-6h") {
