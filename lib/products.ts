@@ -92,7 +92,7 @@ const baseProducts: Omit<Product, 'priceRange' | 'minPrice' | 'maxPrice'>[] = [
     description: "La solución más compacta para techos, excelente para pasillos o espacios muy reducidos.",
     code: "TENDER-COL-4H",
     sizes: [
-      { name: "0,70 x 0,30", price: 505301 }, { name: "0,80 x 0,30", price: 505301 }, { name: "0,90 x 0,30", price: 505301 },
+      { name: "0,70 x 0,30", price: 728352 }, { name: "0,80 x 0,30", price: 728352 }, { name: "0,90 x 0,30", price: 728352 },
       { name: "1,00 x 0,30", price: 728352 }, { name: "1,10 x 0,30", price: 728352 }, { name: "1,20 x 0,30", price: 728352 },
       { name: "1,30 x 0,30", price: 728352 }, { name: "1,40 x 0,30", price: 728352 }, { name: "1,50 x 0,30", price: 800112 },
       { name: "1,60 x 0,30", price: 800112 }, { name: "1,70 x 0,30", price: 800112 },
