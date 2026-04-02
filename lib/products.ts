@@ -39,7 +39,7 @@ const baseProducts: Omit<Product, 'priceRange' | 'minPrice' | 'maxPrice'>[] = [
     description: "Es liviano y fácil de usar gracias a su estructura de aluminio y a su mecanismo de reducción de peso. Elija la medida más adecuada para su espacio disponible.",
     code: "TENDER-COL-8H",
     sizes: [
-      { name: "0,70 x 0,80", price: 800112 }, { name: "0,80 x 0,80", price: 800112 }, { name: "0,90 x 0,80", price: 800112 }, { name: "1,00 x 0,80", price: 727375 },
+      { name: "0,70 x 0,80", price: 800112 }, { name: "0,80 x 0,80", price: 800112 }, { name: "0,90 x 0,80", price: 800112 }, { name: "1,00 x 0,80", price: 800112 },
       { name: "1,10 x 0,80", price: 871871 }, { name: "1,20 x 0,80", price: 871871 }, { name: "1,30 x 0,80", price: 871871 }, { name: "1,40 x 0,80", price: 871871 },
     ],
     images: [
