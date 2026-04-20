@@ -1,6 +1,8 @@
 "use client";
 
-import { CreditCard, Landmark } from "lucide-react";
+import { useState } from "react";
+import { CreditCard, Landmark, Copy, Check } from "lucide-react";
+import { config } from "@/config";
 
 interface PaymentSelectorProps {
   selectedMethod: string;
@@ -12,6 +14,15 @@ export default function PaymentSelector({
   onSelectMethod 
 }: PaymentSelectorProps) {
   
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const copyToClipboard = (text: string, field: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
+
+  const bankDetails = config.bankDetails;
   const paymentMethods = [
     {
       id: "transferencia",
@@ -30,7 +41,7 @@ export default function PaymentSelector({
   return (
     <div className="bg-white rounded-sm p-6 shadow-sm border border-gray-100 animate-fade-in-up">
       <h2 className="text-lg font-bold text-[var(--tender-navy-mid)] mb-6 border-b pb-4">
-        Método de pago
+        <span className="text-[var(--tender-cyan)] mr-1.5">②</span>Método de pago
       </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -77,6 +88,41 @@ export default function PaymentSelector({
           );
         })}
       </div>
+
+      {/* DATOS BANCARIOS - Solo cuando transferencia está seleccionada */}
+      {selectedMethod === "transferencia" && (
+        <div className="mt-4 bg-gray-50 border border-gray-200 rounded-sm p-4 animate-fade-in">
+          <div className="space-y-3">
+            {/* Alias */}
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] uppercase text-gray-500 font-semibold ml-1">Alias</span>
+              <div
+                onClick={() => copyToClipboard(bankDetails.alias, 'alias')}
+                className="flex justify-between items-center bg-white border border-gray-200 p-2.5 rounded-sm cursor-pointer hover:border-[var(--tender-cyan)] transition-colors group"
+              >
+                <code className="text-xs font-mono font-bold text-gray-700">{bankDetails.alias}</code>
+                {copiedField === 'alias' ? <Check size={14} className="text-green-500" /> : <Copy size={14} className="text-gray-400 group-hover:text-[var(--tender-cyan)]" />}
+              </div>
+            </div>
+
+            {/* CBU */}
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] uppercase text-gray-500 font-semibold ml-1">CBU</span>
+              <div
+                onClick={() => copyToClipboard(bankDetails.cbu, 'cbu')}
+                className="flex justify-between items-center bg-white border border-gray-200 p-2.5 rounded-sm cursor-pointer hover:border-[var(--tender-cyan)] transition-colors group"
+              >
+                <code className="text-xs font-mono font-bold text-gray-700">{bankDetails.cbu}</code>
+                {copiedField === 'cbu' ? <Check size={14} className="text-green-500" /> : <Copy size={14} className="text-gray-400 group-hover:text-[var(--tender-cyan)]" />}
+              </div>
+            </div>
+
+            <div className="pt-1">
+              <p className="text-[11px] text-gray-600"><strong>Titular:</strong> {bankDetails.titular}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

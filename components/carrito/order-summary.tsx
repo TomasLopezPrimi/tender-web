@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Truck, Landmark, MessageCircle, Loader2, Copy, Check, CreditCard, Lock } from "lucide-react";
+import { Truck, MessageCircle, Loader2, CreditCard, Lock } from "lucide-react";
 import { config } from "@/config";
 
 interface OrderSummaryProps {
@@ -19,16 +18,6 @@ export default function OrderSummary({
   formatPrice,
   selectedPaymentMethod 
 }: OrderSummaryProps) {
-  
-  const [copiedField, setCopiedField] = useState<string | null>(null);
-
-  const copyToClipboard = (text: string, field: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
-
-  const bankDetails = config.bankDetails
 
   const isTransferencia = selectedPaymentMethod === "transferencia";
 
@@ -83,46 +72,6 @@ export default function OrderSummary({
           </div>
         </div>
       </div>
-
-      {/* SECCIÓN TRANSFERENCIA - Solo se muestra si es el método seleccionado */}
-      {isTransferencia && (
-        <div className="bg-gray-50 border border-gray-200 rounded-sm p-4 mb-6 animate-fade-in">
-          <div className="flex items-center gap-2 mb-4">
-            <Landmark className="text-gray-600 shrink-0" size={18} />
-            <span className="font-bold text-sm text-gray-800">Pago por Transferencia</span>
-          </div>
-
-          <div className="space-y-3">
-            {/* Alias */}
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] uppercase text-gray-500 font-semibold ml-1">Alias</span>
-              <div 
-                onClick={() => copyToClipboard(bankDetails.alias, 'alias')}
-                className="flex justify-between items-center bg-white border border-gray-200 p-2.5 rounded-sm cursor-pointer hover:border-[var(--tender-cyan)] transition-colors group"
-              >
-                <code className="text-xs font-mono font-bold text-gray-700">{bankDetails.alias}</code>
-                {copiedField === 'alias' ? <Check size={14} className="text-green-500" /> : <Copy size={14} className="text-gray-400 group-hover:text-[var(--tender-cyan)]" />}
-              </div>
-            </div>
-
-            {/* CBU */}
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] uppercase text-gray-500 font-semibold ml-1">CBU</span>
-              <div 
-                onClick={() => copyToClipboard(bankDetails.cbu, 'cbu')}
-                className="flex justify-between items-center bg-white border border-gray-200 p-2.5 rounded-sm cursor-pointer hover:border-[var(--tender-cyan)] transition-colors group"
-              >
-                <code className="text-xs font-mono font-bold text-gray-700">{bankDetails.cbu}</code>
-                {copiedField === 'cbu' ? <Check size={14} className="text-green-500" /> : <Copy size={14} className="text-gray-400 group-hover:text-[var(--tender-cyan)]" />}
-              </div>
-            </div>
-
-            <div className="pt-1">
-              <p className="text-[11px] text-gray-600"><strong>Titular:</strong> {bankDetails.titular}</p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* BOTÓN DE CHECKOUT DINÁMICO */}
       <button 

@@ -6,24 +6,13 @@ import { X, Lock, CreditCard } from "lucide-react";
 interface GetnetModalProps {
   isOpen: boolean;
   onClose: () => void;
-  totalPrice: number;
-  onPaymentSuccess: () => void;
+  checkoutUrl: string;
 }
-
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: Number.isInteger(price) ? 0 : 2,
-    maximumFractionDigits: 2
-  }).format(price);
-};
 
 export default function GetnetModal({ 
   isOpen, 
   onClose, 
-  totalPrice, 
-  onPaymentSuccess 
+  checkoutUrl,
 }: GetnetModalProps) {
 
   // Prevenir scroll en el body cuando el modal está abierto
@@ -47,60 +36,45 @@ export default function GetnetModal({
       />
 
       {/* Contenedor del Modal */}
-      <div className="relative w-full max-w-lg bg-white rounded-md shadow-2xl p-6 md:p-8 m-4 animate-fade-in-up">
+      <div className="relative w-full max-w-2xl bg-white rounded-md shadow-2xl m-4 animate-fade-in-up flex flex-col" style={{ maxHeight: "90vh" }}>
         
         {/* Botón Cerrar */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-[var(--tender-navy-mid)] transition-colors rounded-full hover:bg-gray-100"
+          className="absolute top-4 right-4 z-10 p-2 text-gray-400 hover:text-[var(--tender-navy-mid)] transition-colors rounded-full hover:bg-gray-100"
         >
           <X size={20} />
         </button>
 
         {/* Header del Modal */}
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[var(--tender-cyan)]/10 text-[var(--tender-cyan)] mb-4">
-            <CreditCard size={24} />
+        <div className="text-center p-6 pb-4 border-b border-gray-100">
+          <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[var(--tender-cyan)]/10 text-[var(--tender-cyan)] mb-3">
+            <CreditCard size={20} />
           </div>
-          <h2 className="text-2xl font-bold text-[var(--tender-navy-mid)]">
+          <h2 className="text-xl font-bold text-[var(--tender-navy-mid)]">
             Pago Seguro
           </h2>
-          <div className="gold-line mt-3 mb-2"></div>
-          <p className="text-[var(--tender-text-muted)] text-sm mt-2 flex items-center justify-center gap-1">
-            <Lock size={14} /> Transacción encriptada por Getnet
+          <p className="text-[var(--tender-text-muted)] text-xs mt-1 flex items-center justify-center gap-1">
+            <Lock size={12} /> Transacción encriptada por Getnet
           </p>
         </div>
 
-        {/* Resumen a pagar */}
-        <div className="bg-[var(--tender-gray-bg)] p-4 rounded-md mb-6 flex justify-between items-center border border-gray-100">
-          <span className="font-medium text-[var(--tender-text-dark)]">Total a pagar:</span>
-          <span className="text-xl font-bold text-[var(--tender-navy-mid)]">
-            {formatPrice(totalPrice)}
-          </span>
+        {/* Iframe de Getnet Checkout */}
+        <div className="flex-1 min-h-0">
+          <iframe
+            src={checkoutUrl}
+            title="Getnet Checkout"
+            className="w-full border-0"
+            style={{ height: "65vh" }}
+            allow="payment"
+          />
         </div>
 
-        {/* ÁREA DE GETNET (Placeholder) */}
-        <div className="min-h-[300px] border-2 border-dashed border-gray-200 rounded-md flex flex-col items-center justify-center p-6 mb-6 bg-gray-50">
-          <p className="text-[var(--tender-text-muted)] text-center text-sm mb-4">
-            Aquí se inyectará el iframe o el formulario de la pasarela de Getnet.
+        <div className="p-3 border-t border-gray-100">
+          <p className="text-xs text-center text-gray-400">
+            Al procesar el pago aceptás nuestros Términos y Condiciones.
           </p>
-          
-          {/* Botón SIMULADOR - Eliminar en producción */}
-          <button 
-            onClick={() => {
-              // Simulamos que Getnet respondió "Pago Exitoso"
-              onPaymentSuccess();
-              onClose();
-            }}
-            className="px-4 py-2 bg-[var(--tender-navy)] text-white text-sm font-medium rounded-md hover:bg-[var(--tender-cyan)] transition-colors"
-          >
-            Simular Pago Exitoso
-          </button>
         </div>
-
-        <p className="text-xs text-center text-gray-400">
-          Al procesar el pago aceptas nuestros Términos y Condiciones.
-        </p>
       </div>
     </div>
   );
