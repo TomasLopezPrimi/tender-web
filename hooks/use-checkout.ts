@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useCartStore } from "@/hooks/use-cart-store";
 import { iniciarProcesoDePago } from "@/lib/cart-actions";
-import { CartItemReference, ClientData } from "@/types/checkout";
+import { CartItemReference, CheckoutActionResponse, ClientFormValues, clientFormSchema } from "@/types/checkout";
 
 export function useCheckout() {
   const router = useRouter();
@@ -12,67 +14,76 @@ export function useCheckout() {
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [formError, setFormError] = useState("");
-  const [clientForm, setClientForm] = useState<ClientData>({
-    nombre: "",
-    apellido: "",
-    dni: "",
-    email: "",
-    phone: "",
-    usuario_instagram: "",
+
+  const form = useForm<ClientFormValues>({
+    resolver: zodResolver(clientFormSchema),
+    defaultValues: {
+      nombre: "",
+      apellido: "",
+      dni: "",
+      email: "",
+      phone: "",
+      usuario_instagram: "",
+      address: {
+        calle: "",
+        numero: "",
+        ciudad: "",
+        provincia: undefined,
+        codigo_postal: "",
+        piso: "",
+        departamento: "",
+        referencias: "",
+        es_barrio_privado: false,
+      },
+    },
+    mode: "onTouched",
   });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setClientForm(prev => ({ ...prev, [name]: value }));
-    if (formError) setFormError("");
-  };
-
-  const validateForm = () => {
-    if (!clientForm.nombre.trim() || !clientForm.apellido.trim()) return "Por favor ingresá tu nombre y apellido.";
-    if (!clientForm.dni.trim() || clientForm.dni.length < 6) return "Por favor ingresá un DNI válido.";
-    if (!clientForm.email.trim() || !/^\S+@\S+\.\S+$/.test(clientForm.email)) return "Por favor ingresá un email válido.";
-    if (!clientForm.phone.trim() || clientForm.phone.length < 6) return "Por favor ingresá un número de teléfono válido.";
-    return null; 
-  };
 
   type PaymentMethod = "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "EFECTIVO";
 
   
-  const handleCheckout = async (paymentMethod: PaymentMethod = "TRANSFERENCIA") => {
+  const handleCheckout = async (paymentMethod: PaymentMethod = "TRANSFERENCIA"): Promise<CheckoutActionResponse | undefined> => {
     if (items.length === 0) return;
-    
-    const validationError = validateForm();
-    if (validationError) {
-      setFormError(validationError);
+
+    const isValid = await form.trigger();
+    if (!isValid) {
+      setFormError("Revisá los campos marcados en rojo.");
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
     setIsProcessing(true);
+    setFormError("");
 
     try {
+      const clientData = form.getValues();
+
       const itemsParaBackend: CartItemReference[] = items.map(item => ({
         sku: item.sku,
         quantity: item.cantidad,
         selectedSize: item.medida
       }));
       
-      const clientId = undefined; // por ahora no contamos con id de cliente
+      const clientId = undefined;
 
       const response = await iniciarProcesoDePago(
         itemsParaBackend,
         paymentMethod, 
         clientId, 
-        clientForm
+        clientData
       );
 
       if (response.success) {
+        if (response.instruction?.type === 'GETNET_CHECKOUT') {
+          // No limpiar carrito ni navegar — el caller abrirá el modal con la URL
+          return response;
+        }
+        
         if (response.instruction?.type === 'EXTERNAL_REDIRECT') {
           window.open(response.instruction.payload.url, '_blank');
           clearCart(); 
           router.push('/gracias');
         } 
-        // 3. Manejo de Getnet u otros (El pago fue exitoso sin salir de la app)
         else {
           clearCart();
           router.push('/gracias');
@@ -91,12 +102,10 @@ export function useCheckout() {
   };
 
   return {
-    clientForm,
+    form,
     formError,
     setFormError,
     isProcessing,
-    validateForm,
-    handleInputChange,
     handleCheckout
   };
 }

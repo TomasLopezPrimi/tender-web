@@ -13,6 +13,7 @@ export const config = {
         cbu: "0720146888000037236186",
         titular: "Axenfeld Ruth Haydee"
     },
-    descuentoTransferencia : 0.85
+    // descuentoTransferencia : 0.85
+    descuentoTransferencia : process.env.DESCUENTO_TRANSFERENCIA ? parseFloat(process.env.DESCUENTO_TRANSFERENCIA) : 0.85
     
 }

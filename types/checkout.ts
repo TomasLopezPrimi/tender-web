@@ -1,3 +1,49 @@
+import { z } from "zod";
+
+export const PROVINCIAS_AR = [
+  "Buenos Aires", "Catamarca", "Chaco", "Chubut", "Ciudad Autónoma de Buenos Aires",
+  "Córdoba", "Corrientes", "Entre Ríos", "Formosa", "Jujuy", "La Pampa", "La Rioja",
+  "Mendoza", "Misiones", "Neuquén", "Río Negro", "Salta", "San Juan", "San Luis",
+  "Santa Cruz", "Santa Fe", "Santiago del Estero", "Tierra del Fuego", "Tucumán"
+] as const;
+
+export const clientFormSchema = z.object({
+  nombre: z.string().min(1, "Ingresá tu nombre."),
+  apellido: z.string().min(1, "Ingresá tu apellido."),
+  dni: z.string().min(6, "Ingresá un DNI válido.").max(10, "Ingresá un DNI válido."),
+  email: z.string().email("Ingresá un email válido."),
+  phone: z.string().min(6, "Ingresá un teléfono válido."),
+  usuario_instagram: z.string().nullable().optional(),
+  address: z.object({
+    calle: z.string().min(1, "Ingresá la calle."),
+    numero: z.string().min(1, "Ingresá el número."),
+    ciudad: z.string().min(1, "Ingresá la ciudad."),
+    provincia: z.enum(PROVINCIAS_AR, { errorMap: () => ({ message: "Seleccioná una provincia válida." }) }),
+    codigo_postal: z.string()
+      .min(4, "El código postal debe tener al menos 4 caracteres.")
+      .max(8, "El código postal es demasiado largo.")
+      .regex(/^[A-Za-z]?\d{4}[A-Za-z]{0,3}$/, "Código postal inválido (ej: 1414 o B1636)."),
+    piso: z.string().nullable().optional(),
+    departamento: z.string().nullable().optional(),
+    referencias: z.string().nullable().optional(),
+    es_barrio_privado: z.boolean().optional(),
+  }),
+});
+
+export type ClientFormValues = z.infer<typeof clientFormSchema>;
+
+export interface AddressData {
+  calle: string;
+  numero: string;
+  ciudad: string;
+  provincia: string;
+  codigo_postal: string;
+  piso?: string | null;
+  departamento?: string | null;
+  referencias?: string | null;
+  es_barrio_privado?: boolean;
+}
+
 export interface ClientData {
   nombre: string;
   apellido: string;
@@ -8,6 +54,7 @@ export interface ClientData {
   secondary_fullnames?: string[] | null;
   secondary_emails?: string[] | null;
   secondary_phones?: string[] | null;
+  address: AddressData;
 }
 
 export interface CheckoutRequest {
@@ -35,23 +82,20 @@ export type PaymentInstruction =
       payload: { url: string };
     }
   | {
-      type: 'SDK_LIGHTBOX';
+      type: 'GETNET_CHECKOUT';
       provider: 'GETNET';
       payload: {
-        token: string;      // session token generado por Santander
-        amount: number;
-        publicKey: string;
-        orderId: string;
+        checkoutUrl: string;
       };
     };
 
 
 export interface CheckoutActionResponse {
   success: boolean;
-  orderId?: string;           // Generado por FastAPI
+  orderId?: number;
   instruction?: PaymentInstruction;
-  error?: string;             // Mensaje amigable para el usuario
-  debug?: string;             // Solo para desarrollo
+  error?: string;
+  debug?: string;
 }
 
 
