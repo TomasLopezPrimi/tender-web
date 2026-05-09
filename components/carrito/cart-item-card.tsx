@@ -1,17 +1,16 @@
-// components/carrito/CartItemCard.tsx
 import { Trash2 } from "lucide-react";
-import { getProductBySku } from "@/lib/products";
-import { CartItem } from "@/types/products";
+import { CartItem, ProductSize } from "@/types/products";
 
 interface CartItemCardProps {
   item: CartItem;
   onRemove: (id: string) => void;
   onUpdateSize: (id: string, sizeName: string, price: number) => void;
   formatPrice: (price: number) => string;
+  availableSizes?: ProductSize[];
 }
 
-export default function CartItemCard({ item, onRemove, onUpdateSize, formatPrice }: CartItemCardProps) {
-  const fullProduct = getProductBySku(item.sku);
+export default function CartItemCard({ item, onRemove, onUpdateSize, formatPrice, availableSizes }: CartItemCardProps) {
+  const sizes = availableSizes ?? [];
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-50 pb-6 last:border-0 last:pb-0">
@@ -20,20 +19,20 @@ export default function CartItemCard({ item, onRemove, onUpdateSize, formatPrice
         
         <div className="mt-2 flex items-center gap-2">
           <label htmlFor={`size-${item.id}`} className="text-sm text-gray-500">Medida:</label>
-          {fullProduct ? (
+          {sizes.length > 0 ? (
             <select
               id={`size-${item.id}`}
               value={item.medida}
               onChange={(e) => {
                 const newSizeName = e.target.value;
-                const newSizeObj = fullProduct.sizes.find(s => s.name === newSizeName);
+                const newSizeObj = sizes.find(s => s.name === newSizeName);
                 if (newSizeObj) {
                   onUpdateSize(item.id, newSizeObj.name, newSizeObj.price);
                 }
               }}
               className="text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-sm py-1 px-2 focus:outline-none focus:ring-1 focus:ring-[var(--tender-cyan)] cursor-pointer"
             >
-              {fullProduct.sizes.map((size) => (
+              {sizes.map((size) => (
                 <option key={size.name} value={size.name}>
                   {size.name}
                 </option>

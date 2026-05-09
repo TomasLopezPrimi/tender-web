@@ -7,6 +7,12 @@ import { ArrowLeft } from "lucide-react";
 
 import { useCartStore } from "@/hooks/use-cart-store";
 import { useCheckout } from "@/hooks/use-checkout";
+import { PricingConfig, ProductSize } from "@/types/products";
+
+interface CartViewProps {
+  pricingConfig: PricingConfig;
+  productSizes: Record<string, ProductSize[]>;
+}
 
 import EmptyCart from "./empty-cart";
 import CartItemCard from "./cart-item-card";
@@ -25,7 +31,7 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
-export default function CartView() {
+export default function CartView({ pricingConfig, productSizes }: CartViewProps) {
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   
@@ -46,7 +52,7 @@ export default function CartView() {
     handleCheckout 
   } = useCheckout();
 
-  const { register, formState: { errors } } = form;
+  const { register, setValue, clearErrors, formState: { errors } } = form;
 
   const totalItems = items.reduce((acc, item) => acc + item.cantidad, 0);
   const totalPrice = items.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
@@ -79,8 +85,27 @@ export default function CartView() {
   const handleInitiateCheckout = async () => {
     const isValid = await form.trigger();
     if (!isValid) {
-      setFormError("Revisá los campos marcados en rojo.");
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const errs = form.formState.errors;
+      const hasOnlyAddressErrors =
+        errs.address &&
+        !errs.nombre && !errs.apellido && !errs.dni && !errs.email && !errs.phone;
+      if (hasOnlyAddressErrors) {
+        setFormError("Completá la dirección de entrega antes de continuar.");
+        requestAnimationFrame(() => {
+          document.getElementById("address-form-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      } else {
+        setFormError("Revisá los campos marcados en rojo.");
+        requestAnimationFrame(() => {
+          const firstError = document.querySelector<HTMLElement>(".border-red-300");
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+            firstError.focus({ preventScroll: true });
+          } else {
+            document.getElementById("checkout-form-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      }
       return;
     }
 
@@ -127,6 +152,7 @@ export default function CartView() {
                     onRemove={removeItem}
                     onUpdateSize={updateItemSize}
                     formatPrice={formatPrice}
+                    availableSizes={productSizes[item.sku]}
                   />
                 ))}
               </div>
@@ -136,10 +162,11 @@ export default function CartView() {
             <PaymentSelector 
               selectedMethod={paymentMethod}
               onSelectMethod={setPaymentMethod}
+              pricingConfig={pricingConfig}
             />
 
             {/* ③ DATOS PERSONALES Y DIRECCIÓN UNIFICADOS */}
-            <div className="bg-white rounded-sm p-6 shadow-sm border border-gray-100 animate-fade-in-up">
+            <div id="checkout-form-section" className="bg-white rounded-sm p-6 shadow-sm border border-gray-100 animate-fade-in-up">
               <h2 className="text-lg font-bold text-[var(--tender-navy-mid)] mb-6 border-b pb-4">
                 <span className="text-[var(--tender-cyan)] mr-1.5">③</span>Tus datos y dirección de envío
               </h2>
@@ -149,10 +176,14 @@ export default function CartView() {
                 serverError={formError} 
               />
               <div className="border-t border-gray-100 my-6" />
-              <AddressForm
-                register={register}
-                errors={errors}
-              />
+              <div id="address-form-section">
+                <AddressForm
+                  register={register}
+                  errors={errors}
+                  setValue={setValue}
+                  clearErrors={clearErrors}
+                />
+              </div>
             </div>
           </div>
 
@@ -165,6 +196,7 @@ export default function CartView() {
               onCheckout={handleInitiateCheckout}
               selectedPaymentMethod={paymentMethod}
               formatPrice={formatPrice}
+              pricingConfig={pricingConfig}
             />
           </div>
 

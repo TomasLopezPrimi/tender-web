@@ -1,6 +1,7 @@
 import { Metadata } from "next"; 
 import ContactSection from "@/components/home/contact-section";
-import { products } from "@/lib/products";
+import { baseProductMetadata } from "@/lib/products";
+import { getHydratedProducts } from "@/lib/catalog";
 import CategorySection from "@/components/productos/category-section";
 
 export const metadata: Metadata = {
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
   }
 };
 
-export default function ProductosPage() {
+export default async function ProductosPage() {
+  const { products } = await getHydratedProducts(baseProductMetadata);
+
   const colgantes = products.filter((p) => p.code.includes("COL"));
   const rebatibles = products.filter((p) => p.code.includes("REB"));
 
@@ -33,10 +36,7 @@ export default function ProductosPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-    
-
       <main className="flex-1">
-        {/* Inyectamos el catálogo para Google */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}

@@ -1,6 +1,5 @@
-"use client"
-
-import { products} from "@/lib/products"
+import { getGlobalDiscountLabel, shouldShowGlobalDiscountLabel, getHydratedProducts } from "@/lib/catalog"
+import { baseProductMetadata } from "@/lib/products"
 import { UIProduct } from "@/types/products"
 import ProductCard from "./product-card"
 
@@ -8,8 +7,20 @@ interface ProductsSectionProps {
   needTitle: boolean
 }
 
-export default function ProductsSection({needTitle}: ProductsSectionProps) {
+export default async function ProductsSection({needTitle}: ProductsSectionProps) {
+  const { products, pricingConfig } = await getHydratedProducts(baseProductMetadata)
+  const showGlobalLabel = shouldShowGlobalDiscountLabel(pricingConfig)
+  const globalLabel = getGlobalDiscountLabel(pricingConfig)
+
   const displayProducts: UIProduct[] = products.map(p => {
+    if (showGlobalLabel) {
+      return {
+        ...p,
+        badge: globalLabel,
+        badgeColor: "bg-rose-500",
+      };
+    }
+
     let uiProps = {};
     if (p.sku === "tender-col-6h") {
       uiProps = { badge: "Más vendido", badgeColor: "bg-[var(--tender-cyan)]" };

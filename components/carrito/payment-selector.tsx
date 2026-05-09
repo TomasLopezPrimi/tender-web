@@ -3,15 +3,19 @@
 import { useState } from "react";
 import { CreditCard, Landmark, Copy, Check } from "lucide-react";
 import { config } from "@/config";
+import { PricingConfig } from "@/types/products";
+import { getPaymentDiscountRate } from "@/lib/catalog";
 
 interface PaymentSelectorProps {
   selectedMethod: string;
   onSelectMethod: (method: string) => void;
+  pricingConfig: PricingConfig;
 }
 
 export default function PaymentSelector({ 
   selectedMethod, 
-  onSelectMethod 
+  onSelectMethod,
+  pricingConfig,
 }: PaymentSelectorProps) {
   
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -23,11 +27,14 @@ export default function PaymentSelector({
   };
 
   const bankDetails = config.bankDetails;
+  const transferPct = Math.round(getPaymentDiscountRate(pricingConfig, "TRANSFERENCIA") * 100);
   const paymentMethods = [
     {
       id: "transferencia",
       title: "Transferencia Bancaria",
-      description: "Pago manual con 15% de descuento.",
+      description: transferPct > 0
+        ? `¡Aprovechá el ${transferPct}% de descuento!`
+        : "",
       icon: Landmark,
     },
     // {

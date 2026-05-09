@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { products } from '@/lib/products';
+import { baseProductMetadata } from '@/lib/products';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.tender.com.ar';
@@ -27,7 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
-  const productRoutes = products.map((product) => ({
+  const productRoutes = baseProductMetadata.map((product) => ({
     url: `${baseUrl}/producto/${product.sku}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,

@@ -1,5 +1,6 @@
 "use server";
 
+import { config } from "@/config";
 import { 
   CheckoutRequest, 
   CheckoutActionResponse, 
@@ -7,8 +8,8 @@ import {
   ClientData
 } from "@/types/checkout";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
-const INTERNAL_API_KEY = process.env.INTERNAL_API_KEY;
+const BACKEND_URL = config.BACKEND_URL;
+const INTERNAL_API_KEY = config.INTERNAL_API_KEY;
 
 export async function iniciarProcesoDePago(
   items: CartItemReference[],
