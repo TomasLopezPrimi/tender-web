@@ -81,30 +81,3 @@ export async function getHydratedProducts(
 
   return { products, pricingConfig };
 }
-
-/**
- * Retorna los productos visibles con sus variantes e información de pricing
- * hidratada desde backend. Los productos sin variantes se omiten.
- */
-export async function getHydratedProducts(
-  metadataList: ProductMetadata[]
-): Promise<{ products: Product[]; pricingConfig: PricingConfig }> {
-  const skus = metadataList.map((p) => p.sku);
-
-  const [variantsData, pricingConfig] = await Promise.all([
-    fetchVariants(skus),
-    fetchPricingConfig(),
-  ]);
-
-  const variantsByProduct = new Map(
-    variantsData.map((v) => [v.id_producto, v])
-  );
-
-  const products: Product[] = metadataList
-    .filter((meta) => variantsByProduct.has(meta.sku))
-    .map((meta) =>
-      hydrateProduct(meta, variantsByProduct.get(meta.sku)!, pricingConfig)
-    );
-
-  return { products, pricingConfig };
-}
