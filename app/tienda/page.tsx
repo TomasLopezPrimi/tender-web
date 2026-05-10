@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import ProductsSection from '@/components/productos/products-section';
 
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Tienda - Tender®',
