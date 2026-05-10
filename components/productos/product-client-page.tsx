@@ -6,10 +6,22 @@ import Link from 'next/link';
 import { Search, ShoppingCartIcon, Check, Ruler, ChevronDown, MapPin, Info } from 'lucide-react';
 import { formatPrice } from "@/lib/products";
 import { useCartStore } from '@/hooks/use-cart-store';
-import { ProductSize, Product } from '@/types/products';
-import { config } from '@/config';
+import { PricingConfig, ProductSize, Product } from '@/types/products';
+import PromoLabel from '@/components/ui/promo-label';
+import {
+  applyCombinedDiscount,
+  getCombinedDiscountPercentage,
+  getGlobalDiscountLabel,
+  shouldShowGlobalDiscountLabel,
+} from '@/lib/catalog';
 
-export default function ProductClientPage({ product, sku }: { product: Product, sku: string }) {
+interface ProductClientPageProps {
+  product: Product;
+  sku: string;
+  pricingConfig: PricingConfig;
+}
+
+export default function ProductClientPage({ product, sku, pricingConfig }: ProductClientPageProps) {
   const addItem = useCartStore((state) => state.addItem);
   const items = useCartStore((state) => state.items);
 
@@ -31,9 +43,18 @@ export default function ProductClientPage({ product, sku }: { product: Product, 
   const hasItemsInCart = items.length > 0;
   const displayPrice = selectedSize ? formatPrice(selectedSize.price) : product.priceRange;
 
-  const priceWithDiscount = selectedSize 
-  ? formatPrice(selectedSize.price * config.descuentoTransferencia) 
-  : null;
+  const globalLabel = getGlobalDiscountLabel(pricingConfig);
+  const showGlobalLabel = shouldShowGlobalDiscountLabel(pricingConfig);
+
+  const priceWithAllDiscounts = selectedSize
+    ? applyCombinedDiscount(selectedSize.price, pricingConfig, 'TRANSFERENCIA')
+    : null;
+
+  const priceWithDiscount = priceWithAllDiscounts !== null
+    ? formatPrice(priceWithAllDiscounts)
+    : null;
+
+  const totalDiscountPct = getCombinedDiscountPercentage(pricingConfig, 'TRANSFERENCIA');
 
   let hangingSpace = null;
   if (selectedSize) {
@@ -49,6 +70,8 @@ export default function ProductClientPage({ product, sku }: { product: Product, 
   return (
     <main className="min-h-screen bg-white pb-20">
       <div className="container mx-auto px-4 pt-12 max-w-7xl">
+
+        {showGlobalLabel && <div className="mb-6"><PromoLabel label={globalLabel} variant="hero" /></div>}
 
         {/* --- CABECERA / BREADCRUMBS --- a futuro las podemos agregar haciendo bien los links */}
         {/* <nav className="flex items-center text-[10px] uppercase tracking-[0.2em] text-(--tender-text-muted) mb-10 overflow-x-auto whitespace-nowrap pb-2">
@@ -100,7 +123,7 @@ export default function ProductClientPage({ product, sku }: { product: Product, 
           {formatPrice(selectedSize.price)}
         </span>
         <span className="text-[10px] font-black bg-green-100 text-green-700 px-2 py-0.5 rounded-full tracking-wide">
-          {Math.round((1 - config.descuentoTransferencia) * 100)}% OFF
+          {totalDiscountPct}% OFF
         </span>
       </div>
       

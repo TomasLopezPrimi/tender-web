@@ -10,23 +10,31 @@ export const PROVINCIAS_AR = [
 export const clientFormSchema = z.object({
   nombre: z.string().min(1, "Ingresá tu nombre."),
   apellido: z.string().min(1, "Ingresá tu apellido."),
-  dni: z.string().min(6, "Ingresá un DNI válido.").max(10, "Ingresá un DNI válido."),
+  dni: z.string().min(7, "Ingresá un DNI válido.").max(20, "Ingresá un DNI válido."),
   email: z.string().email("Ingresá un email válido."),
-  phone: z.string().min(6, "Ingresá un teléfono válido."),
+  phone: z.string().min(6, "Ingresá un teléfono válido.").max(20, "Ingresá un teléfono válido."),
   usuario_instagram: z.string().nullable().optional(),
   address: z.object({
     calle: z.string().min(1, "Ingresá la calle."),
     numero: z.string().min(1, "Ingresá el número."),
     ciudad: z.string().min(1, "Ingresá la ciudad."),
-    provincia: z.enum(PROVINCIAS_AR, { errorMap: () => ({ message: "Seleccioná una provincia válida." }) }),
+    provincia: z.string().min(1, "Seleccioná una provincia válida."),
     codigo_postal: z.string()
       .min(4, "El código postal debe tener al menos 4 caracteres.")
       .max(8, "El código postal es demasiado largo.")
-      .regex(/^[A-Za-z]?\d{4}[A-Za-z]{0,3}$/, "Código postal inválido (ej: 1414 o B1636)."),
+      .regex(/^[A-Za-z]?\d{4}[A-Za-z]{0,3}$/, "Código postal inválido (ej: 1414 o B1636).")
+      .optional()
+      .or(z.literal("")),
+
     piso: z.string().nullable().optional(),
     departamento: z.string().nullable().optional(),
     referencias: z.string().nullable().optional(),
     es_barrio_privado: z.boolean().optional(),
+    // Campos de geocodificación (opcionales, rellenados por el autocomplete/mapa)
+    latitud: z.number().nullable().optional(),
+    longitud: z.number().nullable().optional(),
+    fuente_geo: z.enum(["usig", "georef", "nominatim", "manual"]).nullable().optional(),
+    direccion_normalizada: z.string().nullable().optional(),
   }),
 });
 
@@ -42,6 +50,10 @@ export interface AddressData {
   departamento?: string | null;
   referencias?: string | null;
   es_barrio_privado?: boolean;
+  latitud?: number | null;
+  longitud?: number | null;
+  fuente_geo?: "usig" | "georef" | "nominatim" | "manual" | null;
+  direccion_normalizada?: string | null;
 }
 
 export interface ClientData {

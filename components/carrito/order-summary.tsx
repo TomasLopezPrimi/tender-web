@@ -1,5 +1,13 @@
 import { Truck, MessageCircle, Loader2, CreditCard, Lock } from "lucide-react";
-import { config } from "@/config";
+import { PricingConfig } from "@/types/products";
+import PromoLabel from "@/components/ui/promo-label";
+import {
+  getCombinedDiscountPercentage,
+  getGlobalDiscountLabel,
+  getGlobalDiscountRate,
+  getPaymentDiscountRate,
+  shouldShowGlobalDiscountLabel,
+} from "@/lib/catalog";
 
 interface OrderSummaryProps {
   totalItems: number;
@@ -7,7 +15,8 @@ interface OrderSummaryProps {
   isProcessing: boolean;
   onCheckout: () => void;
   formatPrice: (price: number) => string;
-  selectedPaymentMethod: string; 
+  selectedPaymentMethod: string;
+  pricingConfig: PricingConfig;
 }
 
 export default function OrderSummary({ 
@@ -16,18 +25,40 @@ export default function OrderSummary({
   isProcessing, 
   onCheckout, 
   formatPrice,
-  selectedPaymentMethod 
+  selectedPaymentMethod,
+  pricingConfig,
 }: OrderSummaryProps) {
 
   const isTransferencia = selectedPaymentMethod === "transferencia";
 
-  const totalPriceWithDiscount = totalPrice * config.descuentoTransferencia  // descuentoTransferencia es 0.85
+  const globalDiscount = getGlobalDiscountRate(pricingConfig);
+  const transferDiscount = getPaymentDiscountRate(pricingConfig, 'TRANSFERENCIA');
+  const globalLabel = getGlobalDiscountLabel(pricingConfig);
+  const globalDiscountPct = Math.round(globalDiscount * 100);
+  const showGlobalLabel = shouldShowGlobalDiscountLabel(pricingConfig);
+
+  const afterGlobal = totalPrice * (1 - globalDiscount);
+  const totalPriceWithDiscount = isTransferencia
+    ? afterGlobal * (1 - transferDiscount)
+    : afterGlobal;
+
+  const combinedDiscountPct = getCombinedDiscountPercentage(pricingConfig, 'TRANSFERENCIA');
 
   return (
     <div className="bg-white rounded-sm p-6 shadow-sm border border-gray-100 sticky top-4 animate-fade-in-up">
       <h2 className="text-lg font-bold text-[var(--tender-navy-mid)] mb-4 border-b pb-4">
         Resumen de compra
       </h2>
+
+      {showGlobalLabel && (
+        <div className="mb-5">
+          <PromoLabel
+            label={globalLabel}
+            variant="summary"
+            kicker={globalDiscountPct > 0 ? `Hasta ${globalDiscountPct}% OFF` : undefined}
+          />
+        </div>
+      )}
       
       {/* <div className="flex justify-between items-center mb-6">
         <span className="text-gray-600">Total ({totalItems} {totalItems === 1 ? 'producto' : 'productos'})</span>
@@ -49,7 +80,7 @@ export default function OrderSummary({
             {formatPrice(totalPriceWithDiscount)}
           </span>
           <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full mt-1 animate-pulse">
-            {Math.round((1 - config.descuentoTransferencia) * 100)}% OFF PAGANDO POR TRANSFERENCIA
+            {combinedDiscountPct}% OFF
           </span>
         </div>
       </>

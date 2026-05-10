@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCartStore } from "@/hooks/use-cart-store";
 import { iniciarProcesoDePago } from "@/lib/cart-actions";
-import { CartItemReference, CheckoutActionResponse, ClientFormValues, clientFormSchema } from "@/types/checkout";
+import { CartItemReference, CheckoutActionResponse, ClientData, ClientFormValues, clientFormSchema } from "@/types/checkout";
 
 export function useCheckout() {
   const router = useRouter();
@@ -48,7 +48,15 @@ export function useCheckout() {
     const isValid = await form.trigger();
     if (!isValid) {
       setFormError("Revisá los campos marcados en rojo.");
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      requestAnimationFrame(() => {
+        const firstError = document.querySelector<HTMLElement>(".border-red-300");
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+          firstError.focus({ preventScroll: true });
+        } else {
+          document.getElementById("checkout-form-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
       return;
     }
 
@@ -56,7 +64,14 @@ export function useCheckout() {
     setFormError("");
 
     try {
-      const clientData = form.getValues();
+      const formValues = form.getValues();
+      const clientData: ClientData = {
+        ...formValues,
+        address: {
+          ...formValues.address,
+          codigo_postal: formValues.address.codigo_postal ?? "",
+        },
+      };
 
       const itemsParaBackend: CartItemReference[] = items.map(item => ({
         sku: item.sku,

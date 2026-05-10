@@ -13,7 +13,6 @@ export const config = {
         cbu: "0720146888000037236186",
         titular: "Axenfeld Ruth Haydee"
     },
-    // descuentoTransferencia : 0.85
-    descuentoTransferencia : process.env.DESCUENTO_TRANSFERENCIA ? parseFloat(process.env.DESCUENTO_TRANSFERENCIA) : 0.85
-    
+    BACKEND_URL: process.env.BACKEND_URL || "http://localhost:8000",
+    INTERNAL_API_KEY: process.env.INTERNAL_API_KEY
 }

@@ -2,11 +2,13 @@ import { UIProduct } from "@/types/products";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import PromoLabel from "@/components/ui/promo-label";
 
 export default function ProductCard({ product }: { product: UIProduct }) {
   // Formateo del precio (Desde $X.XXX)
   const menorPrecio = "Desde " + product.priceRange.split(" ")[0];
   const isCyanBadge = product.badgeColor === "bg-[var(--tender-cyan)]";
+  const isPromoBadge = product.badgeColor === "bg-rose-500";
 
   return (
     <Link
@@ -27,14 +29,20 @@ export default function ProductCard({ product }: { product: UIProduct }) {
 
         {/* Badge Flotante */}
         {product.badge && (
-          <span
-            className={`absolute top-3 left-3 flex items-center justify-center z-10 backdrop-blur-md border text-[9px] font-black px-3 py-1.5 rounded-full tracking-tighter shadow-sm transition-all duration-500 group-hover:left-4
-              ${isCyanBadge
-                ? "bg-[var(--tender-cyan)]/90 text-white border-[var(--tender-cyan)]/20"
-                : "bg-white/90 text-[var(--tender-navy)] border-white/40"}`}
-          >
-            {product.badge}
-          </span>
+          <div className="absolute top-3 left-3 z-10 transition-all duration-500 group-hover:left-4">
+            {isPromoBadge ? (
+              <PromoLabel label={product.badge} variant="card" />
+            ) : (
+              <span
+                className={`flex items-center justify-center backdrop-blur-md border text-[9px] font-black px-3 py-1.5 rounded-full tracking-tighter shadow-sm
+                  ${isCyanBadge
+                    ? "bg-[var(--tender-cyan)]/90 text-white border-[var(--tender-cyan)]/20"
+                    : "bg-white/90 text-[var(--tender-navy)] border-white/40"}`}
+              >
+                {product.badge}
+              </span>
+            )}
+          </div>
         )}
       </div>
 
