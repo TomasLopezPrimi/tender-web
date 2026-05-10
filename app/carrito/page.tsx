@@ -3,6 +3,8 @@ import { fetchPricingConfig, getHydratedProducts } from "@/lib/catalog";
 import { baseProductMetadata } from "@/lib/products";
 import { ProductSize } from "@/types/products";
 
+export const dynamic = 'force-dynamic';
+
 export default async function CarritoPage() {
   const [pricingConfig, { products }] = await Promise.all([
     fetchPricingConfig(),
