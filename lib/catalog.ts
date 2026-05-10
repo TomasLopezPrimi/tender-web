@@ -8,6 +8,8 @@
  * Pensado para usarse en Server Components (Next.js App Router).
  */
 
+import 'server-only';
+
 import {
   BackendProductVariants,
   PricingConfig,

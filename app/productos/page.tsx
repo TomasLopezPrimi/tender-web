@@ -4,6 +4,8 @@ import { baseProductMetadata } from "@/lib/products";
 import { getHydratedProducts } from "@/lib/catalog";
 import CategorySection from "@/components/productos/category-section";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Tienda - Tender®',
   description: 'Comprá Tender® Online! Comprar Tender colgante, Tender Rebatible y Tender Plegable. Todos los modelo y todas las medidas de Tender Original.',
