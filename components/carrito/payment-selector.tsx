@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CreditCard, Landmark, Copy, Check } from "lucide-react";
 import { config } from "@/config";
 import { PricingConfig } from "@/types/products";
-import { getPaymentDiscountRate } from "@/lib/catalog";
+import { getPaymentDiscountRate } from "@/lib/pricing";
 
 interface PaymentSelectorProps {
   selectedMethod: string;

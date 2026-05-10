@@ -7,7 +7,7 @@ import {
   getGlobalDiscountRate,
   getPaymentDiscountRate,
   shouldShowGlobalDiscountLabel,
-} from "@/lib/catalog";
+} from "@/lib/pricing";
 
 interface OrderSummaryProps {
   totalItems: number;

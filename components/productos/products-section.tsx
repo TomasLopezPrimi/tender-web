@@ -1,4 +1,5 @@
-import { getGlobalDiscountLabel, shouldShowGlobalDiscountLabel, getHydratedProducts } from "@/lib/catalog"
+import { getGlobalDiscountLabel, shouldShowGlobalDiscountLabel } from "@/lib/pricing"
+import { getHydratedProducts } from "@/lib/catalog"
 import { baseProductMetadata } from "@/lib/products"
 import { UIProduct } from "@/types/products"
 import ProductCard from "./product-card"
