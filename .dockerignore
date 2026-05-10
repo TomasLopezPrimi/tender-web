@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Dependencies (se reinstalan en el build)
+node_modules
+
+# Build output (se genera en el build)
+.next
+
+# Archivos de entorno con secretos — NO copiar al image
+.env
+.env.*
+!.env.example
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Archivos internos de agentes/herramientas
+.agents
+.claude
+skills-lock.json
+CLAUDE.md
+README.md
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db

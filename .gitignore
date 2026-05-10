@@ -15,6 +15,9 @@ node_modules/
 .next/
 out/
 
+# TypeScript incremental build info
+*.tsbuildinfo
+
 # Archivos de IDE y editor
 .idea/
 .vscode/
