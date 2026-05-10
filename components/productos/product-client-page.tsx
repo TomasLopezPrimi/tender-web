@@ -13,7 +13,7 @@ import {
   getCombinedDiscountPercentage,
   getGlobalDiscountLabel,
   shouldShowGlobalDiscountLabel,
-} from '@/lib/catalog';
+} from '@/lib/pricing';
 
 interface ProductClientPageProps {
   product: Product;
