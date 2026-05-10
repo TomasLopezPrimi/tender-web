@@ -74,7 +74,7 @@ export interface CheckoutRequest {
   customerNote?: string;
   client_id?: number | null;
   client_data?: ClientData | null;
-  payment_method: "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "EFECTIVO"
+  payment_method: "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "GETNET-LINK" | "EFECTIVO"
 }
 
 export interface CartItemReference {
@@ -84,10 +84,15 @@ export interface CartItemReference {
 }
 
 
-export type PaymentProvider = 'WHATSAPP' | 'GETNET' 
+export type PaymentProvider = 'WHATSAPP' | 'GETNET'
 
+export interface GetnetLinkItem {
+  label: string;
+  url: string;
+  amount: number;
+}
 
-export type PaymentInstruction = 
+export type PaymentInstruction =
   | {
       type: 'EXTERNAL_REDIRECT';
       provider: 'WHATSAPP';
@@ -98,6 +103,13 @@ export type PaymentInstruction =
       provider: 'GETNET';
       payload: {
         checkoutUrl: string;
+      };
+    }
+  | {
+      type: 'GETNET_LINKS';
+      provider: 'GETNET';
+      payload: {
+        links: GetnetLinkItem[];
       };
     };
 

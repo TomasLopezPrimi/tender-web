@@ -4,7 +4,7 @@ import { CartItem, ProductSize } from "@/types/products";
 interface CartItemCardProps {
   item: CartItem;
   onRemove: (id: string) => void;
-  onUpdateSize: (id: string, sizeName: string, price: number) => void;
+  onUpdateSize: (id: string, sizeName: string, price: number, linkPago?: string | null) => void;
   formatPrice: (price: number) => string;
   availableSizes?: ProductSize[];
 }
@@ -27,7 +27,7 @@ export default function CartItemCard({ item, onRemove, onUpdateSize, formatPrice
                 const newSizeName = e.target.value;
                 const newSizeObj = sizes.find(s => s.name === newSizeName);
                 if (newSizeObj) {
-                  onUpdateSize(item.id, newSizeObj.name, newSizeObj.price);
+                  onUpdateSize(item.id, newSizeObj.name, newSizeObj.price, newSizeObj.link_pago);
                 }
               }}
               className="text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-sm py-1 px-2 focus:outline-none focus:ring-1 focus:ring-[var(--tender-cyan)] cursor-pointer"

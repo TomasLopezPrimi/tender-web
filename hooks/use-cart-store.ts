@@ -4,9 +4,9 @@ import { CartItem } from '@/types/products';
 
 interface CartState {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, 'cantidad'>) => void; 
-  removeItem: (id: string) => void; 
-  updateItemSize: (oldId: string, newSizeName: string, newPrice: number) => void;
+  addItem: (item: Omit<CartItem, 'cantidad'>) => void;
+  removeItem: (id: string) => void;
+  updateItemSize: (oldId: string, newSizeName: string, newPrice: number, newLinkPago?: string | null) => void;
   clearCart: () => void;
 }
 
@@ -35,7 +35,7 @@ export const useCartStore = create<CartState>()(
         items: state.items.filter((item) => item.id !== id),
       })),
 
-      updateItemSize: (oldId, newSizeName, newPrice) => set((state) => {
+      updateItemSize: (oldId, newSizeName, newPrice, newLinkPago) => set((state) => {
         const itemToUpdate = state.items.find((item) => item.id === oldId);
         if (!itemToUpdate) return state;
 
@@ -45,9 +45,9 @@ export const useCartStore = create<CartState>()(
         if (existingItemWithNewSize) {
           return {
             items: state.items
-              .map((item) => 
-                item.id === newId 
-                  ? { ...item, cantidad: item.cantidad + itemToUpdate.cantidad } 
+              .map((item) =>
+                item.id === newId
+                  ? { ...item, cantidad: item.cantidad + itemToUpdate.cantidad }
                   : item
               )
               .filter((item) => item.id !== oldId),
@@ -55,8 +55,8 @@ export const useCartStore = create<CartState>()(
         } else {
           return {
             items: state.items.map((item) =>
-              item.id === oldId 
-                ? { ...item, id: newId, medida: newSizeName, precio: newPrice } 
+              item.id === oldId
+                ? { ...item, id: newId, medida: newSizeName, precio: newPrice, link_pago: newLinkPago }
                 : item
             ),
           };

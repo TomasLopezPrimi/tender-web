@@ -21,6 +21,8 @@ import AddressForm from "./address-form";
 import OrderSummary from "./order-summary";
 import PaymentSelector from "./payment-selector";
 import GetnetModal from "./getnet-modal";
+import PaymentLinksModal from "./payment-links-modal";
+import { GetnetLinkItem } from "@/types/checkout";
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('es-AR', {
@@ -31,6 +33,9 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
+const getThankYouPath = (method: "transferencia" | "getnet-link" | "getnet-web") =>
+  `/gracias?paymentMethod=${method}`;
+
 export default function CartView({ pricingConfig, productSizes }: CartViewProps) {
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
@@ -38,6 +43,9 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
   const [paymentMethod, setPaymentMethod] = useState("transferencia");
   const [showGetnetModal, setShowGetnetModal] = useState(false);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [showLinksModal, setShowLinksModal] = useState(false);
+  const [paymentLinks, setPaymentLinks] = useState<GetnetLinkItem[]>([]);
+  const [linksOrderId, setLinksOrderId] = useState<number | undefined>(undefined);
 
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
@@ -68,7 +76,7 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
         setShowGetnetModal(false);
         setCheckoutUrl(null);
         clearCart();
-        router.push("/gracias");
+        router.push(getThankYouPath("getnet-web"));
       } else {
         setShowGetnetModal(false);
         setCheckoutUrl(null);
@@ -76,6 +84,13 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
       }
     }
   }, [clearCart, router, setFormError]);
+
+  const handlePaymentLinksCompleted = useCallback(() => {
+    setShowLinksModal(false);
+    setPaymentLinks([]);
+    clearCart();
+    router.push(getThankYouPath("getnet-link"));
+  }, [clearCart, router]);
 
   useEffect(() => {
     window.addEventListener("message", handleGetnetMessage);
@@ -115,8 +130,15 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
         setCheckoutUrl(response.instruction.payload.checkoutUrl);
         setShowGetnetModal(true);
       }
+    } else if (paymentMethod === "getnet-link") {
+      const response = await handleCheckout("GETNET-LINK");
+      if (response?.success && response.instruction?.type === "GETNET_LINKS") {
+        setPaymentLinks(response.instruction.payload.links);
+        setLinksOrderId(response.orderId ?? undefined);
+        setShowLinksModal(true);
+      }
     } else {
-      handleCheckout("TRANSFERENCIA"); 
+      handleCheckout("TRANSFERENCIA");
     }
   };
 
@@ -159,10 +181,11 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
             </div>
 
             {/* ② SELECTOR DE MÉTODO DE PAGO */}
-            <PaymentSelector 
+            <PaymentSelector
               selectedMethod={paymentMethod}
               onSelectMethod={setPaymentMethod}
               pricingConfig={pricingConfig}
+              cartItems={items}
             />
 
             {/* ③ DATOS PERSONALES Y DIRECCIÓN UNIFICADOS */}
@@ -205,7 +228,7 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
 
       {/* MODAL DE GETNET */}
       {checkoutUrl && (
-        <GetnetModal 
+        <GetnetModal
           isOpen={showGetnetModal}
           onClose={() => {
             setShowGetnetModal(false);
@@ -214,6 +237,16 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
           checkoutUrl={checkoutUrl}
         />
       )}
+
+      {/* MODAL DE LINKS DE PAGO (GETNET-LINK) */}
+      <PaymentLinksModal
+        isOpen={showLinksModal}
+        onClose={() => setShowLinksModal(false)}
+        onAllLinksOpened={handlePaymentLinksCompleted}
+        links={paymentLinks}
+        orderId={linksOrderId}
+        pricingConfig={pricingConfig}
+      />
     </div>
   );
 }

@@ -21,7 +21,7 @@ const slides: Slide[] = [
     image: "/images/tender-ropa.jpg",
     alt: "Tender con ropa",
     title: "Original como tu ropa",
-    subtitle: "Más de 60 medidas disponibles. Encontrá la solución perfecta para tu hogar.",
+    subtitle: "La marca que le dio nombre al tendedero Argentino",
     cta: "VER PRODUCTOS",
     ctaHref: "#productos",
     imagePosition: "object-[25%_center] md:object-[center_35%]",
