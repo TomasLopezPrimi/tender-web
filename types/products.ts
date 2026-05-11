@@ -5,11 +5,13 @@ export interface CartItem {
   medida: string;
   precio: number;
   cantidad: number;
+  link_pago?: string | null;
 }
 
 export interface ProductSize {
   name: string;
   price: number;
+  link_pago?: string | null;
 }
 
 export interface ProductFeature {
@@ -51,6 +53,7 @@ export interface UIProduct extends Product {
 export interface BackendVariant {
   medida: string;
   precio_unitario: number;
+  link_pago?: string | null;
 }
 
 export interface BackendProductVariants {

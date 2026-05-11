@@ -39,7 +39,7 @@ export function useCheckout() {
     mode: "onTouched",
   });
 
-  type PaymentMethod = "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "EFECTIVO";
+  type PaymentMethod = "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "GETNET-LINK" | "EFECTIVO";
 
   
   const handleCheckout = async (paymentMethod: PaymentMethod = "TRANSFERENCIA"): Promise<CheckoutActionResponse | undefined> => {
@@ -93,12 +93,17 @@ export function useCheckout() {
           // No limpiar carrito ni navegar — el caller abrirá el modal con la URL
           return response;
         }
-        
+
+        if (response.instruction?.type === 'GETNET_LINKS') {
+          // No limpiar carrito ni navegar — el caller abrirá el modal con los links
+          return response;
+        }
+
         if (response.instruction?.type === 'EXTERNAL_REDIRECT') {
           window.open(response.instruction.payload.url, '_blank');
-          clearCart(); 
+          clearCart();
           router.push('/gracias');
-        } 
+        }
         else {
           clearCart();
           router.push('/gracias');

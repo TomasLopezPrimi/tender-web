@@ -77,6 +77,7 @@ export function hydrateProduct(
   const sizes: ProductSize[] = backendVariants.variantes.map((v) => ({
     name: v.medida,
     price: v.precio_unitario,
+    link_pago: v.link_pago ?? null,
   }));
 
   const displayPrices = sizes.map((s) => applyGlobalDiscount(s.price, pricingConfig));

@@ -3,21 +3,23 @@
 import { useState } from "react";
 import { CreditCard, Landmark, Copy, Check } from "lucide-react";
 import { config } from "@/config";
-import { PricingConfig } from "@/types/products";
+import { PricingConfig, CartItem } from "@/types/products";
 import { getPaymentDiscountRate } from "@/lib/pricing";
 
 interface PaymentSelectorProps {
   selectedMethod: string;
   onSelectMethod: (method: string) => void;
   pricingConfig: PricingConfig;
+  cartItems: CartItem[];
 }
 
-export default function PaymentSelector({ 
-  selectedMethod, 
+export default function PaymentSelector({
+  selectedMethod,
   onSelectMethod,
   pricingConfig,
+  cartItems,
 }: PaymentSelectorProps) {
-  
+
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const copyToClipboard = (text: string, field: string) => {
@@ -28,6 +30,10 @@ export default function PaymentSelector({
 
   const bankDetails = config.bankDetails;
   const transferPct = Math.round(getPaymentDiscountRate(pricingConfig, "TRANSFERENCIA") * 100);
+
+  // GETNET-LINK disponible solo si TODAS las variantes del carrito tienen link_pago
+  const allItemsHaveLink = cartItems.length > 0 && cartItems.every((item) => !!item.link_pago);
+
   const paymentMethods = [
     {
       id: "transferencia",
@@ -36,58 +42,70 @@ export default function PaymentSelector({
         ? `¡Aprovechá el ${transferPct}% de descuento!`
         : "",
       icon: Landmark,
+      disabled: false,
     },
-    // {
-    //   id: "getnet",
-    //   title: "Tarjetas de Crédito / Débito",
-    //   description: "Pago seguro a través de Getnet.",
-    //   icon: CreditCard,
-    // }
+    {
+      id: "getnet-link",
+      title: "Tarjeta de crédito o débito",
+      description: allItemsHaveLink
+        ? "Acepta débito y hasta 18 cuotas con tarjeta de crédito."
+        : "No disponible para los productos seleccionados.",
+      icon: CreditCard,
+      disabled: !allItemsHaveLink,
+    },
   ];
+
+  const handleSelect = (method: string, disabled: boolean) => {
+    if (disabled) return;
+    onSelectMethod(method);
+  };
 
   return (
     <div className="bg-white rounded-sm p-6 shadow-sm border border-gray-100 animate-fade-in-up">
       <h2 className="text-lg font-bold text-[var(--tender-navy-mid)] mb-6 border-b pb-4">
         <span className="text-[var(--tender-cyan)] mr-1.5">②</span>Método de pago
       </h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {paymentMethods.map((method) => {
           const Icon = method.icon;
           const isSelected = selectedMethod === method.id;
+          const isDisabled = method.disabled;
 
           return (
-            <label 
+            <label
               key={method.id}
               className={`
-                relative flex flex-col p-4 cursor-pointer rounded-md border-2 transition-all duration-200
-                ${isSelected 
-                  ? 'border-[var(--tender-cyan)] bg-[var(--tender-cyan)]/5' 
-                  : 'border-gray-200 hover:border-gray-300 bg-white'
+                relative flex flex-col p-4 rounded-md border-2 transition-all duration-200
+                ${isDisabled
+                  ? 'border-gray-100 bg-gray-50 cursor-not-allowed opacity-50'
+                  : isSelected
+                    ? 'border-[var(--tender-cyan)] bg-[var(--tender-cyan)]/5 cursor-pointer'
+                    : 'border-gray-200 hover:border-gray-300 bg-white cursor-pointer'
                 }
               `}
-              onClick={() => onSelectMethod(method.id)}
+              onClick={() => handleSelect(method.id, isDisabled)}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-3">
-                  <Icon 
-                    size={24} 
-                    className={isSelected ? 'text-[var(--tender-cyan)]' : 'text-gray-400'} 
+                  <Icon
+                    size={24}
+                    className={isSelected && !isDisabled ? 'text-[var(--tender-cyan)]' : 'text-gray-400'}
                   />
-                  <span className={`font-semibold ${isSelected ? 'text-[var(--tender-navy-mid)]' : 'text-[var(--tender-text-dark)]'}`}>
+                  <span className={`font-semibold ${isSelected && !isDisabled ? 'text-[var(--tender-navy-mid)]' : 'text-[var(--tender-text-dark)]'}`}>
                     {method.title}
                   </span>
                 </div>
-                
+
                 {/* Custom Radio Button */}
                 <div className={`
                   w-5 h-5 rounded-full border-2 flex items-center justify-center
-                  ${isSelected ? 'border-[var(--tender-cyan)]' : 'border-gray-300'}
+                  ${isSelected && !isDisabled ? 'border-[var(--tender-cyan)]' : 'border-gray-300'}
                 `}>
-                  {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[var(--tender-cyan)]" />}
+                  {isSelected && !isDisabled && <div className="w-2.5 h-2.5 rounded-full bg-[var(--tender-cyan)]" />}
                 </div>
               </div>
-              
+
               <p className="text-sm text-[var(--tender-text-muted)] ml-9">
                 {method.description}
               </p>
@@ -126,6 +144,28 @@ export default function PaymentSelector({
 
             <div className="pt-1">
               <p className="text-[11px] text-gray-600"><strong>Titular:</strong> {bankDetails.titular}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* INFO CUOTAS - Solo cuando getnet-link está seleccionado */}
+      {selectedMethod === "getnet-link" && (
+        <div className="mt-4 animate-fade-in">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-sm p-4">
+            <div className="flex items-start gap-3">
+              <CreditCard size={20} className="text-blue-600 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-sm font-bold text-blue-900 mb-1">
+                  Hasta <span className="text-lg font-black text-blue-700">18 cuotas</span> con tarjeta de crédito
+                </p>
+                <p className="text-xs text-blue-700">
+                  También acepta débito. El interés de las cuotas varía según el banco.
+                </p>
+                <p className="text-xs text-blue-600 mt-2">
+                  Después de confirmar, te mostramos los links de pago para cada producto.
+                </p>
+              </div>
             </div>
           </div>
         </div>

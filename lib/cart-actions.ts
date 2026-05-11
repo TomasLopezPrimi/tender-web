@@ -13,7 +13,7 @@ const INTERNAL_API_KEY = config.INTERNAL_API_KEY;
 
 export async function iniciarProcesoDePago(
   items: CartItemReference[],
-  paymentMethod: "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "EFECTIVO",
+  paymentMethod: "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "GETNET-LINK" | "EFECTIVO",
   clientId?: number,
   clientData?: ClientData,
   customerNote?: string,

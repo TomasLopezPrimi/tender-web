@@ -127,13 +127,13 @@ export default function ProductClientPage({ product, sku, pricingConfig }: Produ
         </span>
       </div>
       
-      {/* Precio con Transferencia */}
+      {/* Precio con descuento */}
       <div className="flex flex-col">
         <div className="text-4xl font-bold text-(--tender-cyan) tracking-tight flex items-baseline gap-2">
           {priceWithDiscount}
-          <span className="text-[10px] font-normal text-(--tender-navy) opacity-70 tracking-widest uppercase">
+          {/* <span className="text-[10px] font-normal text-(--tender-navy) opacity-70 tracking-widest uppercase">
             Por Transferencia
-          </span>
+          </span> */}
         </div>
         {/* <span className="text-[10px] font-normal mt-1 opacity-50 text-(--tender-navy) tracking-widest uppercase"> */}
           {/* IVA INCLUIDO  */}
@@ -182,7 +182,7 @@ export default function ProductClientPage({ product, sku, pricingConfig }: Produ
             </div>
 
             <div className="flex flex-col gap-3">
-              <button onClick={() => { if (!selectedSize) return; addItem({ id: `${product.sku}-${selectedSize.name}`, sku: product.sku, nombre: product.title, medida: selectedSize.name, precio: selectedSize.price }); setIsAdded(true); setTimeout(() => setIsAdded(false), 2000); }} disabled={!selectedSize} className={`group flex items-center justify-center gap-3 w-full py-5 rounded-xl font-black tracking-widest text-xs transition-all ${selectedSize ? isAdded ? 'bg-green-500 text-white' : 'bg-(--tender-navy) text-white hover:bg-(--tender-cyan) hover:shadow-xl' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
+              <button onClick={() => { if (!selectedSize) return; addItem({ id: `${product.sku}-${selectedSize.name}`, sku: product.sku, nombre: product.title, medida: selectedSize.name, precio: selectedSize.price, link_pago: selectedSize.link_pago }); setIsAdded(true); setTimeout(() => setIsAdded(false), 2000); }} disabled={!selectedSize} className={`group flex items-center justify-center gap-3 w-full py-5 rounded-xl font-black tracking-widest text-xs transition-all ${selectedSize ? isAdded ? 'bg-green-500 text-white' : 'bg-(--tender-navy) text-white hover:bg-(--tender-cyan) hover:shadow-xl' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
                 {isAdded ? <Check size={18} /> : <ShoppingCartIcon size={18} className="opacity-50" />}
                 {isAdded ? 'AÑADIDO CON ÉXITO' : 'AÑADIR AL CARRITO'}
               </button>

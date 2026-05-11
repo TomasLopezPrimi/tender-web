@@ -8,8 +8,8 @@ interface Slide {
   id: number
   image: string
   alt: string
-  title: string
-  subtitle: string
+  title?: string
+  subtitle?: string
   cta?: string
   ctaHref?: string
   imagePosition?: string
@@ -17,34 +17,21 @@ interface Slide {
 
 const slides: Slide[] = [
   {
-    id: 1,
+    id: 2,
     image: "/images/tender-ropa.jpg",
     alt: "Tender con ropa",
     title: "Original como tu ropa",
-    subtitle: "Más de 60 medidas disponibles. Encontrá la solución perfecta para tu hogar.",
+    subtitle: "La marca que le dio nombre al tendedero Argentino",
     cta: "VER PRODUCTOS",
     ctaHref: "#productos",
     imagePosition: "object-[25%_center] md:object-[center_35%]",
   },
+  {
+    id: 1,
+    image: "/images/banners/banner.jpeg",
+    alt: "Banner Tender"
+  },
 
-  // {
-  //   id: 3,
-  //   image: "/images/espacio-balcon.jpg",
-  //   alt: "Casa premium con Tender instalado",
-  //   title: "Diseño que eleva tu hogar",
-  //   subtitle: "Calidad, elegancias y funcionalidad para los hogares más exigentes. La marca que define la categoría.",
-  //   cta: "CONOCÉ MÁS",
-  //   ctaHref: "#espacios",
-  // },
-  // {
-  //   id: 4,
-  //   image: "/images/espacio-lavadero.jpg",
-  //   alt: "Tender en lavadero moderno",
-  //   title: "Cada espacio merece un Tender®",
-  //   subtitle: "Más de 60 medidas disponibles. Encontrá la solución perfecta para tu hogar.",
-  //   cta: "VER PRODUCTOS",
-  //   ctaHref: "#productos",
-  // },
 ]
 
 export default function HeroSlider() {
@@ -58,7 +45,7 @@ export default function HeroSlider() {
       if (isAnimating) return
       setIsAnimating(true)
       setCurrent(index)
-      setTimeout(() => setIsAnimating(false), 600)
+      setTimeout(() => setIsAnimating(false), 1000)
     },
     [isAnimating]
   )
@@ -106,23 +93,28 @@ export default function HeroSlider() {
           <div className="absolute inset-0 bg-gradient-to-t from-(--tender-navy)/90 from-10% via-(--tender-navy)/0 via-60% to-transparent" />
           
           <div className="absolute inset-0 flex flex-col items-center justify-end text-center pb-28 md:pb-36 px-6 z-10">
-            <img
-              src="/images/logo-tender.svg"
-              alt="Tender®"
-              className="hidden md:block md:h-14 w-auto select-none mb-4"
-              style={{ filter: "brightness(0) invert(1)" }}
-              draggable={false}
-            />
+            {slide.title && (
+              <img
+                src="/images/logo-tender.svg"
+                alt="Tender®"
+                className="hidden md:block md:h-14 w-auto select-none mb-4"
+                style={{ filter: "brightness(0) invert(1)" }}
+                draggable={false}
+            />)}
 
-            <h2 className="text-3xl md:text-5xl lg:text-6xl text-white font-serif tracking-wide max-w-4xl drop-shadow-md">
-              {slide.title}
-            </h2>
+            {slide.title && (
+              <h2 className="text-3xl md:text-5xl lg:text-6xl text-white font-serif tracking-wide max-w-4xl drop-shadow-md">
+                {slide.title}
+              </h2>
+            )}
             
             <div className="gold-line mt-6 opacity-80" />
             
-            <p className="mt-5 text-white/90 text-sm md:text-lg max-w-2xl leading-relaxed drop-shadow">
-              {slide.subtitle}
-            </p>
+            {slide.subtitle && (
+              <p className="mt-5 text-white/90 text-sm md:text-lg max-w-2xl leading-relaxed drop-shadow">
+                {slide.subtitle}
+              </p>
+            )}
             
             {slide.cta && (
               <a

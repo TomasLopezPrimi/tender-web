@@ -1,6 +1,6 @@
 import { Truck, MessageCircle, Loader2, CreditCard, Lock } from "lucide-react";
+import Image from "next/image";
 import { PricingConfig } from "@/types/products";
-import PromoLabel from "@/components/ui/promo-label";
 import {
   getCombinedDiscountPercentage,
   getGlobalDiscountLabel,
@@ -30,6 +30,7 @@ export default function OrderSummary({
 }: OrderSummaryProps) {
 
   const isTransferencia = selectedPaymentMethod === "transferencia";
+  const isGetnetLink = selectedPaymentMethod === "getnet-link";
 
   const globalDiscount = getGlobalDiscountRate(pricingConfig);
   const transferDiscount = getPaymentDiscountRate(pricingConfig, 'TRANSFERENCIA');
@@ -43,6 +44,8 @@ export default function OrderSummary({
     : afterGlobal;
 
   const combinedDiscountPct = getCombinedDiscountPercentage(pricingConfig, 'TRANSFERENCIA');
+  const showDiscountedPrice = isTransferencia || (isGetnetLink && globalDiscount > 0);
+  const activeBadgePct = isTransferencia ? combinedDiscountPct : globalDiscountPct;
 
   return (
     <div className="bg-white rounded-sm p-6 shadow-sm border border-gray-100 sticky top-4 animate-fade-in-up">
@@ -52,10 +55,13 @@ export default function OrderSummary({
 
       {showGlobalLabel && (
         <div className="mb-5">
-          <PromoLabel
-            label={globalLabel}
-            variant="summary"
-            kicker={globalDiscountPct > 0 ? `Hasta ${globalDiscountPct}% OFF` : undefined}
+          <Image
+            src="/images/banners/40_off.jpeg"
+            alt="40% OFF"
+            width={250}
+            height={280}
+            className="w-full h-auto rounded-lg"
+            priority
           />
         </div>
       )}
@@ -68,24 +74,21 @@ export default function OrderSummary({
   <span className="text-gray-600 pb-1">Total ({totalItems} {totalItems === 1 ? 'producto' : 'productos'})</span>
   
   <div className="flex flex-col items-end">
-    {isTransferencia ? (
+    {showDiscountedPrice ? (
       <>
-        {/* Precio original tachado */}
         <span className="text-sm text-gray-400 line-through leading-none mb-1">
           {formatPrice(totalPrice)}
         </span>
-        {/* Precio con descuento resaltado */}
         <div className="flex flex-col items-end">
           <span className="text-3xl font-black text-[var(--tender-navy-mid)] leading-none">
             {formatPrice(totalPriceWithDiscount)}
           </span>
           <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full mt-1 animate-pulse">
-            {combinedDiscountPct}% OFF
+            {activeBadgePct}% OFF
           </span>
         </div>
       </>
     ) : (
-      /* Precio estándar sin transferencia */
       <span className="text-2xl font-bold text-[var(--tender-navy-mid)]">
         {formatPrice(totalPrice)}
       </span>
@@ -99,6 +102,9 @@ export default function OrderSummary({
           <div className="text-sm text-blue-900 leading-relaxed">
             <span className="font-bold block mb-1">Entrega personalizada:</span>
             <p>Coordinaremos el método de envío más económico para vos por WhatsApp.</p>
+            <p className="mt-2">
+              Tiempo estimado de entrega: <strong>3 a 7 días hábiles</strong>
+            </p>
             <p className="mt-2 text-[11px] opacity-75">* La instalación y el costo de envío no están incluidos en el total.</p>
           </div>
         </div>
@@ -113,15 +119,13 @@ export default function OrderSummary({
           text-white font-extrabold text-sm uppercase tracking-wider 
           py-4 px-6 rounded-sm transition-all duration-300 ease-in-out
           
-          ${isTransferencia 
-            ? `/* Estilos WhatsApp */
-               bg-gradient-to-b from-[#34E073] to-[#25D366]
+          ${isTransferencia
+            ? `bg-gradient-to-b from-[#34E073] to-[#25D366]
                shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4)]
                shadow-[0_4px_14px_0_rgba(37,211,102,0.3)]
                hover:from-[#2ae16f] hover:to-[#1ebd5e]
-               hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)]` 
-            : `/* Estilos Getnet (Tender Navy) */
-               bg-[var(--tender-navy)]
+               hover:shadow-[0_6px_20px_0_rgba(37,211,102,0.5)]`
+            : `bg-[var(--tender-navy)]
                shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]
                shadow-[0_4px_14px_0_rgba(0,0,0,0.2)]
                hover:bg-[var(--tender-navy-mid)]
@@ -142,7 +146,14 @@ export default function OrderSummary({
         )}
 
         <span className="relative top-[1px]">
-          {isProcessing ? "Procesando..." : isTransferencia ? "Confirmar por WhatsApp" : "Pagar con Tarjeta"}
+          {isProcessing
+            ? "Procesando..."
+            : isTransferencia
+              ? "Confirmar por WhatsApp"
+              : isGetnetLink
+                ? "Confirmar y ver links de pago"
+                : "Pagar con Tarjeta"
+          }
         </span>
       </button>
       
@@ -150,6 +161,10 @@ export default function OrderSummary({
       <div className="text-center text-[11px] text-gray-500 mt-4 leading-tight animate-fade-in">
         {isTransferencia ? (
           <p>Al confirmar, te redirigiremos a WhatsApp para que nos envíes el <b>comprobante de transferencia</b> y coordinemos la entrega.</p>
+        ) : isGetnetLink ? (
+          <p className="flex items-center justify-center gap-1">
+            <Lock size={10} /> Al confirmar, te mostramos los links para pagar y luego te contactamos para coordinar la entrega.
+          </p>
         ) : (
           <p className="flex items-center justify-center gap-1">
             <Lock size={10} /> Serás redirigido a una plataforma de pago segura.
