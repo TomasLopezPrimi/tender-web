@@ -67,11 +67,15 @@ export async function iniciarProcesoDePago(
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      return { 
-        success: false, 
-        error: errorData.detail || "El servidor de pagos no respondió correctamente." 
-      };
+      let errorMsg = "El servidor de pagos no respondió correctamente.";
+      try {
+        const ct = response.headers.get("content-type") || "";
+        if (ct.includes("application/json")) {
+          const errorData = await response.json();
+          errorMsg = errorData.detail || errorMsg;
+        }
+      } catch { /* respuesta sin JSON válido, usamos el mensaje genérico */ }
+      return { success: false, error: errorMsg };
     }
 
     const data = await response.json(); 
