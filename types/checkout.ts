@@ -22,9 +22,7 @@ export const clientFormSchema = z.object({
     codigo_postal: z.string()
       .min(4, "El código postal debe tener al menos 4 caracteres.")
       .max(8, "El código postal es demasiado largo.")
-      .regex(/^[A-Za-z]?\d{4}[A-Za-z]{0,3}$/, "Código postal inválido (ej: 1414 o B1636).")
-      .optional()
-      .or(z.literal("")),
+      .regex(/^[A-Za-z]?\d{4}[A-Za-z]{0,3}$/, "Código postal inválido (ej: 1414 o B1636)."),
 
     piso: z.string().nullable().optional(),
     departamento: z.string().nullable().optional(),

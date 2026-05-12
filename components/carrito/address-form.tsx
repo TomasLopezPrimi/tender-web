@@ -269,6 +269,18 @@ export default function AddressForm({ register, errors, setValue, clearErrors }:
       {/* ── Always visible: supplementary fields ── */}
       {(mode === "confirmed" || mode === "manual") && (
         <div className="mt-5 space-y-4">
+          {mode === "confirmed" && (
+            <div className="space-y-1">
+              <label htmlFor="address.codigo_postal" className="text-sm font-medium text-gray-700">Código Postal *</label>
+              <input
+                type="text" id="address.codigo_postal"
+                {...register("address.codigo_postal")}
+                className={inputClass(!!addrErrors?.codigo_postal)}
+                placeholder="Ej. 1414 o B1636"
+              />
+              {addrErrors?.codigo_postal && <p className="text-xs text-red-500 mt-1">{addrErrors.codigo_postal.message}</p>}
+            </div>
+          )}
           <button
             type="button"
             onClick={() => setManualOpen((v) => !v)}
