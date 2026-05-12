@@ -1,81 +1,56 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, Lock, CreditCard } from "lucide-react";
 
-interface GetnetModalProps {
+interface GetnetCheckoutProps {
   isOpen: boolean;
-  onClose: () => void;
-  checkoutUrl: string;
+  paymentIntentId: string;
 }
 
-export default function GetnetModal({ 
-  isOpen, 
-  onClose, 
-  checkoutUrl,
-}: GetnetModalProps) {
+const LOADER_SRC =
+  process.env.NEXT_PUBLIC_GETNET_LOADER_URL ||
+  "https://www.pre.globalgetnet.com/digital-checkout/loader.js";
 
-  // Prevenir scroll en el body cuando el modal está abierto
+const SCRIPT_ID = "getnet-digital-checkout-loader";
+
+type GetnetLoader = {
+  init: (cfg: { paymentIntentId: string; checkoutType: "lightbox" | "iframe" }) => void;
+};
+
+export default function GetnetCheckout({ isOpen, paymentIntentId }: GetnetCheckoutProps) {
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
+    if (!isOpen || !paymentIntentId) return;
+
+    const launch = () => {
+      const w = window as unknown as { loader?: GetnetLoader };
+      if (!w.loader) {
+        console.error("[Getnet] loader.js no expuso window.loader");
+        return;
+      }
+      w.loader.init({ paymentIntentId, checkoutType: "lightbox" });
+    };
+
+    const w = window as unknown as { loader?: GetnetLoader };
+    if (w.loader) {
+      launch();
+      return;
     }
-    return () => { document.body.style.overflow = "unset"; };
-  }, [isOpen]);
 
-  if (!isOpen) return null;
+    const existing = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
+    if (existing) {
+      existing.addEventListener("load", launch, { once: true });
+      return;
+    }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
-      {/* Backdrop oscuro */}
-      <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
-        onClick={onClose}
-      />
+    const script = document.createElement("script");
+    script.id = SCRIPT_ID;
+    script.src = LOADER_SRC;
+    script.async = true;
+    script.setAttribute("data-testid", "digital-checkout");
+    script.onload = launch;
+    script.onerror = () => console.error("[Getnet] falló la carga de loader.js");
+    document.body.appendChild(script);
+  }, [isOpen, paymentIntentId]);
 
-      {/* Contenedor del Modal */}
-      <div className="relative w-full max-w-2xl bg-white rounded-md shadow-2xl m-4 animate-fade-in-up flex flex-col" style={{ maxHeight: "90vh" }}>
-        
-        {/* Botón Cerrar */}
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 text-gray-400 hover:text-[var(--tender-navy-mid)] transition-colors rounded-full hover:bg-gray-100"
-        >
-          <X size={20} />
-        </button>
-
-        {/* Header del Modal */}
-        <div className="text-center p-6 pb-4 border-b border-gray-100">
-          <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[var(--tender-cyan)]/10 text-[var(--tender-cyan)] mb-3">
-            <CreditCard size={20} />
-          </div>
-          <h2 className="text-xl font-bold text-[var(--tender-navy-mid)]">
-            Pago Seguro
-          </h2>
-          <p className="text-[var(--tender-text-muted)] text-xs mt-1 flex items-center justify-center gap-1">
-            <Lock size={12} /> Transacción encriptada por Getnet
-          </p>
-        </div>
-
-        {/* Iframe de Getnet Checkout */}
-        <div className="flex-1 min-h-0">
-          <iframe
-            src={checkoutUrl}
-            title="Getnet Checkout"
-            className="w-full border-0"
-            style={{ height: "65vh" }}
-            allow="payment"
-          />
-        </div>
-
-        <div className="p-3 border-t border-gray-100">
-          <p className="text-xs text-center text-gray-400">
-            Al procesar el pago aceptás nuestros Términos y Condiciones.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 }

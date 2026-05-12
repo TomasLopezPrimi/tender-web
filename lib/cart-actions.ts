@@ -1,15 +1,36 @@
 "use server";
 
 import { config } from "@/config";
-import { 
-  CheckoutRequest, 
-  CheckoutActionResponse, 
+import {
+  CheckoutRequest,
+  CheckoutActionResponse,
   CartItemReference,
-  ClientData
+  ClientData,
+  OrderStatus
 } from "@/types/checkout";
 
 const BACKEND_URL = config.BACKEND_URL;
 const INTERNAL_API_KEY = config.INTERNAL_API_KEY;
+
+
+export async function getOrderStatus(
+  orderId: number
+): Promise<{ status: OrderStatus } | { error: string }> {
+  try {
+    const res = await fetch(`${BACKEND_URL}/orders/${orderId}/status`, {
+      method: "GET",
+      headers: { "X-Api-Key": INTERNAL_API_KEY || "" },
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      return { error: `No se pudo consultar la orden (HTTP ${res.status})` };
+    }
+    const data = await res.json();
+    return { status: data.status as OrderStatus };
+  } catch (e) {
+    return { error: String(e) };
+  }
+}
 
 export async function iniciarProcesoDePago(
   items: CartItemReference[],

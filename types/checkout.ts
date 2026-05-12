@@ -103,6 +103,7 @@ export type PaymentInstruction =
       provider: 'GETNET';
       payload: {
         checkoutUrl: string;
+        paymentIntentId: string;
       };
     }
   | {
