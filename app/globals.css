@@ -179,3 +179,19 @@
   background: linear-gradient(90deg, var(--tender-gold), var(--tender-gold-light));
   margin: 0 auto;
 }
+
+/* Getnet lightbox: forzar fullscreen sobre el overlay inyectado por loader.js.
+   El loader no aplica position:fixed por sí mismo, así que cubrimos los
+   selectores conocidos + una clase marcador que setea el componente. */
+iframe[src*="globalgetnet"],
+iframe[src*="getnet"],
+#digitalCheckout,
+[id*="getnet"][role="dialog"],
+.tender-getnet-lightbox-fixed {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 2147483600 !important;
+  border: 0 !important;
+}

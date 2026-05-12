@@ -37,8 +37,16 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
-const getThankYouPath = (method: "transferencia" | "getnet-link" | "getnet-web") =>
-  `/gracias?paymentMethod=${method}`;
+const getThankYouPath = (
+  method: "transferencia" | "getnet-link" | "getnet-web",
+  orderId?: number | null,
+) => {
+  const params = new URLSearchParams({ paymentMethod: method });
+  if (orderId != null) params.set("orderId", String(orderId));
+  return `/gracias?${params.toString()}`;
+};
+
+const GETNET_FAILURE_PATH = "/carrito/pago-rechazado";
 
 export default function CartView({ pricingConfig, productSizes }: CartViewProps) {
   const [isMounted, setIsMounted] = useState(false);
@@ -78,21 +86,22 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
   const resolveGetnetSuccess = useCallback(() => {
     if (resolvedRef.current) return;
     resolvedRef.current = true;
+    const orderIdForRedirect = getnetOrderId;
     setShowGetnetModal(false);
     setPaymentIntentId(null);
     setGetnetOrderId(null);
     clearCart();
-    router.push(getThankYouPath("getnet-web"));
-  }, [clearCart, router]);
+    router.push(getThankYouPath("getnet-web", orderIdForRedirect));
+  }, [clearCart, router, getnetOrderId]);
 
-  const resolveGetnetFailure = useCallback((message: string) => {
+  const resolveGetnetFailure = useCallback(() => {
     if (resolvedRef.current) return;
     resolvedRef.current = true;
     setShowGetnetModal(false);
     setPaymentIntentId(null);
     setGetnetOrderId(null);
-    setFormError(message);
-  }, [setFormError]);
+    router.push(GETNET_FAILURE_PATH);
+  }, [router]);
 
   // Fallback: si el seller redirect del lightbox logra postMessage al parent.
   const handleGetnetMessage = useCallback((event: MessageEvent) => {
@@ -100,7 +109,7 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
       if (event.data.status === "success") {
         resolveGetnetSuccess();
       } else {
-        resolveGetnetFailure("El pago fue rechazado. Podés intentar nuevamente.");
+        resolveGetnetFailure();
       }
     }
   }, [resolveGetnetSuccess, resolveGetnetFailure]);
@@ -136,14 +145,12 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
         resolveGetnetSuccess();
         return;
       } else if (res.status === "CANCELADA") {
-        resolveGetnetFailure("El pago fue rechazado. Podés intentar nuevamente.");
+        resolveGetnetFailure();
         return;
       }
 
       if (Date.now() - startedAt >= GETNET_POLL_TIMEOUT_MS) {
-        resolveGetnetFailure(
-          "Estamos verificando tu pago. Si ya lo realizaste, te vamos a contactar por WhatsApp."
-        );
+        resolveGetnetFailure();
       }
     };
 
