@@ -8,6 +8,7 @@ import type { UseFormRegister, UseFormSetValue, UseFormClearErrors, FieldErrors 
 import AddressAutocomplete from "./address-autocomplete";
 import { ClientFormValues, PROVINCIAS_AR } from "@/types/checkout";
 import type { AddressSuggestion } from "@/types/usig";
+import { reverseGeocode } from "@/actions/usig";
 
 // Leaflet must only render on the client
 const AddressMap = dynamic(() => import("./address-map"), { ssr: false });
@@ -91,12 +92,19 @@ export default function AddressForm({ register, errors, setValue, clearErrors }:
     setCoords(null);
   }
 
-  function handleAutocompleteSelect(suggestion: AddressSuggestion) {
+  async function handleAutocompleteSelect(suggestion: AddressSuggestion) {
     applyGeoFields(suggestion);
     setConfirmedLabel(suggestion.label);
     setMode("confirmed");
     setManualOpen(false);
     clearErrors("address");
+
+    if (!suggestion.codigo_postal) {
+      const enriched = await reverseGeocode(suggestion.latitud, suggestion.longitud);
+      if (enriched?.codigo_postal) {
+        setValue("address.codigo_postal", enriched.codigo_postal, { shouldDirty: true, shouldValidate: true });
+      }
+    }
   }
 
   function handleReset() {
