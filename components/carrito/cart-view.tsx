@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/hooks/use-cart-store";
 import { useCheckout } from "@/hooks/use-checkout";
 import { getOrderStatus } from "@/lib/cart-actions";
+import { clearThankYouContext, saveThankYouContext } from "@/lib/thank-you-context";
 import { PricingConfig, ProductSize } from "@/types/products";
 
 interface CartViewProps {
@@ -87,16 +88,22 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
     if (resolvedRef.current) return;
     resolvedRef.current = true;
     const orderIdForRedirect = getnetOrderId;
+    saveThankYouContext({
+      paymentMethod: "getnet-web",
+      orderId: orderIdForRedirect,
+      paymentIntentId,
+    });
     setShowGetnetModal(false);
     setPaymentIntentId(null);
     setGetnetOrderId(null);
     clearCart();
     router.push(getThankYouPath("getnet-web", orderIdForRedirect));
-  }, [clearCart, router, getnetOrderId]);
+  }, [clearCart, router, getnetOrderId, paymentIntentId]);
 
   const resolveGetnetFailure = useCallback(() => {
     if (resolvedRef.current) return;
     resolvedRef.current = true;
+    clearThankYouContext();
     setShowGetnetModal(false);
     setPaymentIntentId(null);
     setGetnetOrderId(null);
@@ -194,6 +201,11 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
       const response = await handleCheckout("GETNET-WEB");
       if (response?.success && response.instruction?.type === "GETNET_CHECKOUT") {
         resolvedRef.current = false;
+        saveThankYouContext({
+          paymentMethod: "getnet-web",
+          orderId: response.orderId ?? null,
+          paymentIntentId: response.instruction.payload.paymentIntentId,
+        });
         setPaymentIntentId(response.instruction.payload.paymentIntentId);
         setGetnetOrderId(response.orderId ?? null);
         setShowGetnetModal(true);

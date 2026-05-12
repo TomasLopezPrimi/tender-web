@@ -1,14 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeft, CheckCircle2, MessageCircle, Package, Receipt } from "lucide-react";
+import {
+  readThankYouContext,
+  saveThankYouContext,
+  ThankYouPaymentMethod,
+} from "@/lib/thank-you-context";
+
+interface ResolvedThankYouState {
+  paymentMethod: ThankYouPaymentMethod | null;
+  orderId: string | null;
+}
 
 function GraciasContent() {
   const searchParams = useSearchParams();
-  const paymentMethod = searchParams.get("paymentMethod");
-  const orderId = searchParams.get("orderId");
+  const [resolvedState, setResolvedState] = useState<ResolvedThankYouState>({
+    paymentMethod: null,
+    orderId: null,
+  });
+
+  useEffect(() => {
+    const paymentMethodFromQuery = searchParams.get("paymentMethod") as ThankYouPaymentMethod | null;
+    const orderIdFromQuery = searchParams.get("orderId");
+    const storedContext = readThankYouContext();
+
+    if (paymentMethodFromQuery || orderIdFromQuery) {
+      const resolvedOrderId = orderIdFromQuery
+        ?? (storedContext?.paymentMethod === paymentMethodFromQuery && storedContext.orderId != null
+          ? String(storedContext.orderId)
+          : null);
+
+      setResolvedState({
+        paymentMethod: paymentMethodFromQuery,
+        orderId: resolvedOrderId,
+      });
+
+      if (paymentMethodFromQuery) {
+        saveThankYouContext({
+          paymentMethod: paymentMethodFromQuery,
+          orderId: resolvedOrderId ? Number(resolvedOrderId) : null,
+        });
+      }
+      return;
+    }
+
+    setResolvedState({
+      paymentMethod: storedContext?.paymentMethod ?? null,
+      orderId: storedContext?.orderId != null ? String(storedContext.orderId) : null,
+    });
+  }, [searchParams]);
+
+  const paymentMethod = resolvedState.paymentMethod;
+  const orderId = resolvedState.orderId;
 
   const isTransferencia = paymentMethod === "transferencia" || paymentMethod === null;
   const isGetnetLink = paymentMethod === "getnet-link";
