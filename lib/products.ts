@@ -4,7 +4,8 @@ export function formatPrice(price: number): string {
   return new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency: 'ARS',
-    minimumFractionDigits: 2
+    minimumFractionDigits: Number.isInteger(price) ? 0 : 2,
+    maximumFractionDigits: 2,
   }).format(price);
 }
 

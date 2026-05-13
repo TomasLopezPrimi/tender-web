@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { useCartStore } from "@/hooks/use-cart-store";
 import { useCheckout } from "@/hooks/use-checkout";
-import { getOrderStatus } from "@/lib/cart-actions";
-import { clearThankYouContext, saveThankYouContext } from "@/lib/thank-you-context";
+import { formatPrice } from "@/lib/products";
+import { saveThankYouContext } from "@/lib/thank-you-context";
 import { PricingConfig, ProductSize } from "@/types/products";
 
 interface CartViewProps {
@@ -26,18 +26,6 @@ import GetnetCheckout from "./getnet-modal";
 import PaymentLinksModal from "./payment-links-modal";
 import { GetnetLinkItem } from "@/types/checkout";
 
-const GETNET_POLL_INTERVAL_MS = 3000;
-const GETNET_POLL_TIMEOUT_MS = 10 * 60 * 1000;
-
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: Number.isInteger(price) ? 0 : 2,
-    maximumFractionDigits: 2
-  }).format(price);
-};
-
 const getThankYouPath = (
   method: "transferencia" | "getnet-link" | "getnet-web",
   orderId?: number | null,
@@ -47,8 +35,6 @@ const getThankYouPath = (
   return `/gracias?${params.toString()}`;
 };
 
-const GETNET_FAILURE_PATH = "/carrito/pago-rechazado";
-
 export default function CartView({ pricingConfig, productSizes }: CartViewProps) {
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
@@ -56,11 +42,9 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
   const [paymentMethod, setPaymentMethod] = useState("transferencia");
   const [showGetnetModal, setShowGetnetModal] = useState(false);
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
-  const [getnetOrderId, setGetnetOrderId] = useState<number | null>(null);
   const [showLinksModal, setShowLinksModal] = useState(false);
   const [paymentLinks, setPaymentLinks] = useState<GetnetLinkItem[]>([]);
   const [linksOrderId, setLinksOrderId] = useState<number | undefined>(undefined);
-  const resolvedRef = useRef(false);
 
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
@@ -84,91 +68,12 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
     setIsMounted(true);
   }, []);
 
-  const resolveGetnetSuccess = useCallback(() => {
-    if (resolvedRef.current) return;
-    resolvedRef.current = true;
-    const orderIdForRedirect = getnetOrderId;
-    saveThankYouContext({
-      paymentMethod: "getnet-web",
-      orderId: orderIdForRedirect,
-      paymentIntentId,
-    });
-    setShowGetnetModal(false);
-    setPaymentIntentId(null);
-    setGetnetOrderId(null);
-    clearCart();
-    router.push(getThankYouPath("getnet-web", orderIdForRedirect));
-  }, [clearCart, router, getnetOrderId, paymentIntentId]);
-
-  const resolveGetnetFailure = useCallback(() => {
-    if (resolvedRef.current) return;
-    resolvedRef.current = true;
-    clearThankYouContext();
-    setShowGetnetModal(false);
-    setPaymentIntentId(null);
-    setGetnetOrderId(null);
-    router.push(GETNET_FAILURE_PATH);
-  }, [router]);
-
-  // Fallback: si el seller redirect del lightbox logra postMessage al parent.
-  const handleGetnetMessage = useCallback((event: MessageEvent) => {
-    if (event.data?.type === "getnet-payment-result") {
-      if (event.data.status === "success") {
-        resolveGetnetSuccess();
-      } else {
-        resolveGetnetFailure();
-      }
-    }
-  }, [resolveGetnetSuccess, resolveGetnetFailure]);
-
   const handlePaymentLinksCompleted = useCallback(() => {
     setShowLinksModal(false);
     setPaymentLinks([]);
     clearCart();
     router.push(getThankYouPath("getnet-link"));
   }, [clearCart, router]);
-
-  useEffect(() => {
-    window.addEventListener("message", handleGetnetMessage);
-    return () => window.removeEventListener("message", handleGetnetMessage);
-  }, [handleGetnetMessage]);
-
-  // Polling de estado de orden (Getnet Web Checkout): fuente primaria de verdad.
-  useEffect(() => {
-    if (!showGetnetModal || getnetOrderId == null) return;
-
-    let cancelled = false;
-    const startedAt = Date.now();
-
-    const tick = async () => {
-      if (cancelled || resolvedRef.current) return;
-      const res = await getOrderStatus(getnetOrderId);
-      if (cancelled || resolvedRef.current) return;
-
-      if ("error" in res) {
-        // Error transitorio: seguir polleando hasta timeout.
-        console.warn("[Getnet polling]", res.error);
-      } else if (res.status === "PAGADA") {
-        resolveGetnetSuccess();
-        return;
-      } else if (res.status === "CANCELADA") {
-        resolveGetnetFailure();
-        return;
-      }
-
-      if (Date.now() - startedAt >= GETNET_POLL_TIMEOUT_MS) {
-        resolveGetnetFailure();
-      }
-    };
-
-    const interval = setInterval(tick, GETNET_POLL_INTERVAL_MS);
-    void tick();
-
-    return () => {
-      cancelled = true;
-      clearInterval(interval);
-    };
-  }, [showGetnetModal, getnetOrderId, resolveGetnetSuccess, resolveGetnetFailure]);
 
   const handleInitiateCheckout = async () => {
     const isValid = await form.trigger();
@@ -200,14 +105,12 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
     if (paymentMethod === "getnet") {
       const response = await handleCheckout("GETNET-WEB");
       if (response?.success && response.instruction?.type === "GETNET_CHECKOUT") {
-        resolvedRef.current = false;
         saveThankYouContext({
           paymentMethod: "getnet-web",
           orderId: response.orderId ?? null,
           paymentIntentId: response.instruction.payload.paymentIntentId,
         });
         setPaymentIntentId(response.instruction.payload.paymentIntentId);
-        setGetnetOrderId(response.orderId ?? null);
         setShowGetnetModal(true);
       }
     } else if (paymentMethod === "getnet-link") {

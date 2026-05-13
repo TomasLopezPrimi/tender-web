@@ -161,7 +161,7 @@ async function searchGeoref(query: string): Promise<AddressSuggestion[]> {
     };
     const items = payload.direcciones ?? [];
     const mapped = items
-      .map((item) => {
+      .map((item): AddressSuggestion | null => {
         const calle = item.calle?.nombre?.trim() ?? "";
         const numero = String(item.altura?.valor ?? "").trim();
         const ciudad = item.localidad_censal?.nombre?.trim() ?? "";

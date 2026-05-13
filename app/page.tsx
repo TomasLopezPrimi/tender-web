@@ -6,7 +6,7 @@ import ContactSection from "@/components/home/contact-section"
 import BrandOriginSection from "@/components/home/brand-origin-section"
 import FirstVisitPromoModal from "@/components/home/first-visit-promo-modal"
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default function HomePage() {
 

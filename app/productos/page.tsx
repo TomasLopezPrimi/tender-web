@@ -4,7 +4,7 @@ import { baseProductMetadata } from "@/lib/products";
 import { getHydratedProducts } from "@/lib/catalog";
 import CategorySection from "@/components/productos/category-section";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Tienda - Tender®',

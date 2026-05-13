@@ -47,13 +47,22 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Tender Original",
+    "alternateName": "Tender",
     "url": "https://www.tender.com.ar",
-    "logo": "https://www.tender.com.ar/images/logo-tender.svg", 
+    "logo": "https://www.tender.com.ar/images/logo-tender.svg",
+    "description": "Sitio oficial de Tender® en Argentina. Venta de sistemas de secado de ropa originales con envío a todo el país.",
     "sameAs": [
       "https://www.facebook.com/tenderoriginal/",
       "https://www.instagram.com/tenderargentina/",
       "https://www.youtube.com/@tender8687"
-    ]
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+54-11-5151-7715",
+      "contactType": "sales",
+      "areaServed": "AR",
+      "availableLanguage": "Spanish"
+    }
   };
 
   return (

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCartStore } from "@/hooks/use-cart-store";
-import { iniciarProcesoDePago } from "@/lib/cart-actions";
+import { iniciarProcesoDePago } from "@/actions/cart";
 import { CartItemReference, CheckoutActionResponse, ClientData, ClientFormValues, clientFormSchema } from "@/types/checkout";
 
 export function useCheckout() {

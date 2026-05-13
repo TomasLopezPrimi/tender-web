@@ -6,32 +6,6 @@ import Link from "next/link"
 export default function Footer() {
   return (
     <footer className="bg-[var(--tender-navy-mid)] text-white" aria-label="Pie de página">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Tender",
-            "alternateName": "Tender Original",
-            "url": "https://www.tender.com.ar",
-            "logo": "https://www.tender.com.ar/images/logo-tender.svg",
-            "description": "Sitio oficial de Tender® en Argentina. Venta de sistemas de secado de ropa originales con envío a todo el país.",
-            "sameAs": [
-              "https://www.facebook.com/tenderoriginal/",
-              "https://www.instagram.com/tenderargentina/",
-              "https://www.youtube.com/@tender8687"
-            ],
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "telephone": "+54-11-5151-7715",
-              "contactType": "sales",
-              "areaServed": "AR",
-              "availableLanguage": "Spanish"
-            }
-          }),
-        }}
-      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div>
