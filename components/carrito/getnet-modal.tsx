@@ -9,7 +9,7 @@ interface GetnetCheckoutProps {
 
 const LOADER_SRC =
   process.env.NEXT_PUBLIC_GETNET_LOADER_URL ||
-  "https://www.pre.globalgetnet.com/digital-checkout/loader.js";
+  "https://www.globalgetnet.com/digital-checkout/loader.js";
 
 const SCRIPT_ID = "getnet-digital-checkout-loader";
 const LIGHTBOX_MARKER_CLASS = "tender-getnet-lightbox-fixed";
