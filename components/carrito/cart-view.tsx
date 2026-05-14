@@ -7,6 +7,8 @@ import { ArrowLeft } from "lucide-react";
 
 import { useCartStore } from "@/hooks/use-cart-store";
 import { useCheckout } from "@/hooks/use-checkout";
+import { formatPrice } from "@/lib/products";
+import { saveThankYouContext } from "@/lib/thank-you-context";
 import { PricingConfig, ProductSize } from "@/types/products";
 
 interface CartViewProps {
@@ -20,21 +22,18 @@ import ClientForm from "./client-form";
 import AddressForm from "./address-form";
 import OrderSummary from "./order-summary";
 import PaymentSelector from "./payment-selector";
-import GetnetModal from "./getnet-modal";
+import GetnetCheckout from "./getnet-modal";
 import PaymentLinksModal from "./payment-links-modal";
 import { GetnetLinkItem } from "@/types/checkout";
 
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: Number.isInteger(price) ? 0 : 2,
-    maximumFractionDigits: 2
-  }).format(price);
+const getThankYouPath = (
+  method: "transferencia" | "getnet-link" | "getnet-web",
+  orderId?: number | null,
+) => {
+  const params = new URLSearchParams({ paymentMethod: method });
+  if (orderId != null) params.set("orderId", String(orderId));
+  return `/gracias?${params.toString()}`;
 };
-
-const getThankYouPath = (method: "transferencia" | "getnet-link" | "getnet-web") =>
-  `/gracias?paymentMethod=${method}`;
 
 export default function CartView({ pricingConfig, productSizes }: CartViewProps) {
   const [isMounted, setIsMounted] = useState(false);
@@ -42,7 +41,7 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
   
   const [paymentMethod, setPaymentMethod] = useState("transferencia");
   const [showGetnetModal, setShowGetnetModal] = useState(false);
-  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
   const [showLinksModal, setShowLinksModal] = useState(false);
   const [paymentLinks, setPaymentLinks] = useState<GetnetLinkItem[]>([]);
   const [linksOrderId, setLinksOrderId] = useState<number | undefined>(undefined);
@@ -69,33 +68,12 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
     setIsMounted(true);
   }, []);
 
-  // Escuchar mensajes del iframe de Getnet (redirect page)
-  const handleGetnetMessage = useCallback((event: MessageEvent) => {
-    if (event.data?.type === "getnet-payment-result") {
-      if (event.data.status === "success") {
-        setShowGetnetModal(false);
-        setCheckoutUrl(null);
-        clearCart();
-        router.push(getThankYouPath("getnet-web"));
-      } else {
-        setShowGetnetModal(false);
-        setCheckoutUrl(null);
-        setFormError("El pago fue rechazado. Podés intentar nuevamente.");
-      }
-    }
-  }, [clearCart, router, setFormError]);
-
   const handlePaymentLinksCompleted = useCallback(() => {
     setShowLinksModal(false);
     setPaymentLinks([]);
     clearCart();
     router.push(getThankYouPath("getnet-link"));
   }, [clearCart, router]);
-
-  useEffect(() => {
-    window.addEventListener("message", handleGetnetMessage);
-    return () => window.removeEventListener("message", handleGetnetMessage);
-  }, [handleGetnetMessage]);
 
   const handleInitiateCheckout = async () => {
     const isValid = await form.trigger();
@@ -127,7 +105,12 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
     if (paymentMethod === "getnet") {
       const response = await handleCheckout("GETNET-WEB");
       if (response?.success && response.instruction?.type === "GETNET_CHECKOUT") {
-        setCheckoutUrl(response.instruction.payload.checkoutUrl);
+        saveThankYouContext({
+          paymentMethod: "getnet-web",
+          orderId: response.orderId ?? null,
+          paymentIntentId: response.instruction.payload.paymentIntentId,
+        });
+        setPaymentIntentId(response.instruction.payload.paymentIntentId);
         setShowGetnetModal(true);
       }
     } else if (paymentMethod === "getnet-link") {
@@ -226,16 +209,9 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
         </div>
       )}
 
-      {/* MODAL DE GETNET */}
-      {checkoutUrl && (
-        <GetnetModal
-          isOpen={showGetnetModal}
-          onClose={() => {
-            setShowGetnetModal(false);
-            setCheckoutUrl(null);
-          }}
-          checkoutUrl={checkoutUrl}
-        />
+      {/* GETNET WEB CHECKOUT (lightbox del loader oficial) */}
+      {showGetnetModal && paymentIntentId && (
+        <GetnetCheckout isOpen paymentIntentId={paymentIntentId} />
       )}
 
       {/* MODAL DE LINKS DE PAGO (GETNET-LINK) */}

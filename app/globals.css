@@ -159,6 +159,54 @@
   to { opacity: 1; }
 }
 
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes ringPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  40% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+
+@keyframes ringExpandOnce {
+  0% {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+  45% {
+    opacity: 0.34;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.14);
+  }
+}
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -172,10 +220,42 @@
   animation: fadeIn 0.6s ease-out both;
 }
 
+.animate-slide-in-right {
+  animation: slideInRight 0.55s ease-out both;
+}
+
+.animate-hero-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+.animate-ring-pulse {
+  animation: ringPulse 3.2s ease-out infinite;
+}
+
+.animate-ring-once {
+  animation: ringExpandOnce 1.35s ease-out both;
+}
+
 /* Gold decorative line */
 .gold-line {
   width: 60px;
   height: 2px;
   background: linear-gradient(90deg, var(--tender-gold), var(--tender-gold-light));
   margin: 0 auto;
+}
+
+/* Getnet lightbox: forzar fullscreen sobre el overlay inyectado por loader.js.
+   El loader no aplica position:fixed por sí mismo, así que cubrimos los
+   selectores conocidos + una clase marcador que setea el componente. */
+iframe[src*="globalgetnet"],
+iframe[src*="getnet"],
+#digitalCheckout,
+[id*="getnet"][role="dialog"],
+.tender-getnet-lightbox-fixed {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 2147483600 !important;
+  border: 0 !important;
 }

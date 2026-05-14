@@ -14,19 +14,6 @@ import 'server-only';
 import { BackendProductVariants, PricingConfig, Product, ProductMetadata } from "@/types/products";
 import { hydrateProduct } from "@/lib/pricing";
 
-// Re-exportar las utilidades puras para que los Server Components
-// puedan seguir importando desde un único lugar.
-export {
-  applyGlobalDiscount,
-  applyPaymentDiscount,
-  applyCombinedDiscount,
-  getCombinedDiscountPercentage,
-  getGlobalDiscountLabel,
-  getGlobalDiscountRate,
-  getPaymentDiscountRate,
-  shouldShowGlobalDiscountLabel,
-} from "@/lib/pricing";
-
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
 const API_KEY = process.env.INTERNAL_API_KEY || "";
 
@@ -43,8 +30,17 @@ async function backendGet<T>(path: string): Promise<T> {
 
 // ── Pricing ──────────────────────────────────────────────────────────────────
 
+const DEFAULT_PRICING_CONFIG: PricingConfig = {
+  descuento_global: { activo: false, porcentaje: 0, label: "" },
+  descuentos_por_metodo: [],
+};
+
 export async function fetchPricingConfig(): Promise<PricingConfig> {
-  return backendGet<PricingConfig>("/pricing/config");
+  try {
+    return await backendGet<PricingConfig>("/pricing/config");
+  } catch {
+    return DEFAULT_PRICING_CONFIG;
+  }
 }
 
 // ── Variantes ────────────────────────────────────────────────────────────────
@@ -54,7 +50,11 @@ export async function fetchVariants(
 ): Promise<BackendProductVariants[]> {
   if (skus.length === 0) return [];
   const params = skus.map((s) => `skus=${encodeURIComponent(s)}`).join("&");
-  return backendGet<BackendProductVariants[]>(`/catalogo/variantes?${params}`);
+  try {
+    return await backendGet<BackendProductVariants[]>(`/catalogo/variantes?${params}`);
+  } catch {
+    return [];
+  }
 }
 
 // ── Hidratación ──────────────────────────────────────────────────────────────

@@ -31,8 +31,9 @@ export default function PaymentSelector({
   const bankDetails = config.bankDetails;
   const transferPct = Math.round(getPaymentDiscountRate(pricingConfig, "TRANSFERENCIA") * 100);
 
-  // GETNET-LINK disponible solo si TODAS las variantes del carrito tienen link_pago
-  const allItemsHaveLink = cartItems.length > 0 && cartItems.every((item) => !!item.link_pago);
+  // GETNET-LINK reemplazado por GETNET-WEB. Se conserva comentado por si vuelve.
+  // const allItemsHaveLink = cartItems.length > 0 && cartItems.every((item) => !!item.link_pago);
+  void cartItems;
 
   const paymentMethods = [
     {
@@ -44,14 +45,21 @@ export default function PaymentSelector({
       icon: Landmark,
       disabled: false,
     },
+    // {
+    //   id: "getnet-link",
+    //   title: "Tarjeta de crédito o débito",
+    //   description: allItemsHaveLink
+    //     ? "Acepta débito y hasta 18 cuotas con tarjeta de crédito."
+    //     : "No disponible para los productos seleccionados.",
+    //   icon: CreditCard,
+    //   disabled: !allItemsHaveLink,
+    // },
     {
-      id: "getnet-link",
+      id: "getnet",
       title: "Tarjeta de crédito o débito",
-      description: allItemsHaveLink
-        ? "Acepta débito y hasta 18 cuotas con tarjeta de crédito."
-        : "No disponible para los productos seleccionados.",
+      description: "Pagá con débito o crédito en hasta 18 cuotas. Procesado por Getnet.",
       icon: CreditCard,
-      disabled: !allItemsHaveLink,
+      disabled: false,
     },
   ];
 
@@ -149,8 +157,8 @@ export default function PaymentSelector({
         </div>
       )}
 
-      {/* INFO CUOTAS - Solo cuando getnet-link está seleccionado */}
-      {selectedMethod === "getnet-link" && (
+      {/* INFO CUOTAS - Solo cuando Getnet Web Checkout está seleccionado */}
+      {selectedMethod === "getnet" && (
         <div className="mt-4 animate-fade-in">
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-sm p-4">
             <div className="flex items-start gap-3">
@@ -163,7 +171,7 @@ export default function PaymentSelector({
                   También acepta débito. El interés de las cuotas varía según el banco.
                 </p>
                 <p className="text-xs text-blue-600 mt-2">
-                  Después de confirmar, te mostramos los links de pago para cada producto.
+                  Al confirmar se abrirá una ventana segura de Getnet para procesar tu pago.
                 </p>
               </div>
             </div>

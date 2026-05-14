@@ -161,7 +161,7 @@ async function searchGeoref(query: string): Promise<AddressSuggestion[]> {
     };
     const items = payload.direcciones ?? [];
     const mapped = items
-      .map((item) => {
+      .map((item): AddressSuggestion | null => {
         const calle = item.calle?.nombre?.trim() ?? "";
         const numero = String(item.altura?.valor ?? "").trim();
         const ciudad = item.localidad_censal?.nombre?.trim() ?? "";
@@ -353,8 +353,10 @@ async function reverseNominatim(lat: number, lon: number): Promise<AddressSugges
 // reverseGeocode — public server action (USIG → Nominatim cascade)
 // ---------------------------------------------------------------------------
 export async function reverseGeocode(lat: number, lon: number): Promise<AddressSuggestion | null> {
-  const usig = await reverseUsig(lat, lon);
-  if (usig) return usig;
-  const nominatim = await reverseNominatim(lat, lon);
-  return nominatim;
+  const [usig, nominatim] = await Promise.all([
+    reverseUsig(lat, lon),
+    reverseNominatim(lat, lon),
+  ]);
+  if (!usig) return nominatim;
+  return { ...usig, codigo_postal: usig.codigo_postal ?? nominatim?.codigo_postal };
 }

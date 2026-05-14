@@ -31,6 +31,7 @@ export default function OrderSummary({
 
   const isTransferencia = selectedPaymentMethod === "transferencia";
   const isGetnetLink = selectedPaymentMethod === "getnet-link";
+  const isGetnetWeb = selectedPaymentMethod === "getnet";
 
   const globalDiscount = getGlobalDiscountRate(pricingConfig);
   const transferDiscount = getPaymentDiscountRate(pricingConfig, 'TRANSFERENCIA');
@@ -44,7 +45,7 @@ export default function OrderSummary({
     : afterGlobal;
 
   const combinedDiscountPct = getCombinedDiscountPercentage(pricingConfig, 'TRANSFERENCIA');
-  const showDiscountedPrice = isTransferencia || (isGetnetLink && globalDiscount > 0);
+  const showDiscountedPrice = isTransferencia || ((isGetnetLink || isGetnetWeb) && globalDiscount > 0);
   const activeBadgePct = isTransferencia ? combinedDiscountPct : globalDiscountPct;
 
   return (
