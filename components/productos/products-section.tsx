@@ -1,8 +1,8 @@
 import { getGlobalDiscountLabel, shouldShowGlobalDiscountLabel } from "@/lib/pricing"
-import { getHydratedProducts } from "@/lib/catalog"
+import { getHydratedProducts } from "@/lib/api/catalog"
 import { baseProductMetadata } from "@/lib/products"
 import { UIProduct } from "@/types/products"
-import ProductCard from "./product-card"
+import ProductsCarousel from "./products-carousel"
 
 interface ProductsSectionProps {
   needTitle: boolean
@@ -55,28 +55,7 @@ export default async function ProductsSection({needTitle}: ProductsSectionProps)
           </p>
         </div>
 
-        {/* Grilla: 
-          - Mobile: 1 columna (grid-cols-1)
-          - Tablet: 2 columnas (sm:grid-cols-2)
-          - Desktop: 6 columnas para hacer el truco de 3 y 2 centrados
-        */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 md:gap-5">
-          {displayProducts.map((product, index) => {
-            // En móvil ocupa todo (1 col). En desktop ocupa 2 de las 6 columnas.
-            let gridClasses = "col-span-1 lg:col-span-2";
-
-            // Centramos el 4to producto en la fila de abajo solo en pantallas grandes
-            if (index === 3) {
-              gridClasses += " lg:col-start-2";
-            }
-
-            return (
-              <div key={product.sku} className={gridClasses}>
-                <ProductCard product={product} />
-              </div>
-            );
-          })}
-        </div>
+        <ProductsCarousel products={displayProducts} />
       </div>
     </section>
   )

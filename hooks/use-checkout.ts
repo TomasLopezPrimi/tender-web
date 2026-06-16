@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCartStore } from "@/hooks/use-cart-store";
 import { iniciarProcesoDePago } from "@/actions/cart";
 import { CartItemReference, CheckoutActionResponse, ClientData, ClientFormValues, clientFormSchema } from "@/types/checkout";
+import { scrollToFirstError } from "@/lib/checkout-ui";
 
 export function useCheckout() {
   const router = useRouter();
@@ -48,15 +49,7 @@ export function useCheckout() {
     const isValid = await form.trigger();
     if (!isValid) {
       setFormError("Revisá los campos marcados en rojo.");
-      requestAnimationFrame(() => {
-        const firstError = document.querySelector<HTMLElement>(".border-red-300");
-        if (firstError) {
-          firstError.scrollIntoView({ behavior: "smooth", block: "center" });
-          firstError.focus({ preventScroll: true });
-        } else {
-          document.getElementById("checkout-form-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
+      scrollToFirstError();
       return;
     }
 

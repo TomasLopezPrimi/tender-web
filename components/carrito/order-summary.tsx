@@ -1,11 +1,11 @@
 import { Truck, MessageCircle, Loader2, CreditCard, Lock } from "lucide-react";
-import Image from "next/image";
 import { PricingConfig } from "@/types/products";
+import PromoLabel from "@/components/ui/promo-label";
 import {
   getCombinedDiscountPercentage,
+  getEffectiveDiscountRate,
   getGlobalDiscountLabel,
   getGlobalDiscountRate,
-  getPaymentDiscountRate,
   shouldShowGlobalDiscountLabel,
 } from "@/lib/pricing";
 
@@ -34,15 +34,15 @@ export default function OrderSummary({
   const isGetnetWeb = selectedPaymentMethod === "getnet";
 
   const globalDiscount = getGlobalDiscountRate(pricingConfig);
-  const transferDiscount = getPaymentDiscountRate(pricingConfig, 'TRANSFERENCIA');
   const globalLabel = getGlobalDiscountLabel(pricingConfig);
   const globalDiscountPct = Math.round(globalDiscount * 100);
   const showGlobalLabel = shouldShowGlobalDiscountLabel(pricingConfig);
 
-  const afterGlobal = totalPrice * (1 - globalDiscount);
+  // Use the effective (max) rate so getnet and transferencia paths are consistent.
+  const transferEffectiveRate = getEffectiveDiscountRate(pricingConfig, 'TRANSFERENCIA');
   const totalPriceWithDiscount = isTransferencia
-    ? afterGlobal * (1 - transferDiscount)
-    : afterGlobal;
+    ? totalPrice * (1 - transferEffectiveRate)
+    : totalPrice * (1 - globalDiscount);
 
   const combinedDiscountPct = getCombinedDiscountPercentage(pricingConfig, 'TRANSFERENCIA');
   const showDiscountedPrice = isTransferencia || ((isGetnetLink || isGetnetWeb) && globalDiscount > 0);
@@ -54,18 +54,11 @@ export default function OrderSummary({
         Resumen de compra
       </h2>
 
-      {showGlobalLabel && (
+      {/* {showGlobalLabel && (
         <div className="mb-5">
-          <Image
-            src="/images/banners/40_off.jpeg"
-            alt="40% OFF"
-            width={250}
-            height={280}
-            className="w-full h-auto rounded-lg"
-            priority
-          />
+          <PromoLabel label={globalLabel} variant="summary" kicker={`${globalDiscountPct}% OFF`} />
         </div>
-      )}
+      )} */}
       
       {/* <div className="flex justify-between items-center mb-6">
         <span className="text-gray-600">Total ({totalItems} {totalItems === 1 ? 'producto' : 'productos'})</span>

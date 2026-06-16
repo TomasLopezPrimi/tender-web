@@ -1,20 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { useCartStore } from "@/hooks/use-cart-store";
-import { useCheckout } from "@/hooks/use-checkout";
+import { useCheckoutFlow } from "@/hooks/use-checkout-flow";
 import { formatPrice } from "@/lib/products";
-import { saveThankYouContext } from "@/lib/thank-you-context";
+import { getTotalItems, getTotalPrice } from "@/lib/cart";
 import { PricingConfig, ProductSize } from "@/types/products";
-
-interface CartViewProps {
-  pricingConfig: PricingConfig;
-  productSizes: Record<string, ProductSize[]>;
-}
 
 import EmptyCart from "./empty-cart";
 import CartItemCard from "./cart-item-card";
@@ -24,106 +18,38 @@ import OrderSummary from "./order-summary";
 import PaymentSelector from "./payment-selector";
 import GetnetCheckout from "./getnet-modal";
 import PaymentLinksModal from "./payment-links-modal";
-import { GetnetLinkItem } from "@/types/checkout";
 
-const getThankYouPath = (
-  method: "transferencia" | "getnet-link" | "getnet-web",
-  orderId?: number | null,
-) => {
-  const params = new URLSearchParams({ paymentMethod: method });
-  if (orderId != null) params.set("orderId", String(orderId));
-  return `/gracias?${params.toString()}`;
-};
+interface CartViewProps {
+  pricingConfig: PricingConfig;
+  productSizes: Record<string, ProductSize[]>;
+}
 
 export default function CartView({ pricingConfig, productSizes }: CartViewProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const router = useRouter();
-  
-  const [paymentMethod, setPaymentMethod] = useState("transferencia");
-  const [showGetnetModal, setShowGetnetModal] = useState(false);
-  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
-  const [showLinksModal, setShowLinksModal] = useState(false);
-  const [paymentLinks, setPaymentLinks] = useState<GetnetLinkItem[]>([]);
-  const [linksOrderId, setLinksOrderId] = useState<number | undefined>(undefined);
 
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
   const updateItemSize = useCartStore((state) => state.updateItemSize);
-  const clearCart = useCartStore((state) => state.clearCart);
 
-  const { 
-    form, 
+  const {
+    form,
     formError,
-    setFormError, 
     isProcessing,
-    handleCheckout 
-  } = useCheckout();
+    paymentMethod,
+    setPaymentMethod,
+    startCheckout,
+    getnetModal,
+    linksModal,
+  } = useCheckoutFlow();
 
   const { register, setValue, clearErrors, formState: { errors } } = form;
 
-  const totalItems = items.reduce((acc, item) => acc + item.cantidad, 0);
-  const totalPrice = items.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+  const totalItems = getTotalItems(items);
+  const totalPrice = getTotalPrice(items);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  const handlePaymentLinksCompleted = useCallback(() => {
-    setShowLinksModal(false);
-    setPaymentLinks([]);
-    clearCart();
-    router.push(getThankYouPath("getnet-link"));
-  }, [clearCart, router]);
-
-  const handleInitiateCheckout = async () => {
-    const isValid = await form.trigger();
-    if (!isValid) {
-      const errs = form.formState.errors;
-      const hasOnlyAddressErrors =
-        errs.address &&
-        !errs.nombre && !errs.apellido && !errs.dni && !errs.email && !errs.phone;
-      if (hasOnlyAddressErrors) {
-        setFormError("Completá la dirección de entrega antes de continuar.");
-        requestAnimationFrame(() => {
-          document.getElementById("address-form-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-      } else {
-        setFormError("Revisá los campos marcados en rojo.");
-        requestAnimationFrame(() => {
-          const firstError = document.querySelector<HTMLElement>(".border-red-300");
-          if (firstError) {
-            firstError.scrollIntoView({ behavior: "smooth", block: "center" });
-            firstError.focus({ preventScroll: true });
-          } else {
-            document.getElementById("checkout-form-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        });
-      }
-      return;
-    }
-
-    if (paymentMethod === "getnet") {
-      const response = await handleCheckout("GETNET-WEB");
-      if (response?.success && response.instruction?.type === "GETNET_CHECKOUT") {
-        saveThankYouContext({
-          paymentMethod: "getnet-web",
-          orderId: response.orderId ?? null,
-          paymentIntentId: response.instruction.payload.paymentIntentId,
-        });
-        setPaymentIntentId(response.instruction.payload.paymentIntentId);
-        setShowGetnetModal(true);
-      }
-    } else if (paymentMethod === "getnet-link") {
-      const response = await handleCheckout("GETNET-LINK");
-      if (response?.success && response.instruction?.type === "GETNET_LINKS") {
-        setPaymentLinks(response.instruction.payload.links);
-        setLinksOrderId(response.orderId ?? undefined);
-        setShowLinksModal(true);
-      }
-    } else {
-      handleCheckout("TRANSFERENCIA");
-    }
-  };
 
   if (!isMounted) return null;
 
@@ -140,10 +66,10 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
         <EmptyCart />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* COLUMNA IZQUIERDA: PRODUCTOS, DATOS Y PAGO */}
           <div className="lg:col-span-2 space-y-6">
-            
+
             {/* ① LISTA DE PRODUCTOS */}
             <div className="bg-white rounded-sm p-6 shadow-sm border border-gray-100">
               <h2 className="text-lg font-bold text-[var(--tender-navy-mid)] mb-6 border-b pb-4">
@@ -151,9 +77,9 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
               </h2>
               <div className="space-y-6">
                 {items.map((item) => (
-                  <CartItemCard 
-                    key={item.id} 
-                    item={item} 
+                  <CartItemCard
+                    key={item.id}
+                    item={item}
                     onRemove={removeItem}
                     onUpdateSize={updateItemSize}
                     formatPrice={formatPrice}
@@ -176,10 +102,10 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
               <h2 className="text-lg font-bold text-[var(--tender-navy-mid)] mb-6 border-b pb-4">
                 <span className="text-[var(--tender-cyan)] mr-1.5">③</span>Tus datos y dirección de envío
               </h2>
-              <ClientForm 
-                register={register} 
-                errors={errors} 
-                serverError={formError} 
+              <ClientForm
+                register={register}
+                errors={errors}
+                serverError={formError}
               />
               <div className="border-t border-gray-100 my-6" />
               <div id="address-form-section">
@@ -195,11 +121,11 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
 
           {/* COLUMNA DERECHA: RESUMEN DE COMPRA */}
           <div className="space-y-6">
-            <OrderSummary 
+            <OrderSummary
               totalItems={totalItems}
               totalPrice={totalPrice}
               isProcessing={isProcessing}
-              onCheckout={handleInitiateCheckout}
+              onCheckout={startCheckout}
               selectedPaymentMethod={paymentMethod}
               formatPrice={formatPrice}
               pricingConfig={pricingConfig}
@@ -210,17 +136,17 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
       )}
 
       {/* GETNET WEB CHECKOUT (lightbox del loader oficial) */}
-      {showGetnetModal && paymentIntentId && (
-        <GetnetCheckout isOpen paymentIntentId={paymentIntentId} />
+      {getnetModal.isOpen && getnetModal.paymentIntentId && (
+        <GetnetCheckout isOpen paymentIntentId={getnetModal.paymentIntentId} />
       )}
 
       {/* MODAL DE LINKS DE PAGO (GETNET-LINK) */}
       <PaymentLinksModal
-        isOpen={showLinksModal}
-        onClose={() => setShowLinksModal(false)}
-        onAllLinksOpened={handlePaymentLinksCompleted}
-        links={paymentLinks}
-        orderId={linksOrderId}
+        isOpen={linksModal.isOpen}
+        onClose={linksModal.close}
+        onAllLinksOpened={linksModal.onCompleted}
+        links={linksModal.links}
+        orderId={linksModal.orderId}
         pricingConfig={pricingConfig}
       />
     </div>

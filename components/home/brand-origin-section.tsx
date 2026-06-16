@@ -37,8 +37,12 @@ export default function BrandOriginSection() {
               }}
             />
 
+            <p className="mt-4 text-[var(--tender-gold)] text-sm md:text-base italic font-medium max-w-lg lg:mx-0 mx-auto">
+              Tender. La marca que le dio nombre al tendedero Argentino.
+            </p>
+
             <p className="mt-6 text-white/70 text-base md:text-lg leading-relaxed max-w-lg lg:mx-0 mx-auto">
-              Desde hace más de 70 años, <strong className="text-white font-semibold">Tender®</strong> es sinónimo de
+              Desde 1947, <strong className="text-white font-semibold">Tender®</strong> es sinónimo de
               tendedero de calidad. Fuimos los primeros, y con el tiempo nuestro nombre se convirtió en la
               forma de llamar al producto en sí.
             </p>
@@ -50,7 +54,7 @@ export default function BrandOriginSection() {
 
             <div className="mt-10 flex flex-col md:flex-row flex-wrap justify-center lg:justify-start items-center md:items-stretch gap-8">
               <div>
-                <span className="block text-3xl md:text-4xl font-serif text-white font-bold">70+</span>
+                <span className="block text-3xl md:text-4xl font-serif text-white font-bold">{new Date().getFullYear() - 1947}+</span>
                 <span className="text-xs text-white/50 uppercase tracking-widest mt-1 block">Años de historia</span>
               </div>
               
@@ -98,7 +102,7 @@ export default function BrandOriginSection() {
                 }}
               />
               <p className="mt-4 text-white/40 text-xs uppercase tracking-[0.3em] font-medium">
-                La marca original desde 1960
+                La marca original desde 1947
               </p>
             </div>
           </div>

@@ -48,6 +48,8 @@ const productCategories: ProductCategory[] = [
 export default function SpacesSection() {
   const [current, setCurrent] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  const [dragOffset, setDragOffset] = useState(0)
 
   const goTo = useCallback(
     (index: number) => {
@@ -71,6 +73,25 @@ export default function SpacesSection() {
     const timer = setInterval(next, 6000)
     return () => clearInterval(timer)
   }, [next])
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX)
+    setDragOffset(0)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX === null) return
+    setDragOffset(e.touches[0].clientX - touchStartX)
+  }
+
+  const onTouchEnd = () => {
+    if (touchStartX === null) return
+    const threshold = 50
+    if (dragOffset > threshold) prev()
+    else if (dragOffset < -threshold) next()
+    setTouchStartX(null)
+    setDragOffset(0)
+  }
 
   return (
     // CAMBIO 1: Fondo claro azulado (usando tu variable --tender-gray-bg)
@@ -97,18 +118,28 @@ export default function SpacesSection() {
         {/* Main carousel */}
         <div className="relative max-w-5xl mx-auto">
           <div
-            className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/15 bg-white border border-border/50"
+            className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/15 bg-white border border-border/50 touch-pan-y select-none"
             // CORRECCIÓN: Volvemos a la proporción original 16/10 para no cortar imágenes
             style={{ aspectRatio: "16/10" }}
             aria-label="Galería de espacios"
             aria-roledescription="carousel"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
             {productCategories.map((category, i) => (
               <div
                 key={category.id}
-                className={`absolute inset-0 transition-opacity duration-700 ${
+                className={`absolute inset-0 ease-out ${
+                  dragOffset !== 0 ? "transition-none" : "transition-opacity duration-700"
+                } ${
                   i === current ? "opacity-100 z-10" : "opacity-0 z-0"
                 }`}
+                style={
+                  i === current && dragOffset !== 0
+                    ? { transform: `translateX(${dragOffset}px)` }
+                    : undefined
+                }
                 aria-hidden={i !== current}
               >
                 <Image
@@ -122,26 +153,26 @@ export default function SpacesSection() {
               </div>
             ))}
 
-            {/* Arrows */}
+            {/* Arrows (solo desde tablet/desktop; en mobile se usa swipe) */}
             <button
               onClick={prev}
               // CAMBIO 3: Flechas adaptadas a fondo claro (blancas con borde sutil)
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-[var(--tender-cyan)] rounded-full p-3 text-[var(--tender-navy)] hover:text-white shadow-lg transition-all duration-300 hover:scale-110 border border-border"
+              className="hidden sm:block absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-[var(--tender-cyan)] rounded-full p-3 text-[var(--tender-navy)] hover:text-white shadow-lg transition-all duration-300 hover:scale-110 border border-border"
               aria-label="Categoría anterior"
             >
               <ChevronLeft size={28} strokeWidth={1.5} />
             </button>
             <button
               onClick={next}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-[var(--tender-cyan)] rounded-full p-3 text-[var(--tender-navy)] hover:text-white shadow-lg transition-all duration-300 hover:scale-110 border border-border"
+              className="hidden sm:block absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-[var(--tender-cyan)] rounded-full p-3 text-[var(--tender-navy)] hover:text-white shadow-lg transition-all duration-300 hover:scale-110 border border-border"
               aria-label="Siguiente categoría"
             >
               <ChevronRight size={28} strokeWidth={1.5} />
             </button>
 
-            {/* Dots */}
+            {/* Dots sobre la imagen (solo desktop) */}
             <div
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-3"
+              className="hidden sm:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-20 gap-3"
               role="tablist"
               aria-label="Indicadores de categoría"
             >
@@ -162,17 +193,41 @@ export default function SpacesSection() {
               ))}
             </div>
           </div>
+
+          {/* Dots debajo de la imagen (solo mobile) */}
+          <div
+            className="sm:hidden mt-5 flex justify-center gap-2.5"
+            role="tablist"
+            aria-label="Indicadores de categoría"
+          >
+            {productCategories.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                role="tab"
+                aria-selected={i === current}
+                aria-label={`Ver ${productCategories[i].name}`}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === current
+                    ? "bg-[var(--tender-cyan)] w-9"
+                    : "bg-[var(--tender-navy)]/20 w-2 hover:bg-[var(--tender-navy)]/40"
+                }`}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Category cards below carousel */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        {/* Category cards below carousel — en mobile solo la activa, en desktop las 3 */}
+        <div className="mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {productCategories.map((category, i) => (
             <article
               key={category.id}
               // CAMBIO 4: Tarjetas vuelven a fondo blanco (bg-white)
-              className={`p-8 rounded-2xl border transition-all duration-500 cursor-pointer flex flex-col h-full ${
+              className={`p-8 rounded-2xl border transition-all duration-500 cursor-pointer flex-col h-full ${
+                i === current ? "flex" : "hidden md:flex"
+              } ${
                 i === current
-                  ? "border-[var(--tender-cyan)] bg-white shadow-xl shadow-[var(--tender-cyan)]/5 -translate-y-2"
+                  ? "border-[var(--tender-cyan)] bg-white shadow-xl shadow-[var(--tender-cyan)]/5 md:-translate-y-2"
                   : "border-border bg-white hover:border-[var(--tender-cyan)]/50 hover:shadow-lg"
               }`}
               onClick={() => goTo(i)}

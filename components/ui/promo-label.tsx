@@ -1,4 +1,4 @@
-import { Flame } from "lucide-react";
+import { Sun } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -88,16 +88,22 @@ export default function PromoLabel({ label, variant = "hotSale", kicker }: Promo
     );
   }
 
+  // Promo del Mundial: franjas celestes arriba y abajo (guiño a la bandera
+  // argentina), fondo blanco y sol de Mayo dorado. Usa la paleta de marca.
+  const argentinaFlagBackground =
+    "bg-[linear-gradient(to_bottom,var(--tender-cyan)_0%,var(--tender-cyan)_20%,#ffffff_20%,#ffffff_80%,var(--tender-cyan)_80%,var(--tender-cyan)_100%)]";
+
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-full bg-[#ff6e01] text-white shadow-md",
+        "inline-flex items-center rounded-full text-[var(--tender-navy)] shadow-md ring-1 ring-[var(--tender-navy)]/10",
+        argentinaFlagBackground,
         styles.badge
       )}
     >
-      <Flame
+      <Sun
         aria-hidden
-        className={cn("shrink-0", styles.icon)}
+        className={cn("shrink-0 text-[var(--tender-gold)]", styles.icon)}
         fill="currentColor"
         strokeWidth={1.8}
       />
