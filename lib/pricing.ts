@@ -18,7 +18,7 @@ export function normalizeDiscountRate(value: number): number {
 export function getGlobalDiscountRate(pricingConfig: PricingConfig): number {
   const { activo, porcentaje } = pricingConfig.descuento_global;
   if (!activo) return 0;
-  return normalizeDiscountRate(porcentaje);
+  return normalizeDiscountRate(porcentaje / 100);
 }
 
 export function applyGlobalDiscount(price: number, pricingConfig: PricingConfig): number {
@@ -31,7 +31,7 @@ export function getPaymentDiscountRate(pricingConfig: PricingConfig, method: str
   const methodDiscount = pricingConfig.descuentos_por_metodo.find(
     (d) => d.metodo === method
   )?.porcentaje;
-  return normalizeDiscountRate(methodDiscount ?? 0);
+  return normalizeDiscountRate((methodDiscount ?? 0) / 100);
 }
 
 export function applyPaymentDiscount(price: number, discountRate: number): number {
@@ -40,24 +40,35 @@ export function applyPaymentDiscount(price: number, discountRate: number): numbe
   return price * (1 - safeRate);
 }
 
+/**
+ * Returns the effective discount rate for a given payment method.
+ * Rule: only the highest rate applies — global and payment discounts
+ * are never accumulated. This mirrors the backend pricing logic.
+ */
+export function getEffectiveDiscountRate(
+  pricingConfig: PricingConfig,
+  method: string
+): number {
+  const globalRate = getGlobalDiscountRate(pricingConfig);
+  const paymentRate = getPaymentDiscountRate(pricingConfig, method);
+  return Math.max(globalRate, paymentRate);
+}
+
 export function applyCombinedDiscount(
   price: number,
   pricingConfig: PricingConfig,
   method: string
 ): number {
-  const afterGlobal = applyGlobalDiscount(price, pricingConfig);
-  const paymentRate = getPaymentDiscountRate(pricingConfig, method);
-  return applyPaymentDiscount(afterGlobal, paymentRate);
+  const rate = getEffectiveDiscountRate(pricingConfig, method);
+  if (rate <= 0) return price;
+  return price * (1 - rate);
 }
 
 export function getCombinedDiscountPercentage(
   pricingConfig: PricingConfig,
   method: string
 ): number {
-  const g = getGlobalDiscountRate(pricingConfig);
-  const p = getPaymentDiscountRate(pricingConfig, method);
-  const combined = 1 - (1 - g) * (1 - p);
-  return Math.round(combined * 100);
+  return Math.round(getEffectiveDiscountRate(pricingConfig, method) * 100);
 }
 
 export function getGlobalDiscountLabel(pricingConfig: PricingConfig): string {

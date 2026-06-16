@@ -1,47 +1,111 @@
-// components/tech-service/tech-hero.tsx
+"use client"
+
+import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+
+const desktopSlides = [
+  { id: 3, image: "/images/banners/banner-03.jpg", alt: "Servicio Técnico Tender" },
+  { id: 4, image: "/images/banners/banner-04.jpg", alt: "Instalación Tender" },
+]
+
+const mobileSlides = [
+  { id: 3, image: "/images/banners/mobile/banner-03.jpg", alt: "Servicio Técnico Tender" },
+  { id: 4, image: "/images/banners/mobile/banner-04.jpg", alt: "Instalación Tender" },
+]
+
+const slideCount = desktopSlides.length
 
 export default function TechServiceHero() {
+  const [current, setCurrent] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  const goTo = useCallback(
+    (index: number) => {
+      if (isAnimating) return
+      setIsAnimating(true)
+      setCurrent(index)
+      setTimeout(() => setIsAnimating(false), 1000)
+    },
+    [isAnimating]
+  )
+
+  const prev = useCallback(() => {
+    goTo(current === 0 ? slideCount - 1 : current - 1)
+  }, [current, goTo])
+
+  const next = useCallback(() => {
+    goTo(current === slideCount - 1 ? 0 : current + 1)
+  }, [current, goTo])
+
+  useEffect(() => {
+    const timer = setInterval(next, 6000)
+    return () => clearInterval(timer)
+  }, [next])
+
   return (
-    <section className="relative flex min-h-[65vh] w-full items-center justify-center overflow-hidden bg-black py-24 md:py-32">
-      
-      <Image
-        src="/images/servicio-tecnico/tender-instalacion.jpg"
-        alt="Instalación y Servicio Técnico Tender"
-        fill
-        className="object-cover object-center opacity-90" 
-        priority
-      />
-
-      <div className="absolute inset-0 bg-gradient-to-t from-[var(--tender-navy)]/90 via-[var(--tender-navy)]/60 to-[var(--tender-navy)]/30" />
-
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
-
-      {/* Contenido */}
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-4 text-center">
-        
-        {/* Título con SOMBRA FUERTE para resaltar sobre la imagen clara */}
-        <h1 className="animate-fade-in-up text-4xl font-serif tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.9)] md:text-6xl lg:text-7xl">
-          Servicio Técnico
-        </h1>
-        
-        <div 
-          className="gold-line animate-fade-in-up mb-6 mt-8 h-[3px] w-28 bg-yellow-500 shadow-[0_0_20px_rgba(0,0,0,0.5)]" 
-          style={{ animationDelay: '150ms' }} 
-        />
-        
-        {/* Párrafo con peso Font-Bold y sombra para máxima legibilidad */}
-        <p 
-          className="mt-6 animate-fade-in-up mx-auto max-w-2xl text-balance text-lg font-semibold leading-relaxed text-white drop-shadow-[0_2px_10px_rgba(0,0,0,1)] md:text-2xl" 
-          style={{ animationDelay: '300ms' }}
+    <section
+      className="relative w-full overflow-hidden h-[calc(100svh-var(--navbar-height))]"
+      aria-label="Carrusel servicio técnico"
+      aria-roledescription="carousel"
+    >
+      {/* Capa desktop */}
+      {desktopSlides.map((slide, i) => (
+        <div
+          key={`desktop-${slide.id}`}
+          className={`absolute inset-0 hidden md:block transition-opacity duration-1000 ${
+            i === current ? "opacity-100 z-10" : "opacity-0 z-0"
+          }`}
+          aria-hidden={i !== current}
         >
-          Estamos para ayudarte<br></br><br></br>
-          Aquí encontrarás toda la información para la 
-          <span className="text-cyan-200"> instalación y mantenimiento </span>
-          de tus productos <strong className="text-white">Tender®</strong>.
-        </p>
+          <Image
+            src={slide.image}
+            alt={slide.alt}
+            fill
+            className="object-cover object-center"
+            priority={i === 0}
+            sizes="100vw"
+          />
+        </div>
+      ))}
 
-      </div>
+      {/* Capa mobile */}
+      {mobileSlides.map((slide, i) => (
+        <div
+          key={`mobile-${slide.id}`}
+          className={`absolute inset-0 md:hidden transition-opacity duration-1000 ${
+            i === current ? "opacity-100 z-10" : "opacity-0 z-0"
+          }`}
+          aria-hidden={i !== current}
+        >
+          <Image
+            src={slide.image}
+            alt={slide.alt}
+            fill
+            className="object-cover object-center"
+            priority={i === 0}
+            sizes="100vw"
+          />
+        </div>
+      ))}
+
+      <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+
+      {/* Flechas */}
+      <button
+        onClick={prev}
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 p-3 text-white/50 hover:text-white transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-sm rounded-full"
+        aria-label="Diapositiva anterior"
+      >
+        <ChevronLeft size={36} strokeWidth={1.5} />
+      </button>
+      <button
+        onClick={next}
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 p-3 text-white/50 hover:text-white transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-sm rounded-full"
+        aria-label="Siguiente diapositiva"
+      >
+        <ChevronRight size={36} strokeWidth={1.5} />
+      </button>
     </section>
   )
 }

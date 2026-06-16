@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getMetadataBySku } from "@/lib/products";
-import { getHydratedProducts, fetchPricingConfig } from "@/lib/catalog";
+import { getHydratedProducts, fetchPricingConfig } from "@/lib/api/catalog";
 import ProductClientPage from '@/components/productos/product-client-page';
+import ProductInfoSections from '@/components/productos/detail/product-info-sections';
+import { SITE_URL, absoluteUrl } from '@/lib/site';
+import JsonLd from '@/components/seo/json-ld';
 
 
 interface ProductPageProps {
@@ -23,12 +26,12 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     title: `${metadata.title} | Tender® Original`,
     description: `Comprá ${metadata.title} online. ${metadata.description.substring(0, 100)}... Conocé medidas y precios de Tender Original.`,
     alternates: {
-      canonical: `https://www.tender.com.ar/producto/${metadata.sku}`,
+      canonical: absoluteUrl(`/producto/${metadata.sku}`),
     },
     openGraph: {
       title: `${metadata.title} | Tender®`,
       description: metadata.description,
-      images: [{ url: `https://www.tender.com.ar${metadata.images[0]}` }],
+      images: [{ url: absoluteUrl(metadata.images[0]) }],
     }
   };
 }
@@ -53,13 +56,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": product.title,
-    "image": product.images.map(img => `https://www.tender.com.ar${img}`),
+    "image": product.images.map((img: string) => absoluteUrl(img)),
     "description": product.description,
     "sku": product.sku,
-    "brand": { "@type": "Brand", "name": "Tender®" },
+    "brand": { "@type": "Brand", "@id": `${SITE_URL}/#brand`, "name": "Tender®" },
     "offers": {
       "@type": "AggregateOffer",
-      "url": `https://www.tender.com.ar/producto/${product.sku}`,
+      "url": absoluteUrl(`/producto/${product.sku}`),
       "priceCurrency": "ARS",
       "lowPrice": lowestPrice,
       "highPrice": highestPrice,
@@ -70,11 +73,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <ProductClientPage product={product} sku={resolvedParams.sku} pricingConfig={pricingConfig} />
+      <JsonLd data={jsonLd} />
+      <main className="min-h-screen bg-white pb-20">
+        <ProductClientPage product={product} sku={resolvedParams.sku} pricingConfig={pricingConfig} />
+        <ProductInfoSections product={product} />
+      </main>
     </>
   );
 }

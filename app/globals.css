@@ -5,6 +5,16 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --navbar-height: 44px; /* mobile */
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --navbar-height: 95px; /* desktop: medido en browser */
+  }
+}
+
+:root {
   color-scheme: light;
   /* Tender brand colors: navy blue, cyan accent, clean whites/grays */
   --background: oklch(1 0 0);

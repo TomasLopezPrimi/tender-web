@@ -2,43 +2,82 @@
 
 import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight, Play } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 interface Slide {
   id: number
   image: string
   alt: string
-  title?: string
-  subtitle?: string
-  cta?: string
-  ctaHref?: string
   imagePosition?: string
 }
 
-const slides: Slide[] = [
-  {
-    id: 2,
-    image: "/images/tender-ropa.jpg",
-    alt: "Tender con ropa",
-    title: "Original como tu ropa",
-    subtitle: "La marca que le dio nombre al tendedero Argentino",
-    cta: "VER PRODUCTOS",
-    ctaHref: "#productos",
-    imagePosition: "object-[25%_center] md:object-[center_35%]",
-  },
+// Banners para DESKTOP — horizontal / apaisado. Recomendado: 2560×1440 px (16:9)
+const desktopSlides: Slide[] = [
   {
     id: 1,
-    image: "/images/banners/banner.jpeg",
-    alt: "Banner Tender"
+    image: "/images/banners/banner-01.jpg",
+    alt: "Tender con ropa",
+    imagePosition: "object-[center_35%]",
   },
-
+  {
+    id: 2,
+    image: "/images/banners/banner-02.jpg",
+    alt: "Banner Tender",
+  },
+  // {
+  //   id: 3,
+  //   image: "/images/banners/banner-03.jpg",
+  //   alt: "Banner Tender",
+  // },
+  // {
+  //   id: 4,
+  //   image: "/images/banners/banner-04.jpg",
+  //   alt: "Banner Tender",
+  // },
+  {
+    id: 5,
+    image: "/images/banners/banner-05.jpg",
+    alt: "Banner Tender",
+  },
 ]
+
+// Banners para CELULAR — vertical / parado. Recomendado: 1080×1920 px (9:16)
+// Debe tener la MISMA cantidad de slides que desktopSlides (se emparejan por posición).
+const mobileSlides: Slide[] = [
+  {
+    id: 1,
+    image: "/images/banners/mobile/banner-01.jpg",
+    alt: "Tender con ropa",
+  },
+  {
+    id: 2,
+    image: "/images/banners/mobile/banner-02.jpg",
+    alt: "Banner Tender",
+  },
+  // {
+  //   id: 3,
+  //   image: "/images/banners/mobile/banner-03.jpg",
+  //   alt: "Banner Tender",
+  // },
+  // {
+  //   id: 4,
+  //   image: "/images/banners/mobile/banner-04.jpg",
+  //   alt: "Banner Tender",
+  // },
+  {
+    id: 5,
+    image: "/images/banners/mobile/banner-05.jpg",
+    alt: "Banner Tender",
+  },
+]
+
+const slideCount = desktopSlides.length
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
 
-  const hasMultipleSlides = slides.length > 1
+  const hasMultipleSlides = slideCount > 1
 
   const goTo = useCallback(
     (index: number) => {
@@ -51,11 +90,11 @@ export default function HeroSlider() {
   )
 
   const prev = useCallback(() => {
-    goTo(current === 0 ? slides.length - 1 : current - 1)
+    goTo(current === 0 ? slideCount - 1 : current - 1)
   }, [current, goTo])
 
   const next = useCallback(() => {
-    goTo(current === slides.length - 1 ? 0 : current + 1)
+    goTo(current === slideCount - 1 ? 0 : current + 1)
   }, [current, goTo])
 
   useEffect(() => {
@@ -65,20 +104,23 @@ export default function HeroSlider() {
     return () => clearInterval(timer)
   }, [next, hasMultipleSlides])
 
-  if (slides.length === 0) return null
+  if (slideCount === 0) return null
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-[var(--tender-navy)] h-[85vh] min-h-[600px] 2xl:max-h-[900px]"
+      className="relative w-full overflow-hidden bg-[var(--tender-navy)] h-[calc(100svh-var(--navbar-height))]"
       aria-label="Carrusel de productos destacados"
       aria-roledescription={hasMultipleSlides ? "carousel" : "banner"}
     >
-      {slides.map((slide, i) => (
+      {/* Capa desktop — visible desde md hacia arriba */}
+      {desktopSlides.map((slide, i) => (
         <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
+          key={`desktop-${slide.id}`}
+          className={
+            `absolute inset-0 hidden md:block transition-opacity duration-1000 ${
             i === current ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
+          }`
+        }
           aria-hidden={i !== current}
         >
           <Image
@@ -89,46 +131,31 @@ export default function HeroSlider() {
             priority={i === 0}
             sizes="100vw"
           />
-          
-          <div className="absolute inset-0 bg-gradient-to-t from-(--tender-navy)/90 from-10% via-(--tender-navy)/0 via-60% to-transparent" />
-          
-          <div className="absolute inset-0 flex flex-col items-center justify-end text-center pb-28 md:pb-36 px-6 z-10">
-            {slide.title && (
-              <img
-                src="/images/logo-tender.svg"
-                alt="Tender®"
-                className="hidden md:block md:h-14 w-auto select-none mb-4"
-                style={{ filter: "brightness(0) invert(1)" }}
-                draggable={false}
-            />)}
-
-            {slide.title && (
-              <h2 className="text-3xl md:text-5xl lg:text-6xl text-white font-serif tracking-wide max-w-4xl drop-shadow-md">
-                {slide.title}
-              </h2>
-            )}
-            
-            <div className="gold-line mt-6 opacity-80" />
-            
-            {slide.subtitle && (
-              <p className="mt-5 text-white/90 text-sm md:text-lg max-w-2xl leading-relaxed drop-shadow">
-                {slide.subtitle}
-              </p>
-            )}
-            
-            {slide.cta && (
-              <a
-                href={slide.ctaHref ?? "#"}
-                className="mt-8 inline-block bg-(--tender-cyan) text-white px-10 py-3.5 rounded text-sm font-semibold tracking-widest hover:bg-(--tender-cyan)/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(0,0,0,0.2)]"
-              >
-                {slide.cta}
-              </a>
-            )}
-          </div>
         </div>
       ))}
 
-      {/* CAMBIO 2: Renderizar controles solo si hay más de un slide */}
+      {/* Capa celular — visible por debajo de md */}
+      {mobileSlides.map((slide, i) => (
+        <div
+          key={`mobile-${slide.id}`}
+          className={
+            `absolute inset-0 md:hidden transition-opacity duration-1000 ${
+            i === current ? "opacity-100 z-10" : "opacity-0 z-0"
+          }`
+        }
+          aria-hidden={i !== current}
+        >
+          <Image
+            src={slide.image}
+            alt={slide.alt}
+            fill
+            className={`object-cover ${slide.imagePosition || "object-center"}`}
+            priority={i === 0}
+            sizes="100vw"
+          />
+        </div>
+      ))}
+
       {hasMultipleSlides && (
         <>
           {/* Prev/Next arrows */}
@@ -146,28 +173,6 @@ export default function HeroSlider() {
           >
             <ChevronRight size={36} strokeWidth={1.5} />
           </button>
-
-          {/* Dot indicators */}
-          <div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3"
-            role="tablist"
-            aria-label="Indicadores del carrusel"
-          >
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                role="tab"
-                aria-selected={i === current}
-                aria-label={`Ir a diapositiva ${i + 1}`}
-                className={`rounded-full transition-all duration-500 ${
-                  i === current
-                    ? "bg-white w-8 h-2.5 shadow-[0_0_10px_rgba(255,255,255,0.5)]"
-                    : "bg-white/40 w-2.5 h-2.5 hover:bg-white/80"
-                }`}
-              />
-            ))}
-          </div>
         </>
       )}
     </section>

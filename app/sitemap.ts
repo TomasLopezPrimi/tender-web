@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
 import { baseProductMetadata } from '@/lib/products';
+import { SITE_URL } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.tender.com.ar';
+  const baseUrl = SITE_URL;
 
   const routes = [
     '',

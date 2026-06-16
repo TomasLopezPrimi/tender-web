@@ -2,7 +2,6 @@ import { Product, ProductFeature } from "@/types/products";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import InstallationsAndShipping from "../servicio-tecnico/instalacion";
 import FeatureImage from "./feature-image";
 
 interface CategorySectionProps {
@@ -120,8 +119,6 @@ export default function CategorySection({ type, title, subtitle, heroImage, vide
         </div>
 
       </div>
-
-      <InstallationsAndShipping />
     </section>
   );
 }

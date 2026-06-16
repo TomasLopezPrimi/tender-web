@@ -1,30 +1,58 @@
-import { Metadata } from "next"; 
+import { Metadata } from "next";
 import ContactSection from "@/components/home/contact-section";
+import InstallationsAndShipping from "@/components/servicio-tecnico/instalacion";
 import { baseProductMetadata } from "@/lib/products";
-import { getHydratedProducts } from "@/lib/catalog";
+import { getHydratedProducts } from "@/lib/api/catalog";
 import CategorySection from "@/components/productos/category-section";
+import CategoryTabs from "@/components/productos/category-tabs";
+import { absoluteUrl } from "@/lib/site";
+import JsonLd from "@/components/seo/json-ld";
 
 export const revalidate = 60;
+
+type CategoryType = "colgante" | "rebatible";
+
+const categoryConfig = {
+  colgante: {
+    type: "Colgante" as const,
+    title: "Al Nivel de tu Ropa",
+    subtitle: "Ideal para techos de todo tipo. Con mayor regulación de altura y caja reductora de peso.",
+    heroImage: "/images/producto/tender-col-hero.jpg",
+    bgColor: "bg-background",
+  },
+  rebatible: {
+    type: "Rebatible" as const,
+    title: "Optimizá tu Espacio",
+    subtitle: "Perfecto para paredes. Se pliega a 90 grados ocupando el mínimo espacio cuando no se utiliza.",
+    heroImage: "/images/producto/tender-reb-hero.jpg",
+    bgColor: "bg-muted/20",
+  },
+};
 
 export const metadata: Metadata = {
   title: 'Tienda - Tender®',
   description: 'Comprá Tender® Online! Comprar Tender colgante, Tender Rebatible y Tender Plegable. Todos los modelo y todas las medidas de Tender Original.',
   alternates: {
-    canonical: 'https://www.tender.com.ar/tienda', 
+    canonical: absoluteUrl('/tienda'),
   }
 };
 
-export default async function ProductosPage() {
+interface ProductosPageProps {
+  searchParams: Promise<{ tipo?: string }>;
+}
+
+export default async function ProductosPage({ searchParams }: ProductosPageProps) {
+  const { tipo } = await searchParams;
+  const active: CategoryType = tipo === "rebatible" ? "rebatible" : "colgante";
+
   const { products } = await getHydratedProducts(baseProductMetadata);
 
-  const colgantes = products.filter((p) => p.code.includes("COL"));
-  const rebatibles = products.filter((p) => p.code.includes("REB"));
+  const codeFilter = active === "colgante" ? "COL" : "REB";
+  const categoryProducts = products.filter((p) => p.code.includes(codeFilter));
 
-  const colganteVideo = colgantes[0]?.videoUrl;
-  const colganteFeatures = colgantes[0]?.features || [];
-  
-  const rebatibleVideo = rebatibles[0]?.videoUrl;
-  const rebatibleFeatures = rebatibles[0]?.features || [];
+  const config = categoryConfig[active];
+  const video = categoryProducts[0]?.videoUrl;
+  const features = categoryProducts[0]?.features || [];
 
   const itemListSchema = {
     "@context": "https://schema.org",
@@ -32,43 +60,33 @@ export default async function ProductosPage() {
     "itemListElement": products.map((product, index) => ({
       "@type": "ListItem",
       "position": index + 1,
-      "url": `https://www.tender.com.ar/producto/${product.sku}`
+      "url": absoluteUrl(`/producto/${product.sku}`)
     }))
   };
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-1">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
-        />
+        <JsonLd data={itemListSchema} />
         
         <h1 className="sr-only">
           Tender Original: Catálogo de Modelos Colgantes y Rebatibles
         </h1>
-        
-        <CategorySection 
-          type="Colgante"
-          title="Al Nivel de tu Ropa"
-          subtitle="Ideal para techos de todo tipo. Con mayor regulación de altura y caja reductora de peso."
-          heroImage="/images/producto/tender-col-hero.jpg"
-          videoUrl={colganteVideo}
-          features={colganteFeatures}
-          productsData={colgantes}
-          bgColor="bg-background"
+
+        <CategoryTabs active={active} />
+
+        <CategorySection
+          type={config.type}
+          title={config.title}
+          subtitle={config.subtitle}
+          heroImage={config.heroImage}
+          videoUrl={video}
+          features={features}
+          productsData={categoryProducts}
+          bgColor={config.bgColor}
         />
 
-        <CategorySection 
-          type="Rebatible"
-          title="Optimizá tu Espacio"
-          subtitle="Perfecto para paredes. Se pliega a 90 grados ocupando el mínimo espacio cuando no se utiliza."
-          heroImage="/images/producto/tender-reb-hero.jpg"
-          videoUrl={rebatibleVideo}
-          features={rebatibleFeatures}
-          productsData={rebatibles}
-          bgColor="bg-muted/20"
-        />
+        <InstallationsAndShipping />
 
       </main>
 

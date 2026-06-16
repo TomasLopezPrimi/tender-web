@@ -1,5 +1,5 @@
 import CartView from "../../components/carrito/cart-view";
-import { fetchPricingConfig, getHydratedProducts } from "@/lib/catalog";
+import { fetchPricingConfig, getHydratedProducts } from "@/lib/api/catalog";
 import { baseProductMetadata } from "@/lib/products";
 import { ProductSize } from "@/types/products";
 
