@@ -13,6 +13,7 @@ export const config = {
         cbu: "0720146888000037236186",
         titular: "Axenfeld Ruth Haydee"
     },
+    GOOGLE_ANALYTICS_ID: "G-VP3D951D7F",
     BACKEND_URL: process.env.BACKEND_URL || "http://localhost:8000",
     INTERNAL_API_KEY: process.env.INTERNAL_API_KEY
 }
