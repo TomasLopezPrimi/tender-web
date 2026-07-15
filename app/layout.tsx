@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import WhatsAppButton from '@/components/layout/whatsapp-button'
 import Footer from '@/components/layout/footer'
 import Navbar from '@/components/layout/navbar'
 import JsonLd from '@/components/seo/json-ld'
+import { config } from '@/config'
 import { SITE_URL } from '@/lib/site'
 // import ScrollToTop from '@/components/layout/scroll-to-top'
 
@@ -107,6 +109,18 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans antialiased">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${config.GOOGLE_ANALYTICS_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${config.GOOGLE_ANALYTICS_ID}');
+          `}
+        </Script>
         <JsonLd data={organizationSchema} />
         {/* <ScrollToTop /> */}
         <Navbar />

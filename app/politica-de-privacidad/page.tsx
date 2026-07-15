@@ -31,6 +31,10 @@ export default function PrivacyPolicyPage() {
         </p>
 
         <p>
+          <strong>COOKIES Y ANALÍTICA.</strong> Utilizamos cookies y tecnologías similares para mejorar la experiencia de navegación, analizar el uso del sitio y medir el rendimiento de nuestras comunicaciones y campañas. Para ello podemos utilizar herramientas como Google Analytics, que recopilan información agregada sobre páginas visitadas, dispositivo, navegador, ubicación aproximada y fuente de tráfico. La información se utiliza con fines estadísticos y de mejora del servicio. Podés consultar más información sobre el tratamiento de datos de Google en https://policies.google.com/privacy.
+        </p>
+
+        <p>
           <strong>DIVULGACIÓN DE INFORMACIÓN PERSONAL.</strong> Tender Original S.A. no compartirá, cederá ni transferirá su información personal a terceros, salvo en los casos previstos en la presente Política de Privacidad. El Usuario consiente en forma expresa que Tender Original S.A. podrá transferir, total o parcialmente, información personal del Usuario a asesores profesionales, entidades gubernamentales y/o prestadores de servicios, en la medida necesaria para el cumplimiento de las finalidades descriptas en la presente Política de Privacidad y/u obligaciones legales. Adicionalmente, en virtud del servicio de compra que brinda Tender S.A. podrá compartir cierta información con terceros a efectos de dar cumplimiento con las prestaciones correspondientes. En este caso, Tender Original S.A. deberá necesariamente compartir la información personal del usuario sólo a los efectos del cumplimiento del objeto para el cual fue solicitada la información, para lo cual el usuario que utiliza el servicio de compra presta su consentimiento a tal fin.
         </p>
 
