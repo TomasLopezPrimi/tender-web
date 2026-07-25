@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useCheckout } from "@/hooks/use-checkout";
+import type { CheckoutInitialData } from "@/hooks/use-checkout";
 import { useCartStore } from "@/hooks/use-cart-store";
 import { saveThankYouContext } from "@/lib/thank-you-context";
 import { scrollToAddressSection, scrollToFirstError } from "@/lib/checkout-ui";
@@ -21,11 +22,11 @@ const getThankYouPath = (
  * dirección, branching por método de pago y estado de los modales (Getnet web
  * y links de pago). Envuelve a `useCheckout` (form + server action).
  */
-export function useCheckoutFlow() {
+export function useCheckoutFlow(initialData?: CheckoutInitialData | null) {
   const router = useRouter();
   const clearCart = useCartStore((state) => state.clearCart);
 
-  const { form, formError, setFormError, isProcessing, handleCheckout } = useCheckout();
+  const { form, formError, setFormError, isProcessing, handleCheckout } = useCheckout(initialData);
 
   const [paymentMethod, setPaymentMethod] = useState("transferencia");
   const [showGetnetModal, setShowGetnetModal] = useState(false);

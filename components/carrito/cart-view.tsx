@@ -6,9 +6,11 @@ import { ArrowLeft } from "lucide-react";
 
 import { useCartStore } from "@/hooks/use-cart-store";
 import { useCheckoutFlow } from "@/hooks/use-checkout-flow";
+import { isProfessionalCustomer } from "@/lib/customer";
 import { formatPrice } from "@/lib/products";
 import { getTotalItems, getTotalPrice } from "@/lib/cart";
 import { PricingConfig, ProductSize } from "@/types/products";
+import type { CustomerAddress, CustomerProfile } from "@/types/customer";
 
 import EmptyCart from "./empty-cart";
 import CartItemCard from "./cart-item-card";
@@ -22,9 +24,10 @@ import PaymentLinksModal from "./payment-links-modal";
 interface CartViewProps {
   pricingConfig: PricingConfig;
   productSizes: Record<string, ProductSize[]>;
+  customerData?: { profile: CustomerProfile; addresses: CustomerAddress[] } | null;
 }
 
-export default function CartView({ pricingConfig, productSizes }: CartViewProps) {
+export default function CartView({ pricingConfig, productSizes, customerData }: CartViewProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   const items = useCartStore((state) => state.items);
@@ -40,12 +43,36 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
     startCheckout,
     getnetModal,
     linksModal,
-  } = useCheckoutFlow();
+  } = useCheckoutFlow(customerData);
 
   const { register, setValue, clearErrors, formState: { errors } } = form;
 
   const totalItems = getTotalItems(items);
   const totalPrice = getTotalPrice(items);
+  const profile = customerData?.profile;
+  const professionalDiscount = profile && isProfessionalCustomer(profile.tipo_cliente) && profile.estado_cuenta === "ACTIVO"
+    ? Number(profile.descuento_porcentaje ?? 0)
+    : 0;
+
+  const applyAddress = (address: CustomerAddress) => {
+    setValue("address.calle", address.calle, { shouldValidate: true, shouldDirty: true });
+    setValue("address.numero", address.numero, { shouldValidate: true, shouldDirty: true });
+    setValue("address.ciudad", address.ciudad, { shouldValidate: true, shouldDirty: true });
+    setValue("address.provincia", address.provincia, { shouldValidate: true, shouldDirty: true });
+    setValue("address.codigo_postal", address.codigo_postal ?? "", { shouldValidate: true, shouldDirty: true });
+    setValue("address.piso", address.piso ?? "", { shouldDirty: true });
+    setValue("address.departamento", address.departamento ?? "", { shouldDirty: true });
+    setValue("address.referencias", address.referencias ?? "", { shouldDirty: true });
+    setValue("address.es_barrio_privado", address.es_barrio_privado, { shouldDirty: true });
+    setValue("address.latitud", address.latitud ?? undefined, { shouldDirty: true });
+    setValue("address.longitud", address.longitud ?? undefined, { shouldDirty: true });
+    const source = ["usig", "georef", "nominatim", "manual"].includes(String(address.fuente_geo))
+      ? (address.fuente_geo as "usig" | "georef" | "nominatim" | "manual")
+      : "manual";
+    setValue("address.fuente_geo", source, { shouldDirty: true });
+    setValue("address.direccion_normalizada", address.direccion_normalizada ?? undefined, { shouldDirty: true });
+    clearErrors("address");
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -108,8 +135,25 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
                 serverError={formError}
               />
               <div className="border-t border-gray-100 my-6" />
+              {customerData && (
+                <div className="mb-5 rounded-sm border border-[var(--tender-cyan)]/20 bg-[var(--tender-cyan)]/5 p-4 text-sm text-[var(--tender-navy-mid)]">
+                  <p className="font-semibold">Datos precargados de tu cuenta</p>
+                  <p className="text-xs text-gray-600">Tu cuenta identifica la compra. Los cambios de datos o dirección aplican solo a este pedido; no se guardan en tu perfil.</p>
+                  {!customerData.profile.dni && <p className="mt-2 rounded-sm bg-amber-50 p-2 text-xs font-semibold text-amber-900">Falta tu DNI: completalo abajo para poder finalizar la compra.</p>}
+                  {customerData.addresses.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {customerData.addresses.map((address) => (
+                        <button key={address.id_direccion} type="button" onClick={() => applyAddress(address)} className="rounded-full border border-[var(--tender-cyan)]/30 bg-white px-3 py-1 text-xs font-semibold hover:border-[var(--tender-cyan)]">
+                          {address.calle} {address.numero}, {address.ciudad}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
               <div id="address-form-section">
                 <AddressForm
+                  control={form.control}
                   register={register}
                   errors={errors}
                   setValue={setValue}
@@ -129,6 +173,7 @@ export default function CartView({ pricingConfig, productSizes }: CartViewProps)
               selectedPaymentMethod={paymentMethod}
               formatPrice={formatPrice}
               pricingConfig={pricingConfig}
+              professionalDiscount={professionalDiscount}
             />
           </div>
 

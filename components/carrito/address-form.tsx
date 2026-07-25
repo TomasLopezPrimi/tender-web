@@ -1,9 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MapPin, Pencil, CheckCircle2, ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
-import type { UseFormRegister, UseFormSetValue, UseFormClearErrors, FieldErrors } from "react-hook-form";
+import { useWatch, type Control, type UseFormRegister, type UseFormSetValue, type UseFormClearErrors, type FieldErrors } from "react-hook-form";
 
 import AddressAutocomplete from "./address-autocomplete";
 import { ClientFormValues, PROVINCIAS_AR } from "@/types/checkout";
@@ -14,6 +14,7 @@ import { reverseGeocode } from "@/actions/usig";
 const AddressMap = dynamic(() => import("./address-map"), { ssr: false });
 
 interface AddressFormProps {
+  control: Control<ClientFormValues>;
   register: UseFormRegister<ClientFormValues>;
   errors: FieldErrors<ClientFormValues>;
   setValue: UseFormSetValue<ClientFormValues>;
@@ -22,13 +23,37 @@ interface AddressFormProps {
 
 type Mode = "search" | "confirmed" | "manual";
 
-export default function AddressForm({ register, errors, setValue, clearErrors }: AddressFormProps) {
+export default function AddressForm({ control, register, errors, setValue, clearErrors }: AddressFormProps) {
   const addrErrors = errors.address;
+  const watchedAddress = useWatch({ control, name: "address" });
 
   const [mode, setMode] = useState<Mode>("search");
   const [confirmedLabel, setConfirmedLabel] = useState<string>("");
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
   const [manualOpen, setManualOpen] = useState(false);
+  const watchedLat = watchedAddress?.latitud;
+  const watchedLon = watchedAddress?.longitud;
+  const watchedLabel =
+    watchedAddress?.direccion_normalizada ||
+    [
+      [watchedAddress?.calle, watchedAddress?.numero].filter(Boolean).join(" "),
+      watchedAddress?.ciudad,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+  useEffect(() => {
+    if (mode === "manual" || !watchedLabel) return;
+
+    setConfirmedLabel(watchedLabel);
+    setCoords(
+      typeof watchedLat === "number" && Number.isFinite(watchedLat) &&
+        typeof watchedLon === "number" && Number.isFinite(watchedLon)
+        ? { lat: watchedLat, lon: watchedLon }
+        : null,
+    );
+    setMode("confirmed");
+  }, [mode, watchedLabel, watchedLat, watchedLon]);
 
   const inputClass = (hasError: boolean) =>
     `w-full bg-gray-50 border rounded-sm py-2 px-3 text-sm focus:outline-none focus:ring-1 ${

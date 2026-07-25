@@ -1,5 +1,5 @@
 import { config } from "@/config"
-import { Phone, Mail, MapPin, Clock, Instagram, Facebook, Youtube, Linkedin } from "lucide-react"
+import { Phone, Mail, MapPin, Clock, Instagram, Facebook, Youtube } from "lucide-react"
 import Link from "next/link"
 
 

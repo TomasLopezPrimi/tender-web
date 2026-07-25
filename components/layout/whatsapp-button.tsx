@@ -5,9 +5,6 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 
 export default function WhatsAppButton() {
-  const [hovered, setHovered] = useState(false)
-  const [showAutoTooltip, setShowAutoTooltip] = useState(false)
-  
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [userMessage, setUserMessage] = useState("")
   const [showButton, setShowButton] = useState(false)
@@ -19,20 +16,10 @@ export default function WhatsAppButton() {
       setShowButton(true)
     }, 2000)
 
-    const tooltipTimer = setTimeout(() => {
-      if (!isChatOpen) setShowAutoTooltip(true)
-    }, 3500) // 2000ms + 1500ms
-
-    const hideTimer = setTimeout(() => {
-      setShowAutoTooltip(false)
-    }, 8500)
-
     return () => {
       clearTimeout(buttonTimer)
-      clearTimeout(tooltipTimer)
-      clearTimeout(hideTimer)
     }
-  }, [isChatOpen])
+  }, [])
 
   const handleSendMessage = () => {
     const finalMessage = userMessage.trim() !== "" 
@@ -52,8 +39,6 @@ export default function WhatsAppButton() {
       handleSendMessage()
     }
   }
-
-  const isTooltipVisible = (hovered || showAutoTooltip) && !isChatOpen
 
   return (
     <>
@@ -169,8 +154,6 @@ export default function WhatsAppButton() {
         {/* --- 3. BOTÓN REDONDO PRINCIPAL --- */}
         <button
           onClick={() => setIsChatOpen(!isChatOpen)}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
           className={`relative flex items-center justify-center rounded-full transition-all duration-300 p-4 w-14 h-14 pointer-events-auto
                      hover:scale-105 active:scale-95 
                      ${isChatOpen ? 'bg-[var(--tender-navy)] text-white shadow-xl hover:bg-[var(--tender-navy-mid)]' : 'bg-[#25d366] text-white shadow-lg hover:shadow-xl animate-pulse-green'}`}
