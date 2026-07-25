@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 
 # Bump these in one place to upgrade the base image.
-ARG NODE_VERSION=20-alpine
+# Node 24: pnpm 11 usa builtins que no existen en Node 20.
+ARG NODE_VERSION=24-alpine
 
 # ---- Base (toolchain shared by deps + builder) ----
 FROM node:${NODE_VERSION} AS base
