@@ -21,14 +21,14 @@ export async function GET(request: NextRequest) {
   const next = safeAccountRedirect(request.nextUrl.searchParams.get("next"));
 
   if (!config.GOOGLE_CLIENT_ID) {
-    const url = new URL("/cuenta/ingresar", request.url);
+    const url = new URL("/cuenta/ingresar", config.SITE_URL);
     url.searchParams.set("error", "google_config");
     url.searchParams.set("next", next);
     return NextResponse.redirect(url);
   }
 
   const state = randomBytes(24).toString("base64url");
-  const redirectUri = `${config.SITE_URL}/api/auth/google/callback`;
+  const redirectUri = new URL("/api/auth/google/callback", config.SITE_URL).toString();
   const googleUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   googleUrl.search = new URLSearchParams({
     client_id: config.GOOGLE_CLIENT_ID,
