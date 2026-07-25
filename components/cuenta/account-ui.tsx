@@ -139,7 +139,7 @@ export function AccountDashboard({ profile, emails, addresses, orders }: { profi
       <header className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.28em] text-slate-400">Mi cuenta</p>
-          <h2 className="mt-1 font-serif text-3xl text-[var(--tender-navy)] sm:text-4xl">Hola, {profile.nombre}</h2>
+          
         </div>
         <form action={logoutCustomerAction}>
           <button className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-xs font-bold text-slate-500 transition hover:bg-white hover:text-[var(--tender-navy)] sm:px-4">
