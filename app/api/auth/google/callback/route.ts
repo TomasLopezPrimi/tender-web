@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   if (!expectedState || !state || state !== expectedState) return loginRedirect(request, "google_state", next);
   if (!code) return loginRedirect(request, "google_code", next);
 
-  const redirectUri = new URL("/api/auth/google/callback", request.nextUrl.origin).toString();
+  const redirectUri = `${config.SITE_URL}/api/auth/google/callback`;
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (config.INTERNAL_API_KEY) headers["X-Api-Key"] = config.INTERNAL_API_KEY;
 

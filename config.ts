@@ -14,6 +14,7 @@ export const config = {
         titular: "Axenfeld Ruth Haydee"
     },
     GOOGLE_ANALYTICS_ID: "G-VP3D951D7F",
+    SITE_URL: process.env.SITE_URL || "http://localhost:3000",
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     BACKEND_URL: process.env.BACKEND_URL || "http://localhost:8000",
     INTERNAL_API_KEY: process.env.INTERNAL_API_KEY
