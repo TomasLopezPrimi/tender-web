@@ -34,11 +34,11 @@ const desktopSlides: Slide[] = [
   //   image: "/images/banners/banner-04.jpg",
   //   alt: "Banner Tender",
   // },
-  {
-    id: 5,
-    image: "/images/banners/banner-05.jpg",
-    alt: "Banner Tender",
-  },
+  // {
+  //   id: 5,
+  //   image: "/images/banners/banner-05.jpg",
+  //   alt: "Banner Tender",
+  // },
 ]
 
 // Banners para CELULAR — vertical / parado. Recomendado: 1080×1920 px (9:16)
@@ -64,11 +64,11 @@ const mobileSlides: Slide[] = [
   //   image: "/images/banners/mobile/banner-04.jpg",
   //   alt: "Banner Tender",
   // },
-  {
-    id: 5,
-    image: "/images/banners/mobile/banner-05.jpg",
-    alt: "Banner Tender",
-  },
+  // {
+  //   id: 5,
+  //   image: "/images/banners/mobile/banner-05.jpg",
+  //   alt: "Banner Tender",
+  // },
 ]
 
 const slideCount = desktopSlides.length
