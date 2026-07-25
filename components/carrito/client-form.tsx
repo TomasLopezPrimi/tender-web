@@ -7,9 +7,12 @@ interface ClientFormProps {
   register: UseFormRegister<ClientFormValues>;
   errors: FieldErrors<ClientFormValues>;
   serverError?: string;
+  accountDni?: string | null;
+  isLoggedIn?: boolean;
 }
 
-export default function ClientForm({ register, errors, serverError }: ClientFormProps) {
+export default function ClientForm({ register, errors, serverError, accountDni, isLoggedIn }: ClientFormProps) {
+  const hasAccountDni = Boolean(accountDni);
   const inputClass = (hasError: boolean) =>
     `w-full bg-gray-50 border rounded-sm py-2 px-3 text-sm focus:outline-none focus:ring-1 ${
       hasError
@@ -58,9 +61,15 @@ export default function ClientForm({ register, errors, serverError }: ClientForm
           <input
             type="text" id="dni"
             {...register("dni")}
-            className={inputClass(!!errors.dni)}
+            readOnly={hasAccountDni}
+            className={`${inputClass(!!errors.dni)} ${hasAccountDni ? "cursor-not-allowed text-gray-500" : ""}`}
             placeholder="Sin puntos ni espacios"
           />
+          {isLoggedIn && !errors.dni && (
+            <p className="text-xs text-gray-500 mt-1">
+              {hasAccountDni ? "DNI de tu cuenta. Para cambiarlo, escribinos." : "Lo guardamos en tu cuenta para procesar el pago."}
+            </p>
+          )}
           {errors.dni && <p className="text-xs text-red-500 mt-1">{errors.dni.message}</p>}
         </div>
 

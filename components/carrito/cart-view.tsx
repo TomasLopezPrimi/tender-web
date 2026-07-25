@@ -133,13 +133,14 @@ export default function CartView({ pricingConfig, productSizes, customerData }: 
                 register={register}
                 errors={errors}
                 serverError={formError}
+                accountDni={customerData?.profile.dni}
+                isLoggedIn={!!customerData}
               />
               <div className="border-t border-gray-100 my-6" />
               {customerData && (
                 <div className="mb-5 rounded-sm border border-[var(--tender-cyan)]/20 bg-[var(--tender-cyan)]/5 p-4 text-sm text-[var(--tender-navy-mid)]">
-                  <p className="font-semibold">Datos precargados de tu cuenta</p>
-                  <p className="text-xs text-gray-600">Tu cuenta identifica la compra. Los cambios de datos o dirección aplican solo a este pedido; no se guardan en tu perfil.</p>
-                  {!customerData.profile.dni && <p className="mt-2 rounded-sm bg-amber-50 p-2 text-xs font-semibold text-amber-900">Falta tu DNI: completalo abajo para poder finalizar la compra.</p>}
+                  <p className="font-semibold">Estás comprando con tu cuenta</p>
+                  {!customerData.profile.dni && <p className="mt-2 rounded-sm bg-amber-50 p-2 text-xs font-semibold text-amber-900">Completá tu DNI para poder pagar con tarjeta.</p>}
                   {customerData.addresses.length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-2">
                       {customerData.addresses.map((address) => (
