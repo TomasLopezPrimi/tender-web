@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
   }
 
   const state = randomBytes(24).toString("base64url");
-  const redirectUri = new URL("/api/auth/google/callback", request.nextUrl.origin).toString();
+  const redirectUri = `${config.SITE_URL}/api/auth/google/callback`;
   const googleUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   googleUrl.search = new URLSearchParams({
     client_id: config.GOOGLE_CLIENT_ID,
