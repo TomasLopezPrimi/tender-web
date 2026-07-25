@@ -2,10 +2,12 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation" 
-import { useState } from "react"
-import {  X, ChevronDown, Grip } from "lucide-react"
+import { useEffect, useState } from "react"
+import {  X, ChevronDown, Grip, UserRound, LogOut } from "lucide-react"
+import AccountDropdown from "./account-dropdown"
 import CartWidget from "./cart-widget"
 import NavLink from "./nav-link"
+import { logoutCustomerAction } from "@/actions/customer-auth"
 
 export interface NavItem {
   label: string
@@ -36,10 +38,22 @@ const navItems: NavItem[] = [
   // { label: "CONTACTO", href: "/#contacto" },
 ]
 
-export default function Navbar() {
+export default function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
+  const [sessionLoggedIn, setSessionLoggedIn] = useState(isLoggedIn)
   const pathname = usePathname() 
+
+  useEffect(() => {
+    let active = true
+    fetch("/api/customer/session", { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (active && typeof data?.isLoggedIn === "boolean") setSessionLoggedIn(data.isLoggedIn)
+      })
+      .catch(() => {})
+    return () => { active = false }
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border/50 shadow-sm">
@@ -87,8 +101,11 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* LADO DERECHO: Carrito */}
+          {/* LADO DERECHO: Cuenta + Carrito */}
           <div className="flex-1 flex justify-end items-center pr-2">
+            <Link href="/cuenta" className="lg:hidden mr-1 p-2 text-(--tender-navy) hover:text-(--tender-cyan) transition-colors" aria-label="Mi cuenta">
+              <UserRound size={20} />
+            </Link>
             <div className="lg:hidden">
               <CartWidget />
             </div>
@@ -101,7 +118,8 @@ export default function Navbar() {
             <NavLink key={item.label} item={item} />
           ))}
           
-          <div className="flex items-center ml-2 pl-3 border-l border-border/50">
+          <div className="flex items-center ml-2 pl-3 border-l border-border/50 gap-2">
+            <AccountDropdown isLoggedIn={sessionLoggedIn} />
             <CartWidget />
           </div>
         </nav>
@@ -173,6 +191,25 @@ export default function Navbar() {
                 </div>
               )
             })}
+            <Link
+              href={sessionLoggedIn ? "/cuenta" : "/cuenta/ingresar"}
+              onClick={() => setMobileOpen(false)}
+              className="mt-2 flex items-center gap-2 border-t border-border px-3 pt-3 pb-2 text-sm font-semibold tracking-wide text-(--tender-navy) hover:text-(--tender-cyan)"
+            >
+              <UserRound size={16} />
+              Mi cuenta
+            </Link>
+            {sessionLoggedIn && (
+              <form action={logoutCustomerAction}>
+                <button
+                  type="submit"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm font-semibold tracking-wide text-red-600 hover:bg-red-50 transition-colors"
+                >
+                  <LogOut size={16} />
+                  Cerrar sesión
+                </button>
+              </form>
+            )}
           </div>
         </div>
       )}

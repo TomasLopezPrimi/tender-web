@@ -24,12 +24,12 @@ export default function HeroArquitectos() {
         
         {/* 2. Cambiamos a text-white o un color cian muy claro y sombras oscuras */}
         <span className="text-cyan-300 font-semibold tracking-wider uppercase text-sm mb-4 block drop-shadow-md">
-          Programa Exclusivo
+          Programa profesional
         </span>
         
         {/* 3. H1 en blanco puro con sombra oscura para profundidad */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-wide text-balance mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
-          Soluciones para <span className="text-cyan-200">Arquitectos</span> y Profesionales
+          Soluciones para <span className="text-cyan-200">arquitectos</span> y profesionales
         </h1>
         
         <div className="gold-line mb-6 shadow-sm bg-yellow-500 h-1 w-24 mx-auto" />
@@ -37,7 +37,7 @@ export default function HeroArquitectos() {
         {/* 4. Párrafo en blanco con ligera opacidad (text-white/90) */}
         <p className="mt-4 max-w-2xl mx-auto text-white/90 text-base md:text-lg text-balance font-medium drop-shadow-sm">
           Integramos diseño, funcionalidad y calidad en cada proyecto. 
-          Descubrí los beneficios exclusivos, librerías 3D y asesoramiento 
+          Descubrí beneficios, librerías 3D y asesoramiento 
           personalizado para tus obras.
         </p>
 

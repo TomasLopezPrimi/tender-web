@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Phone, Send } from "lucide-react"
+import { Phone } from "lucide-react"
 import { config } from "@/config"
 
 export default function ContactSection() {

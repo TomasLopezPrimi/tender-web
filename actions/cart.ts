@@ -1,6 +1,7 @@
 "use server";
 
 import { config } from "@/config";
+import { authHeaders, refreshCustomerSession } from "@/lib/account/session";
 import {
   CheckoutRequest,
   CheckoutActionResponse,
@@ -34,11 +35,11 @@ export async function getOrderStatus(
 export async function iniciarProcesoDePago(
   items: CartItemReference[],
   paymentMethod: "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "GETNET-LINK" | "EFECTIVO",
-  clientId?: number,
+  _clientId?: number,
   clientData?: ClientData,
   customerNote?: string,
 ): Promise<CheckoutActionResponse> {
-  if (!clientId && !clientData) {
+  if (!clientData) {
     return {
       success: false,
       error: "Faltan los datos del cliente para procesar la orden.",
@@ -47,21 +48,30 @@ export async function iniciarProcesoDePago(
 
   try {
     const checkoutData: CheckoutRequest = {
-      items,
+      items: items.map(({ sku, quantity, selectedSize }) => ({ sku, quantity, selectedSize })),
       customerNote: customerNote ? customerNote : "Pedido desde la web",
-      client_id: clientId,
       client_data: clientData,
       payment_method: paymentMethod,
     };
+    const customerAuthHeaders = await authHeaders();
 
-    const response = await fetch(`${BACKEND_URL}/orders/create`, {
+    const postCheckout = (headers: Record<string, string>) => fetch(`${BACKEND_URL}/orders/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-Api-Key": INTERNAL_API_KEY || "",
+        ...headers,
       },
       body: JSON.stringify(checkoutData),
     });
+
+    let response = await postCheckout(customerAuthHeaders);
+    if (response.status === 401 && customerAuthHeaders.Authorization) {
+      const refreshed = await refreshCustomerSession();
+      if (refreshed) {
+        response = await postCheckout({ Authorization: `Bearer ${refreshed}` });
+      }
+    }
 
     if (!response.ok) {
       let errorMsg = "El servidor de pagos no respondió correctamente.";

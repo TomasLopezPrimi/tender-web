@@ -5,9 +5,42 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCartStore } from "@/hooks/use-cart-store";
 import { iniciarProcesoDePago } from "@/actions/cart";
 import { CartItemReference, CheckoutActionResponse, ClientData, ClientFormValues, clientFormSchema } from "@/types/checkout";
+import type { CustomerAddress, CustomerProfile } from "@/types/customer";
 import { scrollToFirstError } from "@/lib/checkout-ui";
 
-export function useCheckout() {
+export interface CheckoutInitialData {
+  profile: CustomerProfile;
+  addresses: CustomerAddress[];
+}
+
+function toDefaultValues(initialData?: CheckoutInitialData | null): ClientFormValues {
+  const firstAddress = initialData?.addresses[0];
+  return {
+    nombre: initialData?.profile.nombre ?? "",
+    apellido: initialData?.profile.apellido ?? "",
+    dni: initialData?.profile.dni ?? "",
+    email: initialData?.profile.email ?? "",
+    phone: initialData?.profile.phone ?? "",
+    usuario_instagram: initialData?.profile.usuario_instagram ?? "",
+    address: {
+      calle: firstAddress?.calle ?? "",
+      numero: firstAddress?.numero ?? "",
+      ciudad: firstAddress?.ciudad ?? "",
+      provincia: firstAddress?.provincia ?? "",
+      codigo_postal: firstAddress?.codigo_postal ?? "",
+      piso: firstAddress?.piso ?? "",
+      departamento: firstAddress?.departamento ?? "",
+      referencias: firstAddress?.referencias ?? "",
+      es_barrio_privado: firstAddress?.es_barrio_privado ?? false,
+      latitud: firstAddress?.latitud ?? undefined,
+      longitud: firstAddress?.longitud ?? undefined,
+      fuente_geo: (firstAddress?.fuente_geo as ClientFormValues["address"]["fuente_geo"]) ?? undefined,
+      direccion_normalizada: firstAddress?.direccion_normalizada ?? undefined,
+    },
+  };
+}
+
+export function useCheckout(initialData?: CheckoutInitialData | null) {
   const router = useRouter();
   
   const items = useCartStore((state) => state.items);
@@ -18,25 +51,7 @@ export function useCheckout() {
 
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
-    defaultValues: {
-      nombre: "",
-      apellido: "",
-      dni: "",
-      email: "",
-      phone: "",
-      usuario_instagram: "",
-      address: {
-        calle: "",
-        numero: "",
-        ciudad: "",
-        provincia: undefined,
-        codigo_postal: "",
-        piso: "",
-        departamento: "",
-        referencias: "",
-        es_barrio_privado: false,
-      },
-    },
+    defaultValues: toDefaultValues(initialData),
     mode: "onTouched",
   });
 
@@ -72,12 +87,10 @@ export function useCheckout() {
         selectedSize: item.medida
       }));
       
-      const clientId = undefined;
-
       const response = await iniciarProcesoDePago(
         itemsParaBackend,
         paymentMethod, 
-        clientId, 
+        undefined,
         clientData
       );
 

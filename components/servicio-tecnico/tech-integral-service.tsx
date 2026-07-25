@@ -1,6 +1,6 @@
 // components/tech-service/tech-integral-service.tsx
 import Image from "next/image"
-import { AlertTriangle, ArrowRight } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 
 const services = [
   {

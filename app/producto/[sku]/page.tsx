@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getMetadataBySku } from "@/lib/products";
-import { getHydratedProducts, fetchPricingConfig } from "@/lib/api/catalog";
+import { getHydratedProducts } from "@/lib/api/catalog";
 import ProductClientPage from '@/components/productos/product-client-page';
 import ProductInfoSections from '@/components/productos/detail/product-info-sections';
 import { SITE_URL, absoluteUrl } from '@/lib/site';

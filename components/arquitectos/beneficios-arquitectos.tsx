@@ -33,7 +33,7 @@ export default function BeneficiosArquitectos() {
           </h2>
           <div className="gold-line mx-auto mb-6" />
           <p className="text-[var(--tender-text-muted)] text-base md:text-lg">
-            Herramientas y ventajas exclusivas pensadas para optimizar el flujo de trabajo de los profesionales de la arquitectura.
+            Herramientas y ventajas pensadas para arquitectos, interioristas, constructoras y profesionales que proyectan espacios reales.
           </p>
         </div>
 

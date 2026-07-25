@@ -1,12 +1,9 @@
 import { Truck, MessageCircle, Loader2, CreditCard, Lock } from "lucide-react";
 import { PricingConfig } from "@/types/products";
-import PromoLabel from "@/components/ui/promo-label";
 import {
   getCombinedDiscountPercentage,
   getEffectiveDiscountRate,
-  getGlobalDiscountLabel,
   getGlobalDiscountRate,
-  shouldShowGlobalDiscountLabel,
 } from "@/lib/pricing";
 
 interface OrderSummaryProps {
@@ -17,6 +14,7 @@ interface OrderSummaryProps {
   formatPrice: (price: number) => string;
   selectedPaymentMethod: string;
   pricingConfig: PricingConfig;
+  professionalDiscount?: number;
 }
 
 export default function OrderSummary({ 
@@ -27,6 +25,7 @@ export default function OrderSummary({
   formatPrice,
   selectedPaymentMethod,
   pricingConfig,
+  professionalDiscount = 0,
 }: OrderSummaryProps) {
 
   const isTransferencia = selectedPaymentMethod === "transferencia";
@@ -34,9 +33,7 @@ export default function OrderSummary({
   const isGetnetWeb = selectedPaymentMethod === "getnet";
 
   const globalDiscount = getGlobalDiscountRate(pricingConfig);
-  const globalLabel = getGlobalDiscountLabel(pricingConfig);
   const globalDiscountPct = Math.round(globalDiscount * 100);
-  const showGlobalLabel = shouldShowGlobalDiscountLabel(pricingConfig);
 
   // Use the effective (max) rate so getnet and transferencia paths are consistent.
   const transferEffectiveRate = getEffectiveDiscountRate(pricingConfig, 'TRANSFERENCIA');
@@ -47,6 +44,8 @@ export default function OrderSummary({
   const combinedDiscountPct = getCombinedDiscountPercentage(pricingConfig, 'TRANSFERENCIA');
   const showDiscountedPrice = isTransferencia || ((isGetnetLink || isGetnetWeb) && globalDiscount > 0);
   const activeBadgePct = isTransferencia ? combinedDiscountPct : globalDiscountPct;
+  const showProfessionalEstimate = professionalDiscount > 0 && professionalDiscount > activeBadgePct;
+  const professionalTotal = totalPrice * (1 - professionalDiscount / 100);
 
   return (
     <div className="bg-white rounded-sm p-6 shadow-sm border border-gray-100 sticky top-4 animate-fade-in-up">
@@ -54,12 +53,6 @@ export default function OrderSummary({
         Resumen de compra
       </h2>
 
-      {/* {showGlobalLabel && (
-        <div className="mb-5">
-          <PromoLabel label={globalLabel} variant="summary" kicker={`${globalDiscountPct}% OFF`} />
-        </div>
-      )} */}
-      
       {/* <div className="flex justify-between items-center mb-6">
         <span className="text-gray-600">Total ({totalItems} {totalItems === 1 ? 'producto' : 'productos'})</span>
         <span className="text-2xl font-bold text-[var(--tender-navy-mid)]">{formatPrice(totalPrice)}</span>
@@ -103,6 +96,13 @@ export default function OrderSummary({
           </div>
         </div>
       </div>
+
+      {showProfessionalEstimate && (
+        <div className="mb-6 rounded-sm border border-cyan-200 bg-cyan-50 p-4 text-sm text-cyan-950">
+          <span className="block font-bold">Beneficio profesional estimado</span>
+          <span>{professionalDiscount}% OFF si el backend confirma tu cuenta profesional activa: {formatPrice(professionalTotal)} final estimado.</span>
+        </div>
+      )}
 
       {/* BOTÓN DE CHECKOUT DINÁMICO */}
       <button 
