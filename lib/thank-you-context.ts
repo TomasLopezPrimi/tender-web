@@ -12,6 +12,22 @@ const STORAGE_TTL_MS = 30 * 60 * 1000;
 
 const isBrowser = () => typeof window !== "undefined";
 
+/**
+ * Ruta de /gracias con el método explícito en la query.
+ *
+ * Siempre navegar con este helper: sin `paymentMethod` la página cae al contexto
+ * guardado en sessionStorage y puede mostrar la variante de un intento anterior
+ * (ej. "¡Pago aprobado!" después de una compra por transferencia).
+ */
+export function getThankYouPath(
+  method: ThankYouPaymentMethod,
+  orderId?: number | null,
+): string {
+  const params = new URLSearchParams({ paymentMethod: method });
+  if (orderId != null) params.set("orderId", String(orderId));
+  return `/gracias?${params.toString()}`;
+}
+
 export function saveThankYouContext(
   context: Omit<ThankYouContext, "savedAt">,
 ): void {

@@ -4,18 +4,9 @@ import { useRouter } from "next/navigation";
 import { useCheckout } from "@/hooks/use-checkout";
 import type { CheckoutInitialData } from "@/hooks/use-checkout";
 import { useCartStore } from "@/hooks/use-cart-store";
-import { saveThankYouContext } from "@/lib/thank-you-context";
+import { getThankYouPath, saveThankYouContext } from "@/lib/thank-you-context";
 import { scrollToAddressSection, scrollToFirstError } from "@/lib/checkout-ui";
 import { GetnetLinkItem } from "@/types/checkout";
-
-const getThankYouPath = (
-  method: "transferencia" | "getnet-link" | "getnet-web",
-  orderId?: number | null,
-) => {
-  const params = new URLSearchParams({ paymentMethod: method });
-  if (orderId != null) params.set("orderId", String(orderId));
-  return `/gracias?${params.toString()}`;
-};
 
 /**
  * Orquesta el checkout del carrito: validación con mensajes específicos de
@@ -31,11 +22,16 @@ export function useCheckoutFlow(initialData?: CheckoutInitialData | null) {
   const [paymentMethod, setPaymentMethod] = useState("transferencia");
   const [showGetnetModal, setShowGetnetModal] = useState(false);
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
+  const [getnetCheckoutUrl, setGetnetCheckoutUrl] = useState<string | null>(null);
+  const [getnetOrderId, setGetnetOrderId] = useState<number | null>(null);
   const [showLinksModal, setShowLinksModal] = useState(false);
   const [paymentLinks, setPaymentLinks] = useState<GetnetLinkItem[]>([]);
   const [linksOrderId, setLinksOrderId] = useState<number | undefined>(undefined);
 
   const closeLinksModal = useCallback(() => setShowLinksModal(false), []);
+
+  // El usuario abandona el pago con tarjeta: cerramos y le dejamos el carrito intacto.
+  const closeGetnetModal = useCallback(() => setShowGetnetModal(false), []);
 
   const handlePaymentLinksCompleted = useCallback(() => {
     setShowLinksModal(false);
@@ -70,6 +66,8 @@ export function useCheckoutFlow(initialData?: CheckoutInitialData | null) {
           paymentIntentId: response.instruction.payload.paymentIntentId,
         });
         setPaymentIntentId(response.instruction.payload.paymentIntentId);
+        setGetnetCheckoutUrl(response.instruction.payload.checkoutUrl);
+        setGetnetOrderId(response.orderId ?? null);
         setShowGetnetModal(true);
       }
     } else if (paymentMethod === "getnet-link") {
@@ -91,7 +89,13 @@ export function useCheckoutFlow(initialData?: CheckoutInitialData | null) {
     paymentMethod,
     setPaymentMethod,
     startCheckout,
-    getnetModal: { isOpen: showGetnetModal, paymentIntentId },
+    getnetModal: {
+      isOpen: showGetnetModal,
+      paymentIntentId,
+      checkoutUrl: getnetCheckoutUrl,
+      orderId: getnetOrderId,
+      close: closeGetnetModal,
+    },
     linksModal: {
       isOpen: showLinksModal,
       links: paymentLinks,
