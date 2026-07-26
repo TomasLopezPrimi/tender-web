@@ -140,7 +140,12 @@ export default function CartView({ pricingConfig, productSizes, customerData }: 
               {customerData && (
                 <div className="mb-5 rounded-sm border border-[var(--tender-cyan)]/20 bg-[var(--tender-cyan)]/5 p-4 text-sm text-[var(--tender-navy-mid)]">
                   <p className="font-semibold">Estás comprando con tu cuenta</p>
-                  {!customerData.profile.dni && <p className="mt-2 rounded-sm bg-amber-50 p-2 text-xs font-semibold text-amber-900">Completá tu DNI para poder pagar con tarjeta.</p>}
+                  {!customerData.profile.dni && (
+                    <p className="mt-2 rounded-sm bg-amber-50 p-2 text-xs font-semibold text-amber-900">
+                      Completá tu DNI en el formulario de arriba para poder pagar con tarjeta: lo guardamos en tu cuenta.{" "}
+                      <Link href="/cuenta" className="underline underline-offset-2">También podés cargarlo en tu perfil</Link>.
+                    </p>
+                  )}
                   {customerData.addresses.length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-2">
                       {customerData.addresses.map((address) => (
@@ -183,7 +188,13 @@ export default function CartView({ pricingConfig, productSizes, customerData }: 
 
       {/* GETNET WEB CHECKOUT (lightbox del loader oficial) */}
       {getnetModal.isOpen && getnetModal.paymentIntentId && (
-        <GetnetCheckout isOpen paymentIntentId={getnetModal.paymentIntentId} />
+        <GetnetCheckout
+          isOpen
+          paymentIntentId={getnetModal.paymentIntentId}
+          checkoutUrl={getnetModal.checkoutUrl}
+          orderId={getnetModal.orderId}
+          onClose={getnetModal.close}
+        />
       )}
 
       {/* MODAL DE LINKS DE PAGO (GETNET-LINK) */}

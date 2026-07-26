@@ -7,6 +7,7 @@ import { iniciarProcesoDePago } from "@/actions/cart";
 import { CartItemReference, CheckoutActionResponse, ClientData, ClientFormValues, clientFormSchema } from "@/types/checkout";
 import type { CustomerAddress, CustomerProfile } from "@/types/customer";
 import { scrollToFirstError } from "@/lib/checkout-ui";
+import { clearThankYouContext, getThankYouPath } from "@/lib/thank-you-context";
 
 export interface CheckoutInitialData {
   profile: CustomerProfile;
@@ -106,11 +107,16 @@ export function useCheckout(initialData?: CheckoutInitialData | null) {
         }
 
         if (response.instruction?.type === 'EXTERNAL_REDIRECT') {
+          // Transferencia: abrimos WhatsApp con el detalle del pedido y mostramos
+          // el gracias de transferencia (datos bancarios + comprobante).
           window.open(response.instruction.payload.url, '_blank');
           clearCart();
-          router.push('/gracias');
+          router.push(getThankYouPath('transferencia', response.orderId));
         }
         else {
+          // Sin instrucción de pago no sabemos qué variante mostrar: limpiamos el
+          // contexto para que /gracias no reutilice el de un intento anterior.
+          clearThankYouContext();
           clearCart();
           router.push('/gracias');
         }
