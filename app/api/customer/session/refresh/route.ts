@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { config } from "@/config";
 import { safeAccountRedirect } from "@/lib/account/redirect";
 import { clearCustomerSession, refreshCustomerSession } from "@/lib/account/session";
 
@@ -10,12 +11,12 @@ export async function GET(request: NextRequest) {
   const failure = safeAccountRedirect(request.nextUrl.searchParams.get("failure"), "");
   const refreshed = await refreshCustomerSession();
 
-  if (refreshed) return NextResponse.redirect(new URL(next, request.url));
+  if (refreshed) return NextResponse.redirect(new URL(next, config.SITE_URL));
 
   await clearCustomerSession();
-  if (failure) return NextResponse.redirect(new URL(failure, request.url));
+  if (failure) return NextResponse.redirect(new URL(failure, config.SITE_URL));
 
-  const loginUrl = new URL("/cuenta/ingresar", request.url);
+  const loginUrl = new URL("/cuenta/ingresar", config.SITE_URL);
   loginUrl.searchParams.set("next", next);
   return NextResponse.redirect(loginUrl);
 }

@@ -1,9 +1,11 @@
+import { config } from "@/config";
+
 /**
  * Canonical domain for the Tender site.
  * www.tender.com.ar 301-redirects to this (no-www).
  * Use this constant everywhere URLs are needed — JSON-LD, metadata, sitemap, robots.
  */
-export const SITE_URL = "https://tender.com.ar";
+export const SITE_URL = config.SITE_URL;
 
 /**
  * Returns an absolute URL by joining SITE_URL with a relative path.
