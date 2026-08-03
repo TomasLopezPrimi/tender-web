@@ -3,12 +3,17 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { getOrderStatus } from "@/actions/cart";
 import { useCartStore } from "@/hooks/use-cart-store";
 import {
   ArrowRight,
   Check,
   ChevronDown,
+  CircleX,
+  Clock3,
   Landmark,
+  LoaderCircle,
+  RefreshCw,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -23,12 +28,20 @@ import {
   saveThankYouContext,
 } from "@/lib/thank-you-context";
 import { isThankYouPaymentMethod, variantConfig } from "@/lib/gracias-variants";
-import type { ResolvedThankYouState, VariantKind } from "@/types/gracias";
+import type { ResolvedThankYouState, VariantConfig, VariantKind } from "@/types/gracias";
 import { HeroIconWithRings } from "./hero-icon-with-rings";
 import { TicketPerforation } from "./ticket-perforation";
 import { TimelineStep } from "./timeline-step";
 import { TrustRow } from "./trust-row";
 import { BankField } from "./bank-field";
+
+type PaymentVerification = "idle" | "checking" | "paid" | "cancelled" | "unconfirmed";
+
+const validOrderId = (value: string | null) => {
+  if (!value) return null;
+  const id = Number(value);
+  return Number.isInteger(id) && id > 0 ? String(id) : null;
+};
 
 export function GraciasContent() {
   const searchParams = useSearchParams();
@@ -38,13 +51,15 @@ export function GraciasContent() {
     orderId: null,
   });
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [verification, setVerification] = useState<PaymentVerification>("idle");
+  const [verificationAttempt, setVerificationAttempt] = useState(0);
 
   useEffect(() => {
     const rawPaymentMethodFromQuery = searchParams.get("paymentMethod");
     const paymentMethodFromQuery = isThankYouPaymentMethod(rawPaymentMethodFromQuery)
       ? rawPaymentMethodFromQuery
       : null;
-    const orderIdFromQuery = searchParams.get("orderId");
+    const orderIdFromQuery = validOrderId(searchParams.get("orderId"));
     const storedContext = readThankYouContext();
 
     if (paymentMethodFromQuery || orderIdFromQuery) {
@@ -65,7 +80,6 @@ export function GraciasContent() {
           paymentMethod: paymentMethodFromQuery,
           orderId: resolvedOrderId ? Number(resolvedOrderId) : null,
         });
-        if (paymentMethodFromQuery === "getnet-web") clearCart();
       }
       return;
     }
@@ -75,13 +89,113 @@ export function GraciasContent() {
       paymentMethod: storedContext?.paymentMethod ?? null,
       orderId: storedContext?.orderId != null ? String(storedContext.orderId) : null,
     });
-  }, [searchParams, clearCart]);
+  }, [searchParams]);
 
   const paymentMethod = resolvedState.paymentMethod;
   const orderId = resolvedState.orderId;
+
+  useEffect(() => {
+    if (paymentMethod !== "getnet-web") {
+      setVerification("idle");
+      return;
+    }
+
+    const parsedOrderId = Number(orderId);
+    if (!Number.isInteger(parsedOrderId) || parsedOrderId <= 0) {
+      setVerification("unconfirmed");
+      return;
+    }
+
+    let disposed = false;
+    let requestInProgress = false;
+    setVerification("checking");
+
+    const poll = window.setInterval(checkStatus, 2000);
+    const timeout = window.setTimeout(() => {
+      window.clearInterval(poll);
+      if (!disposed) setVerification("unconfirmed");
+    }, 30000);
+
+    async function checkStatus() {
+      if (requestInProgress) return;
+      requestInProgress = true;
+      const result = await getOrderStatus(parsedOrderId);
+      requestInProgress = false;
+      if (disposed || "error" in result) return;
+
+      if (result.status === "PAGADO") {
+        window.clearInterval(poll);
+        window.clearTimeout(timeout);
+        setVerification("paid");
+        clearCart();
+      } else if (result.status === "CANCELADO") {
+        window.clearInterval(poll);
+        window.clearTimeout(timeout);
+        setVerification("cancelled");
+      }
+    }
+
+    void checkStatus();
+
+    return () => {
+      disposed = true;
+      window.clearInterval(poll);
+      window.clearTimeout(timeout);
+    };
+  }, [paymentMethod, orderId, verificationAttempt, clearCart]);
+
   const variantKey: VariantKind =
     paymentMethod && isThankYouPaymentMethod(paymentMethod) ? paymentMethod : "transferencia";
-  const variant = variantConfig[variantKey];
+  const baseVariant = variantConfig[variantKey];
+  let variant: VariantConfig = baseVariant;
+
+  if (paymentMethod === "getnet-web" && verification !== "paid") {
+    const cancelled = verification === "cancelled";
+    const checking = verification === "checking";
+    variant = {
+      ...baseVariant,
+      title: cancelled
+        ? "El pago no se completó"
+        : checking
+          ? "Estamos verificando tu pago"
+          : "Tu pago sigue en verificación",
+      subtitle: cancelled
+        ? "Tu pedido sigue registrado y el carrito se conservó para que puedas intentarlo nuevamente."
+        : checking
+          ? "La confirmación de Getnet puede demorar unos segundos. No cierres esta página."
+          : "Todavía no recibimos la confirmación. No vuelvas a pagarlo hasta consultar el estado.",
+      heroIcon: cancelled ? CircleX : Clock3,
+      ringTone: "amber",
+      ringLoop: checking,
+      stepsHeading: cancelled ? "Estado del pedido" : "Confirmación en curso",
+      steps: [
+        {
+          id: 1,
+          label: "Pedido recibido",
+          desc: "Guardamos los datos de tu compra.",
+          icon: Check,
+          status: "done",
+        },
+        {
+          id: 2,
+          label: cancelled ? "Pago no completado" : "Verificando pago",
+          desc: cancelled ? "Getnet no confirmó la operación." : "Esperamos la confirmación de Getnet.",
+          icon: cancelled ? CircleX : Clock3,
+          status: "active",
+        },
+        {
+          id: 3,
+          label: cancelled ? "Podés volver a intentarlo" : "Preparación",
+          desc: cancelled ? "Tu carrito continúa disponible." : "Comenzará cuando se acredite el pago.",
+          icon: cancelled ? RefreshCw : baseVariant.steps[2].icon,
+          status: "pending",
+        },
+      ],
+      helperNote: cancelled
+        ? "No se eliminó ningún producto de tu carrito."
+        : "No hace falta iniciar otro pago mientras verificamos este pedido.",
+    };
+  }
   const whatsappHref = `https://wa.me/${config.whatsappNumber}`;
 
   const copyToClipboard = async (text: string, field: string) => {
@@ -132,6 +246,32 @@ export function GraciasContent() {
                   <span className="opacity-60">Pedido</span>
                   <span className="font-bold">#{orderId}</span>
                 </span>
+              </div>
+            )}
+
+            {paymentMethod === "getnet-web" && verification === "checking" && (
+              <div
+                aria-live="polite"
+                className="flex items-center justify-center gap-2 text-sm font-medium text-[var(--tender-navy)]"
+              >
+                <LoaderCircle size={18} className="animate-spin text-[var(--tender-cyan)]" />
+                Consultando el estado del pedido
+              </div>
+            )}
+
+            {paymentMethod === "getnet-web" && verification === "unconfirmed" && (
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-center">
+                <p className="text-sm text-amber-950">
+                  Si acabás de pagar, la confirmación puede tardar unos segundos más.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setVerificationAttempt((attempt) => attempt + 1)}
+                  className="mt-3 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[var(--tender-navy)] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--tender-navy-mid)] focus-visible:ring-2 focus-visible:ring-[var(--tender-cyan)] focus-visible:ring-offset-2"
+                >
+                  <RefreshCw size={17} />
+                  Consultar nuevamente
+                </button>
               </div>
             )}
 
