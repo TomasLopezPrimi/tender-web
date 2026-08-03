@@ -122,7 +122,7 @@ export interface CheckoutActionResponse {
 }
 
 
-export type OrderStatus = 'PENDIENTE' | 'ESPERANDO_CONFIRMACION_PAGO' | 'PAGADA' | 'CANCELADA' 
+export type OrderStatus = 'PENDIENTE' | 'ESPERANDO_CONFIRMACION_PAGO' | 'PAGADO' | 'CANCELADO' 
 
 export interface OrderItemDetail extends CartItemReference {
     nombre: string;
