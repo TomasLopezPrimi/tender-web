@@ -9,6 +9,7 @@ FROM node:${NODE_VERSION} AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PATH"
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV SITE_URL="https://tender.com.ar"
 # pnpm 10+ es requisito: los overrides viven en pnpm-workspace.yaml, no en package.json.
 RUN corepack enable && corepack prepare pnpm@11.3.0 --activate
 
@@ -42,6 +43,7 @@ RUN apk add --no-cache libc6-compat
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV SITE_URL="https://tender.com.ar"
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
