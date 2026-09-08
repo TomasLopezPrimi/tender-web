@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Info, MapPin } from 'lucide-react';
 import { Product } from '@/types/products';
+import Link from 'next/link';
 
 interface ProductInfoSectionsProps {
   product: Product;
@@ -56,7 +57,7 @@ export default function ProductInfoSections({ product }: ProductInfoSectionsProp
             </div>
             <h2 className="text-3xl font-serif text-(--tender-navy)">Zonas de Instalación y Envíos</h2>
             <p className="text-sm text-(--tender-text-dark) leading-relaxed">
-              Contamos con una amplia red de cobertura para asegurar que tu Tender llegue y sea instalado por profesionales en tiempo récord.
+              Consultá por instalación paga, reparación y asesoramiento. La cobertura incluye CABA, zona norte del AMBA y sectores del primer cordón, siempre sujeta a consulta.
             </p>
           </div>
           <div className="flex-[2]">
@@ -93,6 +94,10 @@ export default function ProductInfoSections({ product }: ProductInfoSectionsProp
           </div>
         </div>
       </div>
+
+      <p className="mx-auto mt-12 max-w-4xl text-center text-sm text-(--tender-text-muted)">
+        Antes de comprar, <Link href="/como-elegir-un-tender" className="font-semibold text-(--tender-cyan) underline-offset-4 hover:underline">revisá cómo elegir un tender según tu espacio</Link> o <Link href="/servicio-tecnico" className="font-semibold text-(--tender-cyan) underline-offset-4 hover:underline">consultá por instalación y servicio técnico</Link>.
+      </p>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import SectionDivider from "@/components/home/section-divider"
 import JsonLd from "@/components/seo/json-ld"
 import { SITE_URL } from "@/lib/site"
 import { FAQ_ITEMS } from "@/lib/faq-data"
+import Link from "next/link"
 
 export const revalidate = 60;
 
@@ -71,6 +72,14 @@ export default function HomePage() {
       <JsonLd data={faqPageSchema} />
       <main>
         <HeroSlider />
+        <section className="mx-auto max-w-5xl px-4 py-12 text-center sm:px-6 lg:px-8">
+          <h1 className="font-serif text-3xl text-(--tender-navy) md:text-4xl">Tender® Original, tendederos de ropa argentinos</h1>
+          <p className="mx-auto mt-4 max-w-3xl text-(--tender-text-muted) leading-relaxed">Desde 1947, Tender® acompaña el secado de ropa con tenders colgantes de techo y rebatibles de pared. Conocé los tipos antes de elegir o pasá directo a los modelos disponibles.</p>
+          <div className="mt-6 flex flex-col justify-center gap-3 text-sm sm:flex-row">
+            <Link href="/productos" className="font-semibold text-(--tender-cyan) underline-offset-4 hover:underline">Ver tenders de ropa colgantes y rebatibles</Link>
+            <Link href="/tienda" className="font-semibold text-(--tender-cyan) underline-offset-4 hover:underline">Ver modelos y precios para comprar</Link>
+          </div>
+        </section>
         <ProductsSection needTitle={true} />
         <HistorySection />
         <SpacesSection />

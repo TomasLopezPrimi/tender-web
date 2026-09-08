@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '',
     '/tienda',
     '/productos',
+    '/como-elegir-un-tender',
     '/arquitectos',
     '/servicio-tecnico',
     '/showroom',
@@ -22,7 +23,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     return {
       url: `${baseUrl}${route}`,
-      lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority,
     };
@@ -30,7 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const productRoutes = baseProductMetadata.map((product) => ({
     url: `${baseUrl}/producto/${product.sku}`,
-    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.9,
   }));

@@ -91,9 +91,9 @@ export default function TiendaHero() {
 
       <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
-      <div className="sr-only">
-        <h1>Tienda - Tender®</h1>
-        <p>Todos los modelos y medidas originales directos de fábrica.</p>
+      <div className="absolute inset-x-4 bottom-12 z-30 text-center text-white md:bottom-16">
+        <h1 className="font-serif text-3xl drop-shadow-md md:text-5xl">Comprar tenders de ropa Tender®</h1>
+        <p className="mx-auto mt-3 max-w-xl text-sm drop-shadow-md md:text-base">Compará modelos, medidas y precios para elegir el tender que buscás.</p>
       </div>
 
       {/* Flechas */}

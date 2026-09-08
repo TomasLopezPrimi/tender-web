@@ -7,6 +7,7 @@ import CategorySection from "@/components/productos/category-section";
 import CategoryTabs from "@/components/productos/category-tabs";
 import { absoluteUrl } from "@/lib/site";
 import JsonLd from "@/components/seo/json-ld";
+import Link from "next/link";
 
 export const revalidate = 60;
 
@@ -30,10 +31,10 @@ const categoryConfig = {
 };
 
 export const metadata: Metadata = {
-  title: 'Tienda - Tender®',
-  description: 'Comprá Tender® Online! Comprar Tender colgante, Tender Rebatible y Tender Plegable. Todos los modelo y todas las medidas de Tender Original.',
+  title: 'Tenders de ropa: colgantes y rebatibles | Tender®',
+  description: 'Conocé los tenders de ropa Tender®: modelos colgantes de techo y rebatibles de pared para elegir según tu espacio.',
   alternates: {
-    canonical: absoluteUrl('/tienda'),
+    canonical: absoluteUrl('/productos'),
   }
 };
 
@@ -69,9 +70,17 @@ export default async function ProductosPage({ searchParams }: ProductosPageProps
       <main className="flex-1">
         <JsonLd data={itemListSchema} />
         
-        <h1 className="sr-only">
-          Tender Original: Catálogo de Modelos Colgantes y Rebatibles
-        </h1>
+        <section className="mx-auto max-w-5xl px-4 pb-8 pt-12 text-center sm:px-6 lg:px-8">
+          <h1 className="font-serif text-3xl text-(--tender-navy) md:text-4xl">
+            Tenders de ropa colgantes y rebatibles
+          </h1>
+          <p className="mx-auto mt-4 max-w-3xl text-(--tender-text-muted) leading-relaxed">
+            Elegí un tendedero de ropa según dónde lo vas a instalar: los modelos colgantes aprovechan el techo y los rebatibles se pliegan sobre la pared.
+          </p>
+          <p className="mt-4 text-sm text-(--tender-text-muted)">
+            ¿Necesitás ayuda? <Link href="/como-elegir-un-tender" className="font-semibold text-(--tender-cyan) underline-offset-4 hover:underline">Leé cómo elegir un tender según tu espacio</Link> o <Link href="/tienda" className="font-semibold text-(--tender-cyan) underline-offset-4 hover:underline">consultá los modelos y precios para comprar</Link>.
+          </p>
+        </section>
 
         <CategoryTabs active={active} />
 
