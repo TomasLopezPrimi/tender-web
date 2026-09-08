@@ -34,25 +34,20 @@ export default async function ProductsSection({ needTitle = true }: ProductsSect
 
   
   return (
-    <section
-      id="productos"
-      className="bg-background py-12 md:py-16"
-      aria-label={needTitle ? undefined : "Productos destacados"}
-      aria-labelledby={needTitle ? "products-heading" : undefined}
-    >
+    <section id="productos" className="bg-background py-12 md:py-16" aria-labelledby="products-heading">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--tender-cyan)">
             Desde 1947 · Industria argentina
           </p>
-          {needTitle && (
-            <h1
-              id="products-heading"
-              className="mt-3 font-serif text-3xl text-(--tender-navy) text-balance md:text-4xl"
-            >
-              Tender® Original: tendederos de ropa argentinos
-            </h1>
-          )}
+          <h1
+            id="products-heading"
+            className={needTitle
+              ? "mt-3 font-serif text-3xl text-(--tender-navy) text-balance md:text-4xl"
+              : "sr-only"}
+          >
+            Tender® Original: tendederos de ropa argentinos
+          </h1>
           <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-(--tender-text-muted)">
             Fabricamos tendederos de ropa durables, con instalación, repuestos y servicio técnico.
           </p>

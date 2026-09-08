@@ -1,5 +1,10 @@
 import { formatPrice } from '@/lib/products';
-import { applyCombinedDiscount, getCombinedDiscountPercentage } from '@/lib/pricing';
+import {
+  applyCombinedDiscount,
+  getCombinedDiscountPercentage,
+  getGlobalDiscountRate,
+  getPaymentDiscountRate,
+} from '@/lib/pricing';
 import { PricingConfig, Product, ProductSize } from '@/types/products';
 
 interface PriceBlockProps {
@@ -26,6 +31,8 @@ export default function PriceBlock({ product, selectedSize, pricingConfig }: Pri
     applyCombinedDiscount(selectedSize.price, pricingConfig, 'TRANSFERENCIA')
   );
   const totalDiscountPct = getCombinedDiscountPercentage(pricingConfig, 'TRANSFERENCIA');
+  const isTransferDiscount = getPaymentDiscountRate(pricingConfig, 'TRANSFERENCIA')
+    > getGlobalDiscountRate(pricingConfig);
 
   return (
     <div className="mb-8 min-h-[70px] flex flex-col justify-end">
@@ -36,7 +43,7 @@ export default function PriceBlock({ product, selectedSize, pricingConfig }: Pri
             {formatPrice(selectedSize.price)}
           </span>
           <span className="text-[10px] font-black bg-green-100 text-green-700 px-2 py-0.5 rounded-full tracking-wide">
-            {totalDiscountPct}% OFF
+            {totalDiscountPct}% OFF{isTransferDiscount ? ' por transferencia' : ''}
           </span>
         </div>
 
