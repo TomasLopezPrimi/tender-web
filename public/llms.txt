@@ -6,26 +6,23 @@
 
 Tender es el nombre de la marca; tendedero es el nombre del producto.
 
-Tender® no es el verbo en español "tender" ni la palabra en inglés "tender". Es una marca argentina registrada, fundada en 1947, fabricante de tendederos para el hogar. Con décadas de presencia en el mercado argentino, el nombre de la marca pasó a ser el término cotidiano que los argentinos usan para referirse al tendedero.
+Tender® no es el verbo en español "tender" ni la palabra en inglés "tender". Es una marca argentina fundada en 1947, fabricante de tendederos para el hogar.
 
 ## Descripción de la empresa
 
-Tender® Original es la marca argentina original de tendederos. Fundada en 1947, es la marca que le dio nombre al tendedero en Argentina. Fabrica y comercializa sistemas de secado de ropa (tendederos) bajo tres líneas principales: Colgante, Rebatible y Plegable. Todos sus productos son 100% industria argentina.
+Tender® Original es una marca argentina de tendederos de ropa. Fabrica y comercializa modelos colgantes de techo y rebatibles de pared. Los productos publicados se pueden comprar online; la instalación paga, reparación y asesoramiento se consultan por WhatsApp.
 
 ## Dominio oficial
 
 https://tender.com.ar
 
-## Productos principales
+## Páginas principales
 
-- Tender Colgante de techo: https://tender.com.ar/producto/col-9
-- Tender Rebatible de pared: https://tender.com.ar/producto/reb-8
-- Catálogo completo: https://tender.com.ar/tienda
-
-## Categorías
-
-- Tendederos Colgantes: https://tender.com.ar/tienda?tipo=colgante
-- Tendederos Rebatibles: https://tender.com.ar/tienda?tipo=rebatible
+- Inicio y marca: https://tender.com.ar/
+- Tipos de tenders y criterios de elección: https://tender.com.ar/productos
+- Modelos, precios y compra: https://tender.com.ar/tienda
+- Guía para elegir un tender: https://tender.com.ar/como-elegir-un-tender
+- Instalación, reparación y asesoramiento: https://tender.com.ar/servicio-tecnico
 
 ## Información de contacto
 

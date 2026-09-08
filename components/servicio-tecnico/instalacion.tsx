@@ -7,34 +7,31 @@ import { MapPin, Info, ArrowRight, ZoomIn, X } from "lucide-react"
 
 const zones = [
   { name: "CABA", desc: "Ciudad de Buenos Aires" },
-  { name: "GBA 1", desc: "Hasta 10 Km" },
-  { name: "GBA 2", desc: "De 10 a 25 Km" },
-  { name: "GBA 3", desc: "De 25 a 50 Km" },
-  { name: "GBA 4", desc: "De 50 a 60 Km" },
-  { name: "Interior", desc: "Más de 60 Km" },
+  { name: "Zona norte", desc: "AMBA" },
+  { name: "Primer cordón", desc: "Sectores sujetos a consulta" },
 ]
 
 const serviceCards = [
   {
     id: "instalacion",
     title: "Instalamos tu Tender®",
-    description: "Realizamos instalaciones en la Ciudad de Buenos Aires y en distintas zonas del Gran Buenos Aires.",
+    description: "Instalación paga en CABA, zona norte del AMBA y sectores del primer cordón, sujeta a consulta.",
     image: "/images/servicio-tecnico/install-1.jpg", 
     cta: "Consultá por tu localidad"
   },
   {
-    id: "envios-gba",
-    title: "Envíos en Buenos Aires",
-    description: "En la región de la Ciudad de Buenos Aires y el Gran Buenos Aires, tenemos cinco zonas de distribución.",
+    id: "reparacion",
+    title: "Reparación y asesoramiento",
+    description: "Consultá al equipo técnico para evaluar tu caso y coordinar la atención.",
     image: "/images/servicio-tecnico/install-2.jpg", 
-    cta: "Ver zonas de alcance"
+    cta: "Consultar atención"
   },
   {
-    id: "envios-interior",
-    title: "Envíos al Interior",
-    description: "Para el interior del país realizamos envíos mediante expresos o el medio que el cliente prefiera.",
+    id: "garantia",
+    title: "Garantía Tender®",
+    description: "Los productos cuentan con 1 año de garantía y la instalación con 3 meses de garantía.",
     image: "/images/servicio-tecnico/install-3.jpg", 
-    cta: "Coordinar envío"
+    cta: "Hacer una consulta"
   }
 ]
 
@@ -75,7 +72,7 @@ export default function InstallationsAndShipping() {
           <div className="gold-line mx-auto mb-6" />
           <p className="mt-4 text-(--tender-text-muted) text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
             Nuestros Técnicos te garantizan la colocación óptima de tu Tender®. <br className="hidden md:block" />
-            El servicio incluye CABA y diversas zonas del GBA.
+             Instalación paga, reparación y asesoramiento en CABA, zona norte del AMBA y sectores del primer cordón, sujetos a consulta.
           </p>
         </div>
 
@@ -133,15 +130,14 @@ export default function InstallationsAndShipping() {
               <div className="bg-card border border-border rounded-xl p-4 flex gap-3 shadow-sm hover:shadow-md transition-shadow">
                 <Info className="w-5 h-5 text-[var(--tender-cyan)] shrink-0 mt-0.5" />
                 <p className="text-sm text-[var(--tender-text-muted)] leading-relaxed">
-                  <strong className="text-[var(--tender-text-dark)] font-semibold">Entrega:</strong> El tiempo de envío estimado es de entre 5 y 10 días hábiles.
+                  <strong className="text-[var(--tender-text-dark)] font-semibold">Cobertura:</strong> Confirmamos cada instalación según la ubicación y las condiciones del espacio.
                 </p>
               </div>
 
               <div className="bg-[var(--tender-navy)]/5 border border-[var(--tender-navy)]/10 rounded-xl p-4 flex gap-3 shadow-sm hover:shadow-md transition-shadow">
                 <Info className="w-5 h-5 text-[var(--tender-navy)] shrink-0 mt-0.5" />
                 <p className="text-sm text-[var(--tender-text-dark)] leading-relaxed">
-                  <strong className="font-semibold text-[var(--tender-navy)]">Colocaciones:</strong> Se abonan en efectivo o transferencia con la visita técnica. <br/>
-                  <span className="text-xs text-[var(--tender-text-muted)] mt-1 block">* Servicio de escalera a cotizar.</span>
+                  <strong className="font-semibold text-[var(--tender-navy)]">Colocaciones:</strong> La instalación es paga. En los tenders colgantes, nunca abras la caja del mecanismo.
                 </p>
               </div>
             </div>

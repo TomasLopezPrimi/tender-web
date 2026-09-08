@@ -1,12 +1,16 @@
 import type { Metadata } from 'next'
 import TiendaHero from '@/components/tienda/tienda-hero'
 import ProductsSection from '@/components/productos/products-section';
+import { absoluteUrl } from '@/lib/site';
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'Tienda - Tender®',
-  description: 'Comprá Tender® Online! Comprar Tender colgante, Tender Rebatible y Tender Plegable. Todos los modelo y todas las medidas de Tender Original.',
+  title: 'Comprar tenders de ropa originales | Tender®',
+  description: 'Comprá online tenders de ropa Tender®: compará modelos, medidas y precios de colgantes y rebatibles.',
+  alternates: {
+    canonical: absoluteUrl('/tienda'),
+  },
 }
 
 export default function TiendaPage() {

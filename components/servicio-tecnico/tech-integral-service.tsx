@@ -31,12 +31,11 @@ export default function TechIntegralService() {
         {/* --- Encabezado --- */}
         <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in-up">
           <h2 className="text-3xl md:text-4xl font-serif text-(--tender-navy) mb-6">
-            Mantenimiento y Reparación
+            Reparación y asesoramiento
           </h2>
           <div className="gold-line mx-auto mb-6" />
           <p className="text-lg text-(--tender-text-muted) leading-relaxed">
-            Reparamos el sistema de la caja de elevación, la parrilla de tendido y los cordones. 
-            Además, te ofrecemos todos los repuestos originales con garantía.
+            Evaluamos reparaciones del sistema de elevación, la parrilla de tendido y los cordones. Consultanos para recibir asesoramiento sobre tu caso.
           </p>
         </div>
 

@@ -36,11 +36,11 @@ export default function TechContactSection() {
               <ul className="space-y-4">
                 <li className="flex items-center gap-4 text-sm md:text-base text-white/90">
                   <CheckCircle2 className="w-5 h-5 text-(--tender-cyan) shrink-0" />
-                  <span className="font-light">Repuestos originales siempre disponibles.</span>
+                  <span className="font-light">Garantía de instalación por 3 meses.</span>
                 </li>
                 <li className="flex items-center gap-4 text-sm md:text-base text-white/90">
                   <CheckCircle2 className="w-5 h-5 text-(--tender-cyan) shrink-0" />
-                  <span className="font-light">Servicio de post-venta especializado.</span>
+                  <span className="font-light">Reparación y asesoramiento técnico.</span>
                 </li>
               </ul>
             </div>
@@ -55,8 +55,7 @@ export default function TechContactSection() {
             <div className="gold-line ml-0 mb-6" />
             
             <p className="text-(--tender-text-muted) mb-10 text-lg leading-relaxed text-balance">
-              Si necesitás una reparación, instalación profesional o adquirir repuestos específicos, 
-              comunicate directamente con nuestro departamento técnico.
+              Si necesitás una reparación, instalación paga o asesoramiento, comunicate directamente con nuestro departamento técnico.
             </p>
             
             <div className="space-y-5">
