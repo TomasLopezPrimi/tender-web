@@ -5,12 +5,12 @@ import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const desktopSlides = [
-  { id: 5, image: "/images/banners/banner-05.jpg", alt: "Tienda Tender" },
+  // { id: 5, image: "/images/banners/banner-05.jpg", alt: "Tienda Tender" },
   { id: 1, image: "/images/banners/banner-01.jpg", alt: "Tienda Tender - Tendederos originales de fábrica" },
 ]
 
 const mobileSlides = [
-  { id: 5, image: "/images/banners/mobile/banner-05.jpg", alt: "Tienda Tender" },
+  // { id: 5, image: "/images/banners/mobile/banner-05.jpg", alt: "Tienda Tender" },
   { id: 1, image: "/images/banners/mobile/banner-01.jpg", alt: "Tienda Tender - Tendederos originales de fábrica" },
 ]
 
@@ -19,6 +19,7 @@ const slideCount = desktopSlides.length
 export default function TiendaHero() {
   const [current, setCurrent] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
+  const hasMultipleSlides = slideCount > 1
 
   const goTo = useCallback(
     (index: number) => {
@@ -39,15 +40,17 @@ export default function TiendaHero() {
   }, [current, goTo])
 
   useEffect(() => {
+    if (!hasMultipleSlides) return
+
     const timer = setInterval(next, 6000)
     return () => clearInterval(timer)
-  }, [next])
+  }, [next, hasMultipleSlides])
 
   return (
     <section
       className="relative w-full overflow-hidden h-[calc(100svh-var(--navbar-height))]"
       aria-label="Carrusel tienda"
-      aria-roledescription="carousel"
+      aria-roledescription={hasMultipleSlides ? "carousel" : "banner"}
     >
       {/* Capa desktop */}
       {desktopSlides.map((slide, i) => (
@@ -96,21 +99,24 @@ export default function TiendaHero() {
         <p className="mx-auto mt-3 max-w-xl text-sm drop-shadow-md md:text-base">Compará modelos, medidas y precios para elegir el tender que buscás.</p>
       </div>
 
-      {/* Flechas */}
-      <button
-        onClick={prev}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 p-3 text-white/50 hover:text-white transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-sm rounded-full"
-        aria-label="Diapositiva anterior"
-      >
-        <ChevronLeft size={36} strokeWidth={1.5} />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 p-3 text-white/50 hover:text-white transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-sm rounded-full"
-        aria-label="Siguiente diapositiva"
-      >
-        <ChevronRight size={36} strokeWidth={1.5} />
-      </button>
+      {hasMultipleSlides && (
+        <>
+          <button
+            onClick={prev}
+            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 p-3 text-white/50 hover:text-white transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-sm rounded-full"
+            aria-label="Diapositiva anterior"
+          >
+            <ChevronLeft size={36} strokeWidth={1.5} />
+          </button>
+          <button
+            onClick={next}
+            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 p-3 text-white/50 hover:text-white transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-sm rounded-full"
+            aria-label="Siguiente diapositiva"
+          >
+            <ChevronRight size={36} strokeWidth={1.5} />
+          </button>
+        </>
+      )}
     </section>
   )
 }
