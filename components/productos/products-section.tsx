@@ -36,9 +36,9 @@ export default async function ProductsSection({ needTitle = true }: ProductsSect
   return (
     <section id="productos" className="bg-background py-12 md:py-16" aria-labelledby="products-heading">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="max-w-2xl md:mx-auto md:text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-(--tender-cyan)">
-            Desde 1947 · Industria argentina
+            Tendederos de ropa
           </p>
           <h1
             id="products-heading"
@@ -46,23 +46,17 @@ export default async function ProductsSection({ needTitle = true }: ProductsSect
               ? "mt-3 font-serif text-3xl text-(--tender-navy) text-balance md:text-4xl"
               : "sr-only"}
           >
-            Tender® Original: tendederos de ropa argentinos
+            Un Tender para cada espacio
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-(--tender-text-muted)">
-            Fabricamos tendederos de ropa durables, con instalación, repuestos y servicio técnico.
+          <p className="mt-3 max-w-xl leading-relaxed text-(--tender-text-muted) md:mx-auto">
+            Elegí el modelo que mejor se adapta a tu hogar y a tu forma de secar.
           </p>
-          <div className="mt-6 flex flex-col items-center justify-center gap-3 text-sm sm:flex-row">
-            <Link
-              href="/tienda"
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-(--tender-navy) px-5 py-3 font-semibold text-white transition-colors hover:bg-(--tender-cyan)"
-            >
-              Comprar en la tienda
-            </Link>
+          <div className="mt-4 text-sm md:flex md:justify-center">
             <Link
               href="/productos"
-              className="inline-flex min-h-11 items-center justify-center px-3 py-3 font-semibold text-(--tender-navy) underline decoration-(--tender-cyan) underline-offset-4 hover:text-(--tender-cyan)"
+              className="inline-flex min-h-11 items-center py-3 font-semibold text-(--tender-navy) underline decoration-(--tender-cyan) underline-offset-4 hover:text-(--tender-cyan)"
             >
-              Ver todos los productos
+              Ver catálogo completo
             </Link>
           </div>
         </div>
