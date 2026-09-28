@@ -41,6 +41,7 @@ export interface Product extends ProductMetadata {
   priceRange: string;
   minPrice: number;
   maxPrice: number;
+  transferDiscountPercentage: number;
 }
 
 export interface UIProduct extends Product {

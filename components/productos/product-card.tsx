@@ -61,6 +61,11 @@ export default function ProductCard({ product }: { product: UIProduct }) {
           <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--tender-text-muted)] font-bold">
             {menorPrecio}
           </p>
+          {product.transferDiscountPercentage > 0 && (
+            <span className="inline-flex mt-1 text-[9px] font-black bg-green-100 text-green-700 px-2 py-0.5 rounded-full tracking-wide">
+              {product.transferDiscountPercentage}% OFF por transferencia
+            </span>
+          )}
         </div>
 
         {/* --- FOOTER / ACCIÓN --- */}

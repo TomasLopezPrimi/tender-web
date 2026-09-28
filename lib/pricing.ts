@@ -91,7 +91,13 @@ export function hydrateProduct(
     link_pago: v.link_pago ?? null,
   }));
 
-  const displayPrices = sizes.map((s) => applyGlobalDiscount(s.price, pricingConfig));
+  const displayPrices = sizes.map((s) =>
+    applyCombinedDiscount(s.price, pricingConfig, "TRANSFERENCIA")
+  );
+  const transferDiscountPercentage =
+    getPaymentDiscountRate(pricingConfig, "TRANSFERENCIA") > getGlobalDiscountRate(pricingConfig)
+      ? getCombinedDiscountPercentage(pricingConfig, "TRANSFERENCIA")
+      : 0;
 
   const minPrice = Math.min(...displayPrices);
   const maxPrice = Math.max(...displayPrices);
@@ -107,5 +113,6 @@ export function hydrateProduct(
     priceRange,
     minPrice,
     maxPrice,
+    transferDiscountPercentage,
   };
 }

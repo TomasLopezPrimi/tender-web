@@ -108,6 +108,11 @@ export default function CategorySection({ type, title, subtitle, heroImage, vide
                   <span className="text-sm md:text-base font-medium text-[var(--tender-cyan)]">
                     Desde {product.priceRange.split(' - ')[0]}
                   </span>
+                  {product.transferDiscountPercentage > 0 && (
+                    <span className="mt-1 w-fit text-[10px] font-black bg-green-100 text-green-700 px-2 py-0.5 rounded-full tracking-wide">
+                      {product.transferDiscountPercentage}% OFF por transferencia
+                    </span>
+                  )}
                 </div>
                 
                 <div className="flex shrink-0 items-center justify-center px-5 py-2.5 rounded-full bg-muted/30 border border-border text-sm font-semibold text-[var(--tender-navy)] dark:text-foreground transition-all duration-300 group-hover:bg-[var(--tender-navy)] group-hover:text-white group-hover:border-transparent">
