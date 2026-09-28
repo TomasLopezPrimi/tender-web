@@ -25,7 +25,7 @@ export default function ProductGallery({ images, title }: ProductGalleryProps) {
           <Search size={20} />
         </div>
       </div>
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 sm:gap-3">
         {images.map((img, index) => (
           <button key={index} onClick={() => setActiveImage(img)}
             className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${activeImage === img ? 'border-(--tender-cyan) scale-95' : 'border-transparent opacity-60 hover:opacity-100'}`}
