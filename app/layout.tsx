@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import WhatsAppButton from '@/components/layout/whatsapp-button'
@@ -10,15 +10,9 @@ import { config } from '@/config'
 import { SITE_URL } from '@/lib/site'
 // import ScrollToTop from '@/components/layout/scroll-to-top'
 
-const inter = Inter({
+const montserrat = Montserrat({
   subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
-
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
+  variable: '--font-montserrat',
   display: 'swap',
 })
 
@@ -107,7 +101,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="es" className={montserrat.variable}>
       <body className="font-sans antialiased">
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${config.GOOGLE_ANALYTICS_ID}`}

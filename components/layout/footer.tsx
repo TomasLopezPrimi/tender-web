@@ -95,13 +95,13 @@ export default function Footer() {
             
             <span>
               <span className="opacity-70">Desarrollado por </span>
-              <a 
-                href="https://www.linkedin.com/in/tomaslopezprimi/" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href="https://appteck.com.ar/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hover:text-[var(--tender-cyan)] transition-colors whitespace-nowrap"
               >
-                Tomás López Primi
+                Appteck
               </a>
             </span>
           </div>
