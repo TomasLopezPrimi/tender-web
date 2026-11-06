@@ -37,13 +37,17 @@ import { BankField } from "./bank-field";
 
 type PaymentVerification = "idle" | "checking" | "paid" | "cancelled" | "unconfirmed";
 
+interface GraciasContentProps {
+  bankDetails: typeof config.bankDetails;
+}
+
 const validOrderId = (value: string | null) => {
   if (!value) return null;
   const id = Number(value);
   return Number.isInteger(id) && id > 0 ? String(id) : null;
 };
 
-export function GraciasContent() {
+export function GraciasContent({ bankDetails }: GraciasContentProps) {
   const searchParams = useSearchParams();
   const clearCart = useCartStore((state) => state.clearCart);
   const [resolvedState, setResolvedState] = useState<ResolvedThankYouState>({
@@ -313,18 +317,18 @@ export function GraciasContent() {
                   <CollapsibleContent className="mt-3 space-y-2 animate-fade-in">
                     <BankField
                       label="Alias"
-                      value={config.bankDetails.alias}
+                      value={bankDetails.alias}
                       copied={copiedField === "alias"}
-                      onCopy={() => copyToClipboard(config.bankDetails.alias, "alias")}
+                      onCopy={() => copyToClipboard(bankDetails.alias, "alias")}
                     />
                     <BankField
                       label="CBU"
-                      value={config.bankDetails.cbu}
+                      value={bankDetails.cbu}
                       copied={copiedField === "cbu"}
-                      onCopy={() => copyToClipboard(config.bankDetails.cbu, "cbu")}
+                      onCopy={() => copyToClipboard(bankDetails.cbu, "cbu")}
                     />
                     <p className="pl-1 text-[11px] text-[var(--tender-text-muted)]">
-                      <span className="font-semibold">Titular:</span> {config.bankDetails.titular}
+                      <span className="font-semibold">Titular:</span> {bankDetails.titular}
                     </p>
                   </CollapsibleContent>
                 </Collapsible>

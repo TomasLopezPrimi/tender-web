@@ -27,9 +27,9 @@ export const config = {
       ],
     emailVentas: "ventas@tender.com.ar",
     bankDetails : {
-        alias: "TENDERAX",
-        cbu: "0720146888000037236186",
-        titular: "Axenfeld Ruth Haydee"
+        alias: process.env.BANK_ALIAS!,
+        cbu: process.env.BANK_CBU!,
+        titular: process.env.BANK_ACCOUNT_HOLDER!
     },
     GOOGLE_ANALYTICS_ID: "G-VP3D951D7F",
     SITE_URL: getSiteUrl(),

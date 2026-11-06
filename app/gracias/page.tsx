@@ -1,5 +1,6 @@
 ﻿import { Suspense } from "react";
 import { GraciasContent } from "@/components/gracias/gracias-content";
+import { config } from "@/config";
 
 export default function GraciasPage() {
   return (
@@ -10,7 +11,7 @@ export default function GraciasPage() {
         </div>
       }
     >
-      <GraciasContent />
+      <GraciasContent bankDetails={config.bankDetails} />
     </Suspense>
   );
 }
