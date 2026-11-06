@@ -2,6 +2,8 @@
 import { GraciasContent } from "@/components/gracias/gracias-content";
 import { config } from "@/config";
 
+export const dynamic = "force-dynamic";
+
 export default function GraciasPage() {
   return (
     <Suspense
