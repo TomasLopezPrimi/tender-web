@@ -10,6 +10,7 @@ import { isProfessionalCustomer } from "@/lib/customer";
 import { formatPrice } from "@/lib/products";
 import { getTotalItems, getTotalPrice } from "@/lib/cart";
 import { PricingConfig, ProductSize } from "@/types/products";
+import type { BankDetails } from "@/config";
 import type { CustomerAddress, CustomerProfile } from "@/types/customer";
 
 import EmptyCart from "./empty-cart";
@@ -25,9 +26,10 @@ interface CartViewProps {
   pricingConfig: PricingConfig;
   productSizes: Record<string, ProductSize[]>;
   customerData?: { profile: CustomerProfile; addresses: CustomerAddress[] } | null;
+  bankDetails: BankDetails;
 }
 
-export default function CartView({ pricingConfig, productSizes, customerData }: CartViewProps) {
+export default function CartView({ pricingConfig, productSizes, customerData, bankDetails }: CartViewProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   const items = useCartStore((state) => state.items);
@@ -122,6 +124,7 @@ export default function CartView({ pricingConfig, productSizes, customerData }: 
               onSelectMethod={setPaymentMethod}
               pricingConfig={pricingConfig}
               cartItems={items}
+              bankDetails={bankDetails}
             />
 
             {/* ③ DATOS PERSONALES Y DIRECCIÓN UNIFICADOS */}
