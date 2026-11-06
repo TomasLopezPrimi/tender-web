@@ -4,6 +4,7 @@ import { baseProductMetadata } from "@/lib/products";
 import { ProductSize } from "@/types/products";
 import { getCheckoutCustomerData } from "@/lib/account/api";
 import { getCustomerRefreshToken } from "@/lib/account/session";
+import { config } from "@/config";
 import { redirect } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
@@ -39,7 +40,7 @@ export default async function CarritoPage({ searchParams }: { searchParams: Prom
       <main className="flex-grow container mx-auto px-4 py-8 max-w-6xl">
         <h1 className="text-3xl font-bold text-(--tender-navy-mid) mb-8">Tu Carrito</h1>
         
-        <CartView pricingConfig={pricingConfig} productSizes={productSizes} customerData={customerData} />
+        <CartView pricingConfig={pricingConfig} productSizes={productSizes} customerData={customerData} bankDetails={config.bankDetails} />
       </main>
     </div>
   );

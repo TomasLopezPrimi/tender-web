@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CreditCard, Landmark, Copy, Check } from "lucide-react";
-import { config } from "@/config";
+import type { BankDetails } from "@/config";
 import { PricingConfig, CartItem } from "@/types/products";
 import { getPaymentDiscountRate } from "@/lib/pricing";
 
@@ -11,6 +11,7 @@ interface PaymentSelectorProps {
   onSelectMethod: (method: string) => void;
   pricingConfig: PricingConfig;
   cartItems: CartItem[];
+  bankDetails: BankDetails;
 }
 
 export default function PaymentSelector({
@@ -18,6 +19,7 @@ export default function PaymentSelector({
   onSelectMethod,
   pricingConfig,
   cartItems,
+  bankDetails,
 }: PaymentSelectorProps) {
 
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -28,7 +30,6 @@ export default function PaymentSelector({
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const bankDetails = config.bankDetails;
   const transferPct = Math.round(getPaymentDiscountRate(pricingConfig, "TRANSFERENCIA") * 100);
 
   // GETNET-LINK reemplazado por GETNET-WEB. Se conserva comentado por si vuelve.

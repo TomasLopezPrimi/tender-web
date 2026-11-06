@@ -37,3 +37,5 @@ export const config = {
     BACKEND_URL: process.env.BACKEND_URL || "http://localhost:8000",
     INTERNAL_API_KEY: process.env.INTERNAL_API_KEY
 }
+
+export type BankDetails = typeof config.bankDetails;
