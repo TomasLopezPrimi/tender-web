@@ -32,6 +32,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Los contactos públicos se incorporan al JavaScript durante el build de Next.js.
+ARG NEXT_PUBLIC_WHATSAPP_NUMBER
+ARG NEXT_PUBLIC_CALLS_NUMBER
+
 RUN pnpm run build
 
 # ---- Stage 3: Runner ----

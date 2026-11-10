@@ -75,7 +75,7 @@ export default function Footer() {
                   className="flex items-center gap-2 md:justify-end text-sm text-white/80 hover:text-white transition-colors"
                 >
                   <Phone size={14} className="text-[var(--tender-cyan)]" aria-hidden="true" />
-                  <span>{phone.number}</span>
+                  <span>{phone.label} · {phone.number}</span>
                 </a>
               ))}
             </div>

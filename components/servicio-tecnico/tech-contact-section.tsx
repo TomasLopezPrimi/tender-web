@@ -62,7 +62,7 @@ export default function TechContactSection() {
               
               {/* Botón WhatsApp (Con SVG Oficial) */}
               <a 
-                href="https://api.whatsapp.com/send/?phone=5491131876811"  
+                href={`https://wa.me/${config.whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-5 p-5 bg-white rounded-2xl border border-border/50 hover:border-[#25D366] hover:shadow-xl hover:shadow-[#25D366]/10 transition-all duration-300 group hover:-translate-y-1"

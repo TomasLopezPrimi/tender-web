@@ -40,16 +40,16 @@ export default function ProductClientPage({ product, sku, pricingConfig, interes
           </div>
           <h1 className="text-3xl md:text-4xl font-serif text-(--tender-navy) leading-tight mb-4">{product.title}</h1>
 
+          <p className="text-(--tender-text-dark) leading-relaxed text-sm mb-6 border-l-2 border-(--tender-cyan)/20 pl-4 italic">{product.description}</p>
+
+          <SizeSelector sizes={product.sizes} selectedSize={selectedSize} onChange={setSelectedSize} />
+
           <PriceBlock
-            product={product}
+            sizes={product.sizes}
             selectedSize={selectedSize}
             pricingConfig={pricingConfig}
             interestFreeInstallments={interestFreeInstallments}
           />
-
-          <p className="text-(--tender-text-dark) leading-relaxed text-sm mb-10 border-l-2 border-(--tender-cyan)/20 pl-4 italic">{product.description}</p>
-
-          <SizeSelector sizes={product.sizes} selectedSize={selectedSize} onChange={setSelectedSize} />
 
           <HangingSpaceNote sku={sku} selectedSize={selectedSize} />
 

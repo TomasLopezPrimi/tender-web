@@ -1,44 +1,10 @@
 "use client"
 
-import { config } from "@/config"
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { useWhatsAppChat } from "@/hooks/use-whatsapp-chat"
 
 export default function WhatsAppButton() {
-  const [isChatOpen, setIsChatOpen] = useState(false)
-  const [userMessage, setUserMessage] = useState("")
-  const [showButton, setShowButton] = useState(false)
-
-  const phone = config.whatsappNumber
-
-  useEffect(() => {
-    const buttonTimer = setTimeout(() => {
-      setShowButton(true)
-    }, 2000)
-
-    return () => {
-      clearTimeout(buttonTimer)
-    }
-  }, [])
-
-  const handleSendMessage = () => {
-    const finalMessage = userMessage.trim() !== "" 
-      ? userMessage 
-      : "Hola, tengo una consulta sobre los productos Tender."
-    
-    const href = `https://wa.me/${phone}?text=${encodeURIComponent(finalMessage)}`
-    window.open(href, "_blank", "noopener,noreferrer")
-    
-    setIsChatOpen(false)
-    setUserMessage("")
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
-    }
-  }
+  const { isChatOpen, userMessage, setUserMessage, showButton, closeChat, toggleChat, handleSendMessage, handleKeyDown } = useWhatsAppChat()
 
   return (
     <>
@@ -71,7 +37,7 @@ export default function WhatsAppButton() {
         {/* --- 1. VENTANA DE CHAT --- */}
         <div
           className={`relative bg-[var(--background)] text-[var(--tender-text-dark)] rounded-2xl shadow-2xl border border-[var(--border)] transition-all duration-300 ease-out origin-bottom-right overflow-hidden
-            w-[calc(100vw-2rem)] sm:w-[340px]
+            w-[calc(100vw-2rem)] sm:w-[340px] max-h-[calc(100dvh-6rem)] overflow-y-auto
             ${isChatOpen ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto visible' : 'opacity-0 translate-y-8 scale-95 invisible absolute bottom-16'}`}
         >
           {/* Header del Chat: Mantengo tu diseño que estaba muy bien */}
@@ -91,8 +57,8 @@ export default function WhatsAppButton() {
             </div>
             
             <button 
-              onClick={() => setIsChatOpen(false)}
-              className="text-white/70 hover:text-white transition-colors p-1 -mr-1 -mt-1"
+              onClick={closeChat}
+              className="text-white/70 hover:text-white transition-colors flex min-h-11 min-w-11 items-center justify-center -mr-1 -mt-1"
               aria-label="Cerrar chat"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -111,6 +77,7 @@ export default function WhatsAppButton() {
             </div>
 
             <textarea
+              aria-label="Tu consulta por WhatsApp"
               value={userMessage}
               onChange={(e) => setUserMessage(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -153,11 +120,12 @@ export default function WhatsAppButton() {
 
         {/* --- 3. BOTÓN REDONDO PRINCIPAL --- */}
         <button
-          onClick={() => setIsChatOpen(!isChatOpen)}
+          onClick={toggleChat}
           className={`relative flex items-center justify-center rounded-full transition-all duration-300 p-4 w-14 h-14 pointer-events-auto
                      hover:scale-105 active:scale-95 
                      ${isChatOpen ? 'bg-[var(--tender-navy)] text-white shadow-xl hover:bg-[var(--tender-navy-mid)]' : 'bg-[#25d366] text-white shadow-lg hover:shadow-xl animate-pulse-green'}`}
           aria-label={isChatOpen ? "Cerrar chat" : "Abrir chat de WhatsApp"}
+          aria-expanded={isChatOpen}
         >
           {/* Vuelve el punto rojo clásico de notificación para llamar la atención */}
           {!isChatOpen && (

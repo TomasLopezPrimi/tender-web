@@ -88,7 +88,7 @@ const organizationSchema = {
   ],
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+54-11-5151-7715",
+    "telephone": `+${config.callsNumber}`,
     "contactType": "sales",
     "areaServed": "AR",
     "availableLanguage": "Spanish"

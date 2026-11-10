@@ -17,7 +17,6 @@ export default function ContactSection() {
 
   const formRef = useRef<HTMLFormElement>(null)
 
-  // const WHATSAPP_NUMBER = "5491131876811" 
   const WHATSAPP_NUMBER = config.whatsappNumber
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -67,7 +66,7 @@ ${formData.consulta}`
                     size={18}
                     className="text-[var(--tender-cyan)] group-hover:scale-110 transition-transform"
                   />
-                  <span className="font-medium">{phone.number}</span>
+                  <span className="font-medium">{phone.label} · {phone.number}</span>
                 </a>
               ))}
             </div>
