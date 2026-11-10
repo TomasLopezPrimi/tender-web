@@ -116,6 +116,7 @@ export type PaymentInstruction =
 export interface CheckoutActionResponse {
   success: boolean;
   orderId?: number;
+  transferReceiptToken?: string | null;
   instruction?: PaymentInstruction;
   error?: string;
   debug?: string;

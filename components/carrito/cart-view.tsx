@@ -27,9 +27,10 @@ interface CartViewProps {
   productSizes: Record<string, ProductSize[]>;
   customerData?: { profile: CustomerProfile; addresses: CustomerAddress[] } | null;
   bankDetails: BankDetails;
+  interestFreeInstallments: number | null;
 }
 
-export default function CartView({ pricingConfig, productSizes, customerData, bankDetails }: CartViewProps) {
+export default function CartView({ pricingConfig, productSizes, customerData, bankDetails, interestFreeInstallments }: CartViewProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   const items = useCartStore((state) => state.items);
@@ -123,8 +124,8 @@ export default function CartView({ pricingConfig, productSizes, customerData, ba
               selectedMethod={paymentMethod}
               onSelectMethod={setPaymentMethod}
               pricingConfig={pricingConfig}
-              cartItems={items}
               bankDetails={bankDetails}
+              interestFreeInstallments={interestFreeInstallments}
             />
 
             {/* ③ DATOS PERSONALES Y DIRECCIÓN UNIFICADOS */}

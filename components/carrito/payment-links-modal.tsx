@@ -95,7 +95,7 @@ export default function PaymentLinksModal({
           <AlertCircle size={16} className="text-amber-600 mt-0.5 shrink-0" />
           <div className="text-xs text-amber-800 leading-relaxed space-y-1">
             <p>
-              Tu compra está registrada y <strong>pendiente de pago</strong>. Completá cada link para finalizar. Podés pagar con débito o hasta 18 cuotas con tarjeta de crédito.
+              Tu compra está registrada y <strong>pendiente de pago</strong>. Completá cada link para finalizar el pago.
             </p>
             <p>
               Una vez acreditado el pago, te vamos a contactar para coordinar la entrega.

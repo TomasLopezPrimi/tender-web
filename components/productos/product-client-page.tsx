@@ -15,9 +15,10 @@ interface ProductClientPageProps {
   product: Product;
   sku: string;
   pricingConfig: PricingConfig;
+  interestFreeInstallments: number | null;
 }
 
-export default function ProductClientPage({ product, sku, pricingConfig }: ProductClientPageProps) {
+export default function ProductClientPage({ product, sku, pricingConfig, interestFreeInstallments }: ProductClientPageProps) {
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(null);
 
   const globalLabel = getGlobalDiscountLabel(pricingConfig);
@@ -39,7 +40,12 @@ export default function ProductClientPage({ product, sku, pricingConfig }: Produ
           </div>
           <h1 className="text-3xl md:text-4xl font-serif text-(--tender-navy) leading-tight mb-4">{product.title}</h1>
 
-          <PriceBlock product={product} selectedSize={selectedSize} pricingConfig={pricingConfig} />
+          <PriceBlock
+            product={product}
+            selectedSize={selectedSize}
+            pricingConfig={pricingConfig}
+            interestFreeInstallments={interestFreeInstallments}
+          />
 
           <p className="text-(--tender-text-dark) leading-relaxed text-sm mb-10 border-l-2 border-(--tender-cyan)/20 pl-4 italic">{product.description}</p>
 

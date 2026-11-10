@@ -32,6 +32,48 @@ export async function getOrderStatus(
   }
 }
 
+export async function getTransferReceipt(orderId: number, guestToken?: string) {
+  try {
+    const customerHeaders = guestToken ? {} : await authHeaders();
+    const response = await fetch(`${BACKEND_URL}/orders/${orderId}/transfer-receipt`, {
+      headers: { ...customerHeaders, ...(guestToken ? { "X-Transfer-Receipt-Token": guestToken } : {}) },
+      cache: "no-store",
+    });
+    if (!response.ok) return { ok: false as const, error: receiptError(response.status) };
+    return { ok: true as const, data: await response.json() as { uploaded: boolean } };
+  } catch {
+    return { ok: false as const, error: "No pudimos consultar el comprobante. Intentá nuevamente." };
+  }
+}
+
+export async function uploadTransferReceipt(orderId: number, file: File, guestToken?: string) {
+  if (!file.size || file.size > 5 * 1024 * 1024 || !["application/pdf", "image/jpeg", "image/png"].includes(file.type)) {
+    return { ok: false as const, error: "Elegí un PDF, JPG o PNG de hasta 5 MiB." };
+  }
+  try {
+    const customerHeaders = guestToken ? {} : await authHeaders();
+    const body = new FormData();
+    body.append("file", file);
+    const response = await fetch(`${BACKEND_URL}/orders/${orderId}/transfer-receipt`, {
+      method: "POST",
+      headers: { ...customerHeaders, ...(guestToken ? { "X-Transfer-Receipt-Token": guestToken } : {}) },
+      body,
+    });
+    if (!response.ok) return { ok: false as const, error: receiptError(response.status) };
+    return { ok: true as const, data: await response.json() };
+  } catch {
+    return { ok: false as const, error: "No pudimos enviar el comprobante. Revisá tu conexión e intentá nuevamente." };
+  }
+}
+
+function receiptError(status: number) {
+  if (status === 401 || status === 403 || status === 404) return "No pudimos validar el acceso a este pedido. Si el enlace venció, escribinos por WhatsApp.";
+  if (status === 409) return "Este pedido no admite comprobantes o ya recibió uno.";
+  if (status === 400) return "El archivo no es válido o supera el tamaño permitido. Elegí PDF, JPG o PNG de hasta 5 MiB.";
+  if (status === 502) return "No pudimos guardar el archivo. Intentá nuevamente más tarde.";
+  return "No pudimos completar la operación. Intentá nuevamente.";
+}
+
 export async function iniciarProcesoDePago(
   items: CartItemReference[],
   paymentMethod: "TRANSFERENCIA" | "GETNET-PRESENCIAL" | "GETNET-WEB" | "GETNET-LINK" | "EFECTIVO",
@@ -90,6 +132,7 @@ export async function iniciarProcesoDePago(
     return {
       success: true,
       orderId: data.id_orden,
+      transferReceiptToken: data.transfer_receipt_token ?? null,
       instruction: data.instruction,
     };
   } catch (error) {

@@ -16,6 +16,14 @@ function getSiteUrl() {
     }
 }
 
+export function getInterestFreeInstallments(): number | null {
+    const value = process.env.CUOTAS_SIN_INTERES?.trim();
+    if (!value || !/^\d+$/.test(value)) return null;
+
+    const installments = Number(value);
+    return Number.isSafeInteger(installments) && installments > 0 ? installments : null;
+}
+
 export const config = {
     whatsappNumber : "5491131876811",
     phone2: "+54 11 5151-7715",

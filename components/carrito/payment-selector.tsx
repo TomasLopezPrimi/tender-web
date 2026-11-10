@@ -3,23 +3,23 @@
 import { useState } from "react";
 import { CreditCard, Landmark, Copy, Check } from "lucide-react";
 import type { BankDetails } from "@/config";
-import { PricingConfig, CartItem } from "@/types/products";
+import { PricingConfig } from "@/types/products";
 import { getPaymentDiscountRate } from "@/lib/pricing";
 
 interface PaymentSelectorProps {
   selectedMethod: string;
   onSelectMethod: (method: string) => void;
   pricingConfig: PricingConfig;
-  cartItems: CartItem[];
   bankDetails: BankDetails;
+  interestFreeInstallments: number | null;
 }
 
 export default function PaymentSelector({
   selectedMethod,
   onSelectMethod,
   pricingConfig,
-  cartItems,
   bankDetails,
+  interestFreeInstallments,
 }: PaymentSelectorProps) {
 
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -32,10 +32,6 @@ export default function PaymentSelector({
 
   const transferPct = Math.round(getPaymentDiscountRate(pricingConfig, "TRANSFERENCIA") * 100);
 
-  // GETNET-LINK reemplazado por GETNET-WEB. Se conserva comentado por si vuelve.
-  // const allItemsHaveLink = cartItems.length > 0 && cartItems.every((item) => !!item.link_pago);
-  void cartItems;
-
   const paymentMethods = [
     {
       id: "transferencia",
@@ -46,19 +42,10 @@ export default function PaymentSelector({
       icon: Landmark,
       disabled: false,
     },
-    // {
-    //   id: "getnet-link",
-    //   title: "Tarjeta de crédito o débito",
-    //   description: allItemsHaveLink
-    //     ? "Acepta débito y hasta 18 cuotas con tarjeta de crédito."
-    //     : "No disponible para los productos seleccionados.",
-    //   icon: CreditCard,
-    //   disabled: !allItemsHaveLink,
-    // },
     {
       id: "getnet",
       title: "Tarjeta de crédito o débito",
-      description: "Pagá con débito o crédito en hasta 18 cuotas. Procesado por Getnet.",
+      description: "Pagá con crédito o débito a través de Getnet.",
       icon: CreditCard,
       disabled: false,
     },
@@ -165,12 +152,16 @@ export default function PaymentSelector({
             <div className="flex items-start gap-3">
               <CreditCard size={20} className="text-blue-600 mt-0.5 shrink-0" />
               <div>
-                <p className="text-sm font-bold text-blue-900 mb-1">
-                  Hasta <span className="text-lg font-black text-blue-700">18 cuotas</span> con tarjeta de crédito
-                </p>
-                <p className="text-xs text-blue-700">
-                  También acepta débito. El interés de las cuotas varía según el banco.
-                </p>
+                {interestFreeInstallments && (
+                  <>
+                    <p className="mb-1 text-sm font-bold text-blue-900">
+                      Hasta <span className="text-lg font-black text-blue-700">{interestFreeInstallments} cuotas sin interés</span>
+                    </p>
+                    <p className="text-xs leading-relaxed text-blue-700">
+                      Con tarjetas de crédito Visa, Mastercard y American Express. No aplica a débito.
+                    </p>
+                  </>
+                )}
                 <p className="text-xs text-blue-600 mt-2">
                   Al confirmar se abrirá una ventana segura de Getnet para procesar tu pago.
                 </p>
