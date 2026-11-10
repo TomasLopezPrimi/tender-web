@@ -73,3 +73,29 @@ export function clearThankYouContext(): void {
   if (!isBrowser()) return;
   window.sessionStorage.removeItem(STORAGE_KEY);
 }
+
+const RECEIPT_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
+const receiptTokenKey = (orderId: string | number) => `tender-transfer-receipt:${orderId}`;
+
+export function saveTransferReceiptToken(orderId: number, token: string): void {
+  if (!isBrowser()) return;
+  window.sessionStorage.setItem(receiptTokenKey(orderId), JSON.stringify({ token, savedAt: Date.now() }));
+}
+
+export function readTransferReceiptToken(orderId: string): string | null {
+  if (!isBrowser()) return null;
+  const key = receiptTokenKey(orderId);
+  const raw = window.sessionStorage.getItem(key);
+  if (!raw) return null;
+  try {
+    const value = JSON.parse(raw) as { token?: unknown; savedAt?: unknown };
+    if (typeof value.token !== "string" || typeof value.savedAt !== "number" || Date.now() - value.savedAt > RECEIPT_TOKEN_TTL_MS) {
+      window.sessionStorage.removeItem(key);
+      return null;
+    }
+    return value.token;
+  } catch {
+    window.sessionStorage.removeItem(key);
+    return null;
+  }
+}

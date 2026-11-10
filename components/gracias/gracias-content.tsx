@@ -34,6 +34,7 @@ import { TicketPerforation } from "./ticket-perforation";
 import { TimelineStep } from "./timeline-step";
 import { TrustRow } from "./trust-row";
 import { BankField } from "./bank-field";
+import { TransferReceiptUpload } from "./transfer-receipt-upload";
 
 type PaymentVerification = "idle" | "checking" | "paid" | "cancelled" | "unconfirmed";
 
@@ -303,7 +304,7 @@ export function GraciasContent({ bankDetails }: GraciasContentProps) {
 
             {variant.showBankPanel && (
               <section className="space-y-3 rounded-2xl border border-gray-200 bg-[var(--tender-gray-bg)]/70 p-4">
-                <Collapsible defaultOpen={false}>
+                <Collapsible defaultOpen={paymentMethod === "transferencia"}>
                   <CollapsibleTrigger className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 transition-colors hover:border-[var(--tender-cyan)]/30">
                     <span className="flex items-center gap-2 text-sm font-semibold text-[var(--tender-navy)]">
                       <Landmark size={18} className="text-[var(--tender-cyan)]" />
@@ -332,6 +333,13 @@ export function GraciasContent({ bankDetails }: GraciasContentProps) {
                     </p>
                   </CollapsibleContent>
                 </Collapsible>
+              </section>
+            )}
+
+            {paymentMethod === "transferencia" && orderId && Number.isInteger(Number(orderId)) && Number(orderId) > 0 && (
+              <section className="space-y-3">
+                <h2 className="text-center text-lg font-bold text-[var(--tender-navy)]">Elegí cómo enviarnos el comprobante</h2>
+                <TransferReceiptUpload orderId={Number(orderId)} />
               </section>
             )}
 

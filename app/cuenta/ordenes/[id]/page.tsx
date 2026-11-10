@@ -5,6 +5,7 @@ import { AccountShell, OrderTypeBadge } from "@/components/cuenta/account-ui";
 import { getCustomerOrder, getCustomerOrderVisits } from "@/lib/account/api";
 import { formatPrice, getMetadataBySku } from "@/lib/products";
 import type { CustomerOrderItem, CustomerOrderVisit } from "@/types/customer";
+import { TransferReceiptUpload } from "@/components/gracias/transfer-receipt-upload";
 
 const knownSkus = ["tender-col-8h", "tender-col-6h", "tender-col-4h", "tender-reb-6h", "tender-reb-4h"];
 
@@ -85,6 +86,14 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
           {order.discount_amount != null && Number(order.discount_amount) > 0 ? <p className="mt-4 text-sm text-slate-500">Descuento aplicado: {formatPrice(Number(order.discount_amount))}</p> : null}
         </section>
+
+        {order.payment_method?.toUpperCase() === "TRANSFERENCIA" && order.tipo === "VENTA" ? (
+          <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_18px_50px_-36px_rgba(8,30,66,0.4)]">
+            <h2 className="font-black text-[var(--tender-navy-mid)]">Comprobante de transferencia</h2>
+            <p className="my-3 text-sm text-slate-600">Adjuntá un PDF, JPG o PNG de hasta 5 MiB. El pago se confirmará después de verificar la transferencia.</p>
+            <TransferReceiptUpload account orderId={Number(order.id_orden)} />
+          </section>
+        ) : null}
 
         <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_18px_50px_-36px_rgba(8,30,66,0.4)]">
           <h2 className="font-black text-[var(--tender-navy-mid)]">Items</h2>

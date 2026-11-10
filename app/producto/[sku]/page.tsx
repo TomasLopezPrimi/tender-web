@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
+import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import { getMetadataBySku } from "@/lib/products";
 import { getHydratedProducts } from "@/lib/api/catalog";
+import { getInterestFreeInstallments } from '@/config';
 import ProductClientPage from '@/components/productos/product-client-page';
 import ProductInfoSections from '@/components/productos/detail/product-info-sections';
 import { SITE_URL, absoluteUrl } from '@/lib/site';
@@ -42,6 +44,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   if (!metadata) notFound();
 
+  await connection();
+  const interestFreeInstallments = getInterestFreeInstallments();
+
   // Hidratar: si el backend no devuelve variantes para este sku, el producto
   // no está disponible → tratar como no encontrado.
   const { products, pricingConfig } = await getHydratedProducts([metadata]);
@@ -75,7 +80,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <>
       <JsonLd data={jsonLd} />
       <main className="min-h-screen bg-white pb-20">
-        <ProductClientPage product={product} sku={resolvedParams.sku} pricingConfig={pricingConfig} />
+        <ProductClientPage
+          product={product}
+          sku={resolvedParams.sku}
+          pricingConfig={pricingConfig}
+          interestFreeInstallments={interestFreeInstallments}
+        />
         <ProductInfoSections product={product} />
       </main>
     </>
